@@ -1,9 +1,15 @@
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 
 public class ItemSlot : MonoBehaviour
 {
     #region Fields
+
+    [Header("Config")] 
+    [SerializeField] private SlotType type;
+    [SerializeField] private List<ItemSlot> neighbors;
+    
     [Header("Visual Elements")]
     [SerializeField] private SpriteRenderer hoverIndicatorSprite;
     
@@ -13,6 +19,7 @@ public class ItemSlot : MonoBehaviour
     
     private SlotVisualState _currentVisualState = SlotVisualState.Idle;
     private Tween _scaleTween;
+    public Item currentItem;
     #endregion
 
     #region LifeCycle
@@ -26,6 +33,10 @@ public class ItemSlot : MonoBehaviour
     private void Start()
     {
         hoverIndicatorSprite.transform.localScale = Vector3.zero;
+        foreach (ItemSlot neighbor in neighbors)
+        {
+            neighbor.AddNeighbor(this);
+        }
     }   
 
     private void OnDisable()
@@ -95,6 +106,38 @@ public class ItemSlot : MonoBehaviour
 
         _currentVisualState = visualState;
         ApplyVisualState();
+    }
+
+    public void AddNeighbor(ItemSlot neighbor)
+    {
+        if(!neighbors.Contains(neighbor))
+            neighbors.Add(neighbor);
+    }
+
+    public void SeCurrentItem(Item item)
+    {
+        currentItem = item;
+    }
+    
+    public ItemType GetItemTypeInSlot()
+    {
+        return currentItem.GetItemType();
+    }
+
+    public string GetItemIdInSlot()
+    {
+        return currentItem.GetItemId();
+    }
+    
+    public int GetCountTreeAround()
+    {
+        int count = 0;
+        foreach (ItemSlot neighbor in neighbors)
+        {
+            if(neighbor.GetItemTypeInSlot() == ItemType.Plant)
+                count++;
+        }
+        return count;
     }
     #endregion
     

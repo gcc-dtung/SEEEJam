@@ -23,6 +23,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private float positionTweenDuration = 0.2f;
     [SerializeField] private float viewTweenDuration = 0.2f;
     [SerializeField] private LayerMask slotLayerMask;
+    [SerializeField] private Item currentItem;
     
     private Vector3 _dragOffset;
     private float _zCoordinate;
@@ -70,7 +71,6 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         if(_positionTween.isAlive)
             _positionTween.Stop();
-        
         _zCoordinate = mainCamera.WorldToScreenPoint(transform.position).z;
         Vector3 mouseWorldPos = GetMousePos(eventData.position);
         _dragOffset = transform.position - mouseWorldPos;
@@ -113,6 +113,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             if (itemSlot != null)
             {
                 _originalItemPosition = itemSlot.transform.position;
+                itemSlot.SeCurrentItem(currentItem);
             }
         }
         ChangeViewItem(1f, 1f);

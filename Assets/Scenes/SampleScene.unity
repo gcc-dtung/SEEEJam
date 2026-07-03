@@ -241,9 +241,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4321f1945def847a9ba963afeb12d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotItem
+  type: 0
+  neighbors: []
   hoverIndicatorSprite: {fileID: 264270737}
   dragStateScale: 0.7
   scaleTransitionDuration: 0.2
+  currentItem: {fileID: 0}
 --- !u!61 &282579625
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -563,7 +566,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -816,9 +819,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4321f1945def847a9ba963afeb12d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotItem
+  type: 0
+  neighbors:
+  - {fileID: 804526400}
+  - {fileID: 282579624}
+  - {fileID: 2027673971}
   hoverIndicatorSprite: {fileID: 1001950498}
   dragStateScale: 0.7
   scaleTransitionDuration: 0.2
+  currentItem: {fileID: 0}
 --- !u!61 &695614293
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -933,7 +942,7 @@ Transform:
   m_GameObject: {fileID: 695614291}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.3, y: 2.4, z: 0}
+  m_LocalPosition: {x: -1.24, y: -0.27, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -971,9 +980,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4321f1945def847a9ba963afeb12d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotItem
+  type: 0
+  neighbors:
+  - {fileID: 695614292}
+  - {fileID: 282579624}
+  - {fileID: 2027673971}
   hoverIndicatorSprite: {fileID: 519509072}
   dragStateScale: 0.7
   scaleTransitionDuration: 0.2
+  currentItem: {fileID: 0}
 --- !u!61 &804526401
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1088,7 +1103,7 @@ Transform:
   m_GameObject: {fileID: 804526399}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.57, y: 2.51, z: 0}
+  m_LocalPosition: {x: 2.09, y: -0.26, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1197,6 +1212,7 @@ GameObject:
   - component: {fileID: 1193790897}
   - component: {fileID: 1193790896}
   - component: {fileID: 1193790895}
+  - component: {fileID: 1193790898}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -1226,6 +1242,7 @@ MonoBehaviour:
   slotLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  currentItem: {fileID: 1193790898}
 --- !u!61 &1193790896
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1288,6 +1305,34 @@ Transform:
   - {fileID: 2034861946}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1193790898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193790894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4bbf60e4f358f84d9457ae0ace3bc49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  itemType: 0
+  itemId: Naruto
+  conditions:
+  - rid: 2543591591631388742
+  - rid: 2543591591631388743
+  references:
+    version: 2
+    RefIds:
+    - rid: 2543591591631388742
+      type: {class: NearTreeCountCondition, ns: , asm: Assembly-CSharp}
+      data:
+        nCount: 2
+    - rid: 2543591591631388743
+      type: {class: NearSpecificTreeCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetTreeId: 
 --- !u!1 &1944517890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,9 +1443,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4321f1945def847a9ba963afeb12d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotItem
+  type: 0
+  neighbors:
+  - {fileID: 804526400}
+  - {fileID: 695614292}
+  - {fileID: 282579624}
   hoverIndicatorSprite: {fileID: 434206644}
   dragStateScale: 0.7
   scaleTransitionDuration: 0.2
+  currentItem: {fileID: 0}
 --- !u!61 &2027673972
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1548,7 +1599,7 @@ Transform:
   m_GameObject: {fileID: 2034861945}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: -1.56, y: -5.08, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
