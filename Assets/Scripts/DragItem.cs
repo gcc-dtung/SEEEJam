@@ -9,6 +9,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public static UnityEvent<DragItem>  OnDragStart = new UnityEvent<DragItem>();
     public static UnityEvent<DragItem> OnDragEnd = new UnityEvent<DragItem>();
     public static UnityEvent<DragItem, ItemSlot> OnHoverChanged = new UnityEvent<DragItem, ItemSlot>();
+    public static UnityEvent OnBoardChanged = new UnityEvent();
     #endregion
     
     #region Field
@@ -24,15 +25,19 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private float viewTweenDuration = 0.2f;
     [SerializeField] private LayerMask slotLayerMask;
     [SerializeField] private Item currentItem;
+    [SerializeField] private ItemSlot startingItemSlot;
     
     private Vector3 _dragOffset;
     private float _zCoordinate;
     private Vector3 _originalItemPosition;
     private ItemSlot _currentHoverItemSlot;
+    private ItemSlot _sourceItemSlot;
     
     private Tween _positionTween;
     private Tween _opacityTween;
     private Tween _scaleTween;
+    
+    public Item CurrentDragItem => currentItem;
     #endregion
 
     #region LifeCycle
@@ -44,6 +49,11 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private void Start()
     {
+        if(startingItemSlot != null)
+        {
+            transform.position = startingItemSlot.transform.position;
+            startingItemSlot.SeCurrentItem(currentItem);
+        }
         _originalItemPosition = transform.position;
     }
     
@@ -77,13 +87,15 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         
         ChangeViewItem(dragScaleMultiplier, dragOpacity);
         itemCollider.enabled = false;
+
+        _sourceItemSlot = GetSlotAtPosition(transform.position);
         
         OnDragStart?.Invoke(this);
         
-        ItemSlot startingItemSlot = GetSlotAtPosition(mouseWorldPos);
-        if (startingItemSlot != null)
+        ItemSlot slotAtPosition = GetSlotAtPosition(mouseWorldPos);
+        if (slotAtPosition != null)
         {
-            _currentHoverItemSlot = startingItemSlot;
+            _currentHoverItemSlot = slotAtPosition;
             OnHoverChanged?.Invoke(this, _currentHoverItemSlot);
         }
     }
@@ -100,8 +112,6 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             _currentHoverItemSlot = hoverItemSlot;
             OnHoverChanged?.Invoke(this, _currentHoverItemSlot);
         }
-
-        
     }
     
     public void OnPointerUp(PointerEventData eventData)
@@ -112,8 +122,17 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             ItemSlot itemSlot = hit.GetComponent<ItemSlot>();
             if (itemSlot != null)
             {
-                _originalItemPosition = itemSlot.transform.position;
-                itemSlot.SeCurrentItem(currentItem);
+                if (itemSlot.CanPlaceItem(currentItem))
+                {
+                    if (_sourceItemSlot != null && _sourceItemSlot != itemSlot)
+                    {
+                        _sourceItemSlot.TakeCurrentItem(currentItem);
+                    }
+                    
+                    _originalItemPosition = itemSlot.transform.position;
+                    itemSlot.SeCurrentItem(currentItem);
+                    OnBoardChanged?.Invoke();
+                }
             }
         }
         ChangeViewItem(1f, 1f);
@@ -122,6 +141,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         
         OnDragEnd?.Invoke(this);
         _currentHoverItemSlot = null;
+        _sourceItemSlot = null;
     }
     #endregion
 
@@ -135,13 +155,15 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         if(_scaleTween.isAlive)
             _scaleTween.Stop();
-        Tween.Scale(transform, viewScale, viewTweenDuration);
+        if(transform.localScale != viewScale * Vector3.one)
+            Tween.Scale(transform, viewScale, viewTweenDuration);
         Color currentColor = itemViewRenderer.color;
         Color newColor = itemViewRenderer.color;
         newColor.a = viewOpacity;
         if(_opacityTween.isAlive)
             _opacityTween.Stop();
-        Tween.Custom(currentColor, newColor, duration: viewTweenDuration, onValueChange: newVal => itemViewRenderer.color = newVal);
+        if(currentColor != newColor)
+            _opacityTween = Tween.Custom(currentColor, newColor, duration: viewTweenDuration, onValueChange: newVal => itemViewRenderer.color = newVal);
     }
 
     private void TweenToPosition(Vector3 from, Vector3 to, float duration)

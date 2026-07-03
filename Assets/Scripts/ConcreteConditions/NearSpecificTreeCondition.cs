@@ -7,6 +7,12 @@ public class NearSpecificTreeCondition : PlantCondition
 
     public override bool CheckCondition(ItemSlot itemSlot)
     {
-        return itemSlot.GetItemIdInSlot() == targetTreeId;
+        foreach (ItemSlot neighbor in itemSlot.Neighbors)
+        {
+            if (neighbor.HasCurrentItem && neighbor.GetItemIdInSlot() == targetTreeId)
+                return true;
+        }
+
+        return false;
     }
 }

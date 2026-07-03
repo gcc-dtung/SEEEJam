@@ -4,7 +4,9 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     [SerializeField] private ItemType itemType;
+    [SerializeField] private SlotType itemSlotType;
     [SerializeField] private string itemId;
+    [SerializeField] private SpriteRenderer itemSprite;
     
     [SerializeReference]
     [SubclassSelector]
@@ -12,16 +14,74 @@ public class Item : MonoBehaviour
 
     private ItemSlot currentSlot;
     
-    #region Public API
-    public ItemType GetItemType() => itemType;
-    public string GetItemId() => itemId;
 
-    public bool CheckCondition()
+    private void OnEnable()
     {
-        foreach(PlantCondition cond in conditions)
-            if (!cond.CheckCondition(currentSlot))
-                return false;
+        DragItem.OnBoardChanged.AddListener(RefreshCurrentSlotVisual);
+    }
+
+    private void OnDisable()
+    {
+        DragItem.OnBoardChanged.RemoveListener(RefreshCurrentSlotVisual);
+    }
+    
+    #region Public API
+    public SlotType ItemSlotType => itemSlotType;
+    public ItemType ItemType => itemType;
+    public string ItemId => itemId;
+
+    private bool CheckCondition(ItemSlot slot)
+    {
+        if(conditions!= null)
+            foreach(PlantCondition cond in conditions)
+                if (!cond.CheckCondition(slot))
+                    return false;
         return true;
+    }
+
+    public void SpriteWhenNormal()
+    {
+        itemSprite.color = Color.white;
+    }
+
+    public void SpriteWhenWrong()
+    {
+        itemSprite.color = Color.red;
+    }
+
+    public void SpriteWhenCorrect()
+    {
+        itemSprite.color = Color.green;
+    }
+
+    public void UpdateVisualItem(ItemSlot slot)
+    {
+        currentSlot = slot;
+
+        if (slot.Type == SlotType.Wait)
+        {
+            SpriteWhenNormal();
+        }
+        else if (CheckCondition(slot))
+        {
+            SpriteWhenCorrect();
+        }
+        else
+        {
+            SpriteWhenWrong();
+        }
+    }
+
+    public void SetCurrentSlot(ItemSlot slot)
+    {
+        currentSlot = slot;
+    }
+
+    private void RefreshCurrentSlotVisual()
+    {
+        if (currentSlot == null) return;
+
+        UpdateVisualItem(currentSlot);
     }
     
     #endregion

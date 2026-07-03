@@ -19,7 +19,12 @@ public class ItemSlot : MonoBehaviour
     
     private SlotVisualState _currentVisualState = SlotVisualState.Idle;
     private Tween _scaleTween;
+    private Item _hoverItem;
+    
+    public SlotType Type => type;
     public Item currentItem;
+    public bool HasCurrentItem => currentItem != null;
+    public List<ItemSlot> Neighbors => neighbors;
     #endregion
 
     #region LifeCycle
@@ -52,11 +57,14 @@ public class ItemSlot : MonoBehaviour
 
     private void HandleDragStart(DragItem item)
     {
+        item.CurrentDragItem.SpriteWhenNormal();
+        _hoverItem = item.CurrentDragItem;
         SetVisualState(SlotVisualState.ActiveDrag);
     }
 
     private void HandleDragEnd(DragItem item)
     {
+        _hoverItem = null;
         SetVisualState(SlotVisualState.Idle);
     }
 
@@ -77,6 +85,17 @@ public class ItemSlot : MonoBehaviour
     #region PrivateMethods
     private void ApplyVisualState()
     {
+        if (_hoverItem == null)
+        {
+            TweenHoverIndicatorScale(0f);
+            return;
+        }
+        if (!CanPlaceItem(_hoverItem))
+        {
+            TweenHoverIndicatorScale(0f);
+            return;
+        }
+
         switch (_currentVisualState)
         {
             case SlotVisualState.ActiveDrag:
@@ -95,7 +114,8 @@ public class ItemSlot : MonoBehaviour
     {
         if(_scaleTween.isAlive)
             _scaleTween.Stop();
-        _scaleTween = Tween.Scale(hoverIndicatorSprite.transform, newSize, scaleTransitionDuration);
+        if(hoverIndicatorSprite.transform.localScale != newSize * Vector3.one)
+            _scaleTween = Tween.Scale(hoverIndicatorSprite.transform, newSize, scaleTransitionDuration);
     }
     #endregion
     
@@ -114,19 +134,38 @@ public class ItemSlot : MonoBehaviour
             neighbors.Add(neighbor);
     }
 
+    public bool CanPlaceItem(Item item)
+    {
+        if (item == null) return false;
+
+        bool isValidSlotType = type == SlotType.Wait || type == item.ItemSlotType;
+        bool hasAnotherItem = currentItem != null && currentItem != item;
+        return isValidSlotType && !hasAnotherItem;
+    }
+
     public void SeCurrentItem(Item item)
     {
         currentItem = item;
+        currentItem.SetCurrentSlot(this);
+    }
+
+    public void TakeCurrentItem(Item item)
+    {
+        if (item == currentItem)
+        {
+            currentItem.SetCurrentSlot(null);
+            currentItem = null;
+        }
     }
     
     public ItemType GetItemTypeInSlot()
     {
-        return currentItem.GetItemType();
+        return currentItem.ItemType;
     }
 
     public string GetItemIdInSlot()
     {
-        return currentItem.GetItemId();
+        return currentItem.ItemId;
     }
     
     public int GetCountTreeAround()
@@ -134,11 +173,12 @@ public class ItemSlot : MonoBehaviour
         int count = 0;
         foreach (ItemSlot neighbor in neighbors)
         {
-            if(neighbor.GetItemTypeInSlot() == ItemType.Plant)
+            if(neighbor.HasCurrentItem && neighbor.GetItemTypeInSlot() == ItemType.Plant)
                 count++;
         }
         return count;
     }
+    
     #endregion
     
 }

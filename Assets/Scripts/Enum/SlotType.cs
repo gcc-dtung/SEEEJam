@@ -3,5 +3,6 @@ public enum SlotType
     Dirt,
     Sand,
     Water,
-    DryDirt
+    DryDirt,
+    Wait
 }
