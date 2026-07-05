@@ -12,7 +12,11 @@ public class NearSpecificTreeCondition : PlantCondition
             if (neighbor.HasCurrentItem && neighbor.GetItemIdInSlot() == targetTreeId)
                 return true;
         }
-
         return false;
+    }
+
+    public override string GetTooltip()
+    {
+        return "Muon dat canh " + targetTreeId;
     }
 }

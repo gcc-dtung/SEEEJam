@@ -10,4 +10,9 @@ public class NearTreeCountCondition : PlantCondition
         int actualTree = itemSlot.GetCountTreeAround();
         return (actualTree == nCount);
     }
+
+    public override string GetTooltip()
+    {
+       return "Muon co " + nCount + " cay xung quanh";
+    }
 }

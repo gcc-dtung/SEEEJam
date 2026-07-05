@@ -39,6 +39,16 @@ public class Item : MonoBehaviour
         return true;
     }
 
+    public string GetTooltip()
+    {
+        string itemTooltip = itemId + ":\n";
+        if (conditions == null || conditions.Count == 0)
+            return itemId + ":\ncan place anywhere";
+        foreach(PlantCondition cond in conditions)
+            itemTooltip += cond.GetTooltip() + '\n';
+        return itemTooltip;
+    }
+
     public void SpriteWhenNormal()
     {
         itemSprite.color = Color.white;
@@ -51,7 +61,7 @@ public class Item : MonoBehaviour
 
     public void SpriteWhenCorrect()
     {
-        itemSprite.color = Color.green;
+        itemSprite.color = Color.blue;
     }
 
     public void UpdateVisualItem(ItemSlot slot)

@@ -5,4 +5,5 @@ using UnityEngine;
 public abstract class PlantCondition
 {
     public abstract bool CheckCondition(ItemSlot itemSlot);
+    public abstract string GetTooltip();
 }

@@ -10,6 +10,8 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public static UnityEvent<DragItem> OnDragEnd = new UnityEvent<DragItem>();
     public static UnityEvent<DragItem, ItemSlot> OnHoverChanged = new UnityEvent<DragItem, ItemSlot>();
     public static UnityEvent OnBoardChanged = new UnityEvent();
+    public static UnityEvent<string> OnShowTooltip = new UnityEvent<string>();
+    public static UnityEvent OnHideTooltip = new UnityEvent();
     #endregion
     
     #region Field
@@ -91,6 +93,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         _sourceItemSlot = GetSlotAtPosition(transform.position);
         
         OnDragStart?.Invoke(this);
+        OnShowTooltip?.Invoke(currentItem.GetTooltip());
         
         ItemSlot slotAtPosition = GetSlotAtPosition(mouseWorldPos);
         if (slotAtPosition != null)
@@ -140,6 +143,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         itemCollider.enabled = true;
         
         OnDragEnd?.Invoke(this);
+        OnHideTooltip?.Invoke();
         _currentHoverItemSlot = null;
         _sourceItemSlot = null;
     }
