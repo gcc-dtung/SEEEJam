@@ -134,6 +134,12 @@ public class ItemSlot : MonoBehaviour
             neighbors.Add(neighbor);
     }
 
+    public void Configure(SlotType slotType, List<ItemSlot> slotNeighbors = null)
+    {
+        type = slotType;
+        neighbors = slotNeighbors ?? new List<ItemSlot>();
+    }
+
     public bool CanPlaceItem(Item item)
     {
         if (item == null) return false;

@@ -13,10 +13,15 @@ public class Item : MonoBehaviour
     private List<PlantCondition> conditions = new List<PlantCondition>();
 
     private ItemSlot currentSlot;
-    
+
+    private void Awake()
+    {
+        EnsureItemSprite();
+    }
 
     private void OnEnable()
     {
+        EnsureItemSprite();
         DragItem.OnBoardChanged.AddListener(RefreshCurrentSlotVisual);
     }
 
@@ -29,6 +34,14 @@ public class Item : MonoBehaviour
     public SlotType ItemSlotType => itemSlotType;
     public ItemType ItemType => itemType;
     public string ItemId => itemId;
+
+    public void Configure(ItemType newItemType, SlotType newItemSlotType, string newItemId, List<PlantCondition> newConditions)
+    {
+        itemType = newItemType;
+        itemSlotType = newItemSlotType;
+        itemId = newItemId;
+        conditions = newConditions ?? new List<PlantCondition>();
+    }
 
     private bool CheckCondition(ItemSlot slot)
     {
@@ -51,16 +64,22 @@ public class Item : MonoBehaviour
 
     public void SpriteWhenNormal()
     {
+        EnsureItemSprite();
+        if (itemSprite == null) return;
         itemSprite.color = Color.white;
     }
 
     public void SpriteWhenWrong()
     {
+        EnsureItemSprite();
+        if (itemSprite == null) return;
         itemSprite.color = Color.red;
     }
 
     public void SpriteWhenCorrect()
     {
+        EnsureItemSprite();
+        if (itemSprite == null) return;
         itemSprite.color = Color.blue;
     }
 
@@ -92,6 +111,12 @@ public class Item : MonoBehaviour
         if (currentSlot == null) return;
 
         UpdateVisualItem(currentSlot);
+    }
+
+    private void EnsureItemSprite()
+    {
+        if (itemSprite == null)
+            itemSprite = GetComponentInChildren<SpriteRenderer>();
     }
     
     #endregion

@@ -34,6 +34,8 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     private Vector3 _originalItemPosition;
     private ItemSlot _currentHoverItemSlot;
     private ItemSlot _sourceItemSlot;
+    private float _slotZOffset;
+    private Vector3 _normalScale = Vector3.one;
     
     private Tween _positionTween;
     private Tween _opacityTween;
@@ -47,6 +49,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         if(mainCamera == null)
             mainCamera = Camera.main;
+        _normalScale = transform.localScale;
     }
 
     private void Start()
@@ -57,6 +60,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             startingItemSlot.SeCurrentItem(currentItem);
         }
         _originalItemPosition = transform.position;
+        _normalScale = transform.localScale;
     }
     
     private void OnDisable()
@@ -67,7 +71,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         
         itemCollider.enabled = true;
         transform.position = _originalItemPosition;
-        transform.localScale = Vector3.one;
+        transform.localScale = _normalScale;
         
         if(itemViewRenderer != null)
         {
@@ -132,7 +136,7 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
                         _sourceItemSlot.TakeCurrentItem(currentItem);
                     }
                     
-                    _originalItemPosition = itemSlot.transform.position;
+                    _originalItemPosition = itemSlot.transform.position + new Vector3(0f, 0f, _slotZOffset);
                     itemSlot.SeCurrentItem(currentItem);
                     OnBoardChanged?.Invoke();
                 }
@@ -150,6 +154,19 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     #endregion
 
     #region PrivateMethods
+    public void ConfigureStart(ItemSlot newStartingItemSlot, float zOffset = 0f)
+    {
+        startingItemSlot = newStartingItemSlot;
+        _slotZOffset = zOffset;
+        if (startingItemSlot == null || currentItem == null)
+            return;
+
+        transform.position = startingItemSlot.transform.position + new Vector3(0f, 0f, _slotZOffset);
+        startingItemSlot.SeCurrentItem(currentItem);
+        _originalItemPosition = transform.position;
+        _normalScale = transform.localScale;
+    }
+
     private Vector3 GetMousePos(Vector3 pos)
     {
         return mainCamera.ScreenToWorldPoint(new Vector3(pos.x, pos.y, _zCoordinate));
@@ -159,8 +176,9 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     {
         if(_scaleTween.isAlive)
             _scaleTween.Stop();
-        if(transform.localScale != viewScale * Vector3.one)
-            Tween.Scale(transform, viewScale, viewTweenDuration);
+        Vector3 targetScale = _normalScale * viewScale;
+        if(transform.localScale != targetScale)
+            _scaleTween = Tween.Scale(transform, targetScale, viewTweenDuration);
         Color currentColor = itemViewRenderer.color;
         Color newColor = itemViewRenderer.color;
         newColor.a = viewOpacity;
