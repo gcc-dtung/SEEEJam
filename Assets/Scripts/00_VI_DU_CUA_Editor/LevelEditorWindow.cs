@@ -472,6 +472,8 @@ public class LevelEditorWindow : EditorWindow
             RenameLandId(oldId, land.landId);
 
         land.slotType = (SlotType)EditorGUILayout.EnumPopup("Type", land.slotType);
+        land.isCorner = EditorGUILayout.ToggleLeft("Corner", land.isCorner);
+        land.isEdge = EditorGUILayout.ToggleLeft("Edge", land.isEdge);
         land.itemId = EditorGUILayout.TextField("Item ID", land.itemId ?? "");
 
         DrawPositionFields(ref land.x, ref land.y);
@@ -504,6 +506,7 @@ public class LevelEditorWindow : EditorWindow
 
         tree.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", tree.itemType);
         tree.requiredSlotType = (SlotType)EditorGUILayout.EnumPopup("Required Slot", tree.requiredSlotType);
+        tree.smell = (PlantSmell)EditorGUILayout.EnumPopup("Smell", tree.smell);
         tree.parameterN = EditorGUILayout.IntField("Parameter n", tree.parameterN);
 
         DrawPositionFields(ref tree.x, ref tree.y);
@@ -526,6 +529,8 @@ public class LevelEditorWindow : EditorWindow
             x = 80 + _level.cells.Count * 30,
             y = 80 + _level.cells.Count * 18,
             slotType = SlotType.Dirt,
+            isCorner = false,
+            isEdge = false,
             itemId = "",
             neighborIds = new List<string>()
         };
@@ -556,6 +561,7 @@ public class LevelEditorWindow : EditorWindow
             y = 180 + _level.trees.Count * 18,
             itemType = ItemType.Plant,
             requiredSlotType = SlotType.Dirt,
+            smell = PlantSmell.None,
             parameterN = 0,
             customNotes = "",
             conditions = new List<TreeConditionData>
@@ -611,9 +617,14 @@ public class LevelEditorWindow : EditorWindow
                     if (i == 0)
                         tree.parameterN = condition.n;
                 }
-                else
+                else if (condition.conditionType == TreeConditionType.NearSpecificTree)
                 {
                     condition.targetTreeId = DrawTreeIdPopup("Target Tree", tree, condition.targetTreeId);
+                }
+                else if (condition.conditionType == TreeConditionType.NeighborSmell)
+                {
+                    condition.smell = DrawSmellConditionTargetPopup("Smell", condition.smell);
+                    condition.smellPreference = (SmellConditionPreference)EditorGUILayout.EnumPopup("Preference", condition.smellPreference);
                 }
 
                 EditorGUILayout.EndVertical();
@@ -656,6 +667,15 @@ public class LevelEditorWindow : EditorWindow
         int selectedIndex = Mathf.Max(0, ids.IndexOf(currentId));
         selectedIndex = EditorGUILayout.Popup(label, selectedIndex, ids.ToArray());
         return ids[selectedIndex];
+    }
+
+    private static PlantSmell DrawSmellConditionTargetPopup(string label, PlantSmell currentSmell)
+    {
+        PlantSmell[] smells = { PlantSmell.Perfume, PlantSmell.Disgust };
+        string[] labels = { PlantSmell.Perfume.ToString(), PlantSmell.Disgust.ToString() };
+        int selectedIndex = currentSmell == PlantSmell.Disgust ? 1 : 0;
+        selectedIndex = EditorGUILayout.Popup(label, selectedIndex, labels);
+        return smells[selectedIndex];
     }
 
     private void NewLevel()
@@ -866,6 +886,8 @@ public class LevelEditorWindow : EditorWindow
 
             if (condition.conditionType == TreeConditionType.NearSpecificTree && FindTree(condition.targetTreeId) == null)
                 condition.targetTreeId = "";
+            if (condition.conditionType == TreeConditionType.NeighborSmell && condition.smell == PlantSmell.None)
+                condition.smell = PlantSmell.Perfume;
         }
     }
 

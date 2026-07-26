@@ -67,7 +67,7 @@ public class LevelRuntimeLoader : MonoBehaviour
             ItemSlot slot = Instantiate(slotPrefab, ToWorldPosition(level, land.x, land.y), Quaternion.identity, slotRoot);
             slot.name = string.IsNullOrWhiteSpace(land.landId) ? "LandSlot" : land.landId;
             ApplyEditorSize(slot.gameObject, level, level.slotSize);
-            slot.Configure(land.slotType);
+            slot.Configure(land.slotType, null, land.isCorner, land.isEdge);
             landSlots[land.landId] = slot;
             _spawnedObjects.Add(slot.gameObject);
         }
@@ -106,7 +106,7 @@ public class LevelRuntimeLoader : MonoBehaviour
 
             Item item = dragItem.CurrentDragItem;
             if (item != null)
-                item.Configure(tree.itemType, tree.requiredSlotType, tree.treeId, BuildPlantConditions(tree.conditions));
+                item.Configure(tree.itemType, tree.requiredSlotType, tree.treeId, tree.smell, BuildPlantConditions(tree.conditions));
 
             dragItem.ConfigureStart(waitSlot, itemInputZOffset);
             _spawnedObjects.Add(dragItem.gameObject);
@@ -122,13 +122,15 @@ public class LevelRuntimeLoader : MonoBehaviour
         foreach (TreeConditionData data in conditionData)
         {
             if (data.conditionType == TreeConditionType.NearTreeCount)
-            {
                 conditions.Add(new NearTreeCountCondition { nCount = data.n });
-            }
-            else if (!string.IsNullOrWhiteSpace(data.targetTreeId))
-            {
+            else if (data.conditionType == TreeConditionType.NearSpecificTree && !string.IsNullOrWhiteSpace(data.targetTreeId))
                 conditions.Add(new NearSpecificTreeCondition { targetTreeId = data.targetTreeId });
-            }
+            else if (data.conditionType == TreeConditionType.EdgeSlot)
+                conditions.Add(new EdgeSlotCondition());
+            else if (data.conditionType == TreeConditionType.CornerSlot)
+                conditions.Add(new CornerSlotCondition());
+            else if (data.conditionType == TreeConditionType.NeighborSmell && data.smell != PlantSmell.None)
+                conditions.Add(new NeighborSmellCondition { smell = data.smell, preference = data.smellPreference });
         }
         return conditions;
     }

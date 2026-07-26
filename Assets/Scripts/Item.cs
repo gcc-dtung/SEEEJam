@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemType itemType;
     [SerializeField] private SlotType itemSlotType;
     [SerializeField] private string itemId;
+    [SerializeField] private PlantSmell smell;
     [SerializeField] private SpriteRenderer itemSprite;
     
     [SerializeReference]
@@ -34,12 +35,14 @@ public class Item : MonoBehaviour
     public SlotType ItemSlotType => itemSlotType;
     public ItemType ItemType => itemType;
     public string ItemId => itemId;
+    public PlantSmell Smell => smell;
 
-    public void Configure(ItemType newItemType, SlotType newItemSlotType, string newItemId, List<PlantCondition> newConditions)
+    public void Configure(ItemType newItemType, SlotType newItemSlotType, string newItemId, PlantSmell newSmell, List<PlantCondition> newConditions)
     {
         itemType = newItemType;
         itemSlotType = newItemSlotType;
         itemId = newItemId;
+        smell = newSmell;
         conditions = newConditions ?? new List<PlantCondition>();
     }
 

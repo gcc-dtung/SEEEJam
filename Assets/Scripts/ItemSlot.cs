@@ -8,6 +8,8 @@ public class ItemSlot : MonoBehaviour
 
     [Header("Config")] 
     [SerializeField] private SlotType type;
+    [SerializeField] private bool isCorner;
+    [SerializeField] private bool isEdge;
     [SerializeField] private List<ItemSlot> neighbors;
     
     [Header("Visual Elements")]
@@ -22,6 +24,8 @@ public class ItemSlot : MonoBehaviour
     private Item _hoverItem;
     
     public SlotType Type => type;
+    public bool IsCorner => isCorner;
+    public bool IsEdge => isEdge;
     public Item currentItem;
     public bool HasCurrentItem => currentItem != null;
     public List<ItemSlot> Neighbors => neighbors;
@@ -134,10 +138,12 @@ public class ItemSlot : MonoBehaviour
             neighbors.Add(neighbor);
     }
 
-    public void Configure(SlotType slotType, List<ItemSlot> slotNeighbors = null)
+    public void Configure(SlotType slotType, List<ItemSlot> slotNeighbors = null, bool slotIsCorner = false, bool slotIsEdge = false)
     {
         type = slotType;
         neighbors = slotNeighbors ?? new List<ItemSlot>();
+        isCorner = slotIsCorner;
+        isEdge = slotIsEdge;
     }
 
     public bool CanPlaceItem(Item item)
