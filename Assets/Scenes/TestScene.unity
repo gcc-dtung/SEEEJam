@@ -2110,7 +2110,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bootstrap
   levelLoader: {fileID: 250437047}
   levelSequence:
-  - {fileID: 4900000, guid: 19cbbfd12512c064bb7a05120a9d4de9, type: 3}
+  - {fileID: 4900000, guid: ef8eaa165d9e00448a652b3d4c5d085e, type: 3}
+  - {fileID: 4900000, guid: 994b105f2de33f84cba236fc66e3da69, type: 3}
+  - {fileID: 4900000, guid: 5404029ed1e58dc47887520da68f553a, type: 3}
+  - {fileID: 4900000, guid: 1fa3e6a723260074aa8cb870e76e2058, type: 3}
   loadOnStart: 1
 --- !u!114 &1606776114
 MonoBehaviour:

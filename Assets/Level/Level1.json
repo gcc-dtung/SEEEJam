@@ -52,8 +52,8 @@
         {
             "treeId": "tree_01",
             "solutionLandId": "",
-            "x": 100,
-            "y": 1620,
+            "x": 430,
+            "y": 1614,
             "itemType": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
@@ -71,8 +71,8 @@
         {
             "treeId": "tree_02",
             "solutionLandId": "",
-            "x": 240,
-            "y": 1620,
+            "x": 644,
+            "y": 1614,
             "itemType": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
