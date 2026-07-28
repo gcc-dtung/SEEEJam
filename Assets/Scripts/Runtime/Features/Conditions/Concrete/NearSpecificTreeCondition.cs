@@ -17,6 +17,6 @@ public class NearSpecificTreeCondition : PlantCondition
 
     public override string GetDescription()
     {
-        return $"Must be next to {targetTreeId}.";
+        return $"I want to plant near {targetTreeId}.";
     }
 }

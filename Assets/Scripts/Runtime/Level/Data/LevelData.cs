@@ -38,7 +38,9 @@ public enum TreeConditionType
     EdgeSlot,
     CornerSlot,
     NeighborSmell,
-    EmitSmell
+    EmitSmell,
+    PlantAlone,
+    Anywhere
 }
 
 [Serializable]

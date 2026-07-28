@@ -16,9 +16,9 @@ public class EmitSmellCondition : PlantCondition
         switch (smell)
         {
             case PlantSmell.Perfume:
-                return "Has a good smell.";
+                return "I have good perfume smell.";
             case PlantSmell.Disgust:
-                return "Has a bad smell.";
+                return "I make a stink smell.";
             default:
                 return "Has no smell.";
         }

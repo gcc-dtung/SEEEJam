@@ -10,6 +10,6 @@ public class CornerSlotCondition : PlantCondition
 
     public override string GetDescription()
     {
-        return "Must be placed on a corner slot.";
+        return "I want to be placed on a corner slot.";
     }
 }

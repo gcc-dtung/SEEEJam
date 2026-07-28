@@ -13,6 +13,6 @@ public class NearTreeCountCondition : PlantCondition
 
     public override string GetDescription()
     {
-        return $"Must have exactly {nCount} neighboring tree(s).";
+        return $"I want to be planted near only {nCount} tree(s).";
     }
 }

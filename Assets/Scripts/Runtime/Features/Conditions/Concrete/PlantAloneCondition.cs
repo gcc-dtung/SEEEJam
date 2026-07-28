@@ -10,6 +10,6 @@ public class PlantAloneCondition : PlantCondition
 
     public override string GetDescription()
     {
-        return "Must be alone, with no neighboring trees.";
+        return "I want to be planted alone.";
     }
 }

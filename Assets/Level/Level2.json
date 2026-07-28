@@ -15,7 +15,7 @@
             "x": 420,
             "y": 840,
             "slotType": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
             "neighborIds": [
@@ -40,7 +40,7 @@
             "x": 420,
             "y": 1120,
             "slotType": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
             "neighborIds": [
@@ -52,7 +52,7 @@
         {
             "treeId": "tree_01",
             "solutionLandId": "",
-            "x": 100,
+            "x": 360,
             "y": 1620,
             "itemType": 0,
             "requiredSlotType": 0,
@@ -60,9 +60,9 @@
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 7,
+                    "conditionType": 3,
                     "n": 0,
-                    "targetTreeId": "",
+                    "targetTreeId": "tree_02",
                     "smell": 1,
                     "smellPreference": 0
                 }
@@ -71,7 +71,7 @@
         {
             "treeId": "tree_02",
             "solutionLandId": "",
-            "x": 240,
+            "x": 540,
             "y": 1620,
             "itemType": 0,
             "requiredSlotType": 0,
@@ -82,6 +82,25 @@
                     "conditionType": 1,
                     "n": 0,
                     "targetTreeId": "tree_01",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_03",
+            "solutionLandId": "",
+            "x": 720,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 1,
+                    "n": 0,
+                    "targetTreeId": "tree_02",
                     "smell": 1,
                     "smellPreference": 0
                 }

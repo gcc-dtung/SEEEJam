@@ -153,6 +153,10 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new NeighborSmellCondition { smell = data.smell, preference = data.smellPreference });
             else if (data.conditionType == TreeConditionType.EmitSmell && data.smell != PlantSmell.None)
                 conditions.Add(new EmitSmellCondition { smell = data.smell });
+            else if (data.conditionType == TreeConditionType.PlantAlone)
+                conditions.Add(new PlantAloneCondition());
+            else if (data.conditionType == TreeConditionType.Anywhere)
+                conditions.Add(new AnywhereCondition());
         }
         return conditions;
     }

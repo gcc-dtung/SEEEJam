@@ -1,15 +1,15 @@
 using System;
 
 [Serializable]
-public class EdgeSlotCondition : PlantCondition
+public class AnywhereCondition : PlantCondition
 {
     public override bool CheckCondition(ItemSlot itemSlot)
     {
-        return itemSlot != null && itemSlot.IsEdge;
+        return true;
     }
 
     public override string GetDescription()
     {
-        return "I want to be planted on an edge slot.";
+        return "I can be planted anywhere.";
     }
 }

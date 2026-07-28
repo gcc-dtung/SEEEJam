@@ -34,7 +34,7 @@ public class NeighborSmellCondition : PlantCondition
     {
         string smellName = smell.ToString().ToLowerInvariant();
         return preference == SmellConditionPreference.Like
-            ? $"Must be near a {smellName} smell."
-            : $"Must not be near a {smellName} smell.";
+            ? $"I want to be near a {smellName} smell."
+            : $"I must not be near a {smellName} smell.";
     }
 }
