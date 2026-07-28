@@ -74,10 +74,10 @@ public class LevelData
     public int height = 5;
     public int screenX = 0;
     public int screenY = 0;
-    public int screenWidth = 540;
-    public int screenHeight = 960;
-    public int slotSize = 48;
-    public int itemSize = 32;
+    public int screenWidth = 1080;
+    public int screenHeight = 2340;
+    public int slotSize = 125;
+    public int itemSize = 100;
     public List<LevelCellData> cells = new List<LevelCellData>();
     public List<TreeData>      trees = new List<TreeData>();
 }

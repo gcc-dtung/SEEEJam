@@ -48,6 +48,7 @@ public class LevelEditorWindow : EditorWindow
     private float _canvasZoom = 1f;
     private bool _isPanningCanvas;
     private bool _isSpacePressed;
+    private bool _snapEnabled;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowWindow()
@@ -161,6 +162,9 @@ public class LevelEditorWindow : EditorWindow
         if (GUILayout.Button("Add Tree", GUILayout.Height(32)))
             AddTree();
 
+        EditorGUILayout.Space(6);
+        _snapEnabled = EditorGUILayout.ToggleLeft("Snap to 20", _snapEnabled);
+
         EditorGUILayout.Space(10);
         GUILayout.Label("Lands", EditorStyles.boldLabel);
         _landScroll = EditorGUILayout.BeginScrollView(_landScroll, GUILayout.MinHeight(90));
@@ -204,6 +208,7 @@ public class LevelEditorWindow : EditorWindow
         Handles.EndGUI();
 
         DrawCanvasGrid(canvasRect);
+        DrawRegionBounds(canvasRect);
         DrawLandNodes(canvasRect);
         DrawTreeNodes(canvasRect);
         HandleCanvasEvents(canvasRect);
@@ -281,6 +286,34 @@ public class LevelEditorWindow : EditorWindow
             Color color = SlotColors.TryGetValue(land.slotType, out Color slotColor) ? slotColor : Color.gray;
             DrawNode(nodeRect, color, _selectionKind == SelectionKind.Land && _selectedLandIndex == i, land.landId);
         }
+    }
+
+    private void DrawRegionBounds(Rect rect)
+    {
+        Handles.BeginGUI();
+        Handles.color = new Color(0.2f, 1f, 0.2f, 0.85f);
+
+        // Land region: (100,620) to (1000,1340)
+        Vector2 landTL = ToCanvas(rect, 100, 620);
+        Vector2 landBR = ToCanvas(rect, 1000, 1340);
+        Handles.DrawAAPolyLine(2f,
+            new Vector3(landTL.x, landTL.y),
+            new Vector3(landBR.x, landTL.y),
+            new Vector3(landBR.x, landBR.y),
+            new Vector3(landTL.x, landBR.y),
+            new Vector3(landTL.x, landTL.y));
+
+        // Tree region: (100,1614) to (1000,1820)
+        Vector2 treeTL = ToCanvas(rect, 100, 1614);
+        Vector2 treeBR = ToCanvas(rect, 1000, 1820);
+        Handles.DrawAAPolyLine(2f,
+            new Vector3(treeTL.x, treeTL.y),
+            new Vector3(treeBR.x, treeTL.y),
+            new Vector3(treeBR.x, treeBR.y),
+            new Vector3(treeTL.x, treeBR.y),
+            new Vector3(treeTL.x, treeTL.y));
+
+        Handles.EndGUI();
     }
 
     private void DrawTreeNodes(Rect rect)
@@ -411,16 +444,20 @@ public class LevelEditorWindow : EditorWindow
             if (_dragLandIndex >= 0 && _dragLandIndex < _level.cells.Count)
             {
                 Vector2 pos = FromCanvas(rect, clampedMousePosition - _dragOffset + Vector2.one * (_dragNodeSize * 0.5f));
-                _level.cells[_dragLandIndex].x = Mathf.RoundToInt(pos.x);
-                _level.cells[_dragLandIndex].y = Mathf.RoundToInt(pos.y);
+                float clampedLandX = Mathf.Clamp(pos.x, 100f, 1000f);
+                float clampedLandY = Mathf.Clamp(pos.y, 620f, 1340f);
+                _level.cells[_dragLandIndex].x = _snapEnabled ? SnapValue(clampedLandX) : Mathf.RoundToInt(clampedLandX);
+                _level.cells[_dragLandIndex].y = _snapEnabled ? SnapValue(clampedLandY) : Mathf.RoundToInt(clampedLandY);
                 Repaint();
                 e.Use();
             }
             else if (_dragTreeIndex >= 0 && _dragTreeIndex < _level.trees.Count)
             {
                 Vector2 pos = FromCanvas(rect, clampedMousePosition - _dragOffset + Vector2.one * (_dragNodeSize * 0.5f));
-                _level.trees[_dragTreeIndex].x = Mathf.RoundToInt(pos.x);
-                _level.trees[_dragTreeIndex].y = Mathf.RoundToInt(pos.y);
+                float clampedX = Mathf.Clamp(pos.x, 100f, 1000f);
+                float clampedY = Mathf.Clamp(pos.y, 1614f, 1820f);
+                _level.trees[_dragTreeIndex].x = _snapEnabled ? SnapValue(clampedX) : Mathf.RoundToInt(clampedX);
+                _level.trees[_dragTreeIndex].y = _snapEnabled ? SnapValue(clampedY) : Mathf.RoundToInt(clampedY);
                 Repaint();
                 e.Use();
             }
@@ -553,14 +590,22 @@ public class LevelEditorWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
+    private static int SnapValue(float v)
+    {
+        return Mathf.RoundToInt(v / 20f) * 20;
+    }
+
     private void AddTree()
     {
+        const int treeStartX = 100;
+        const int treeStepX = 150;
+        const int treeY = 1614;
         TreeData tree = new TreeData
         {
             treeId = NextTreeId(),
             solutionLandId = "",
-            x = 120 + _level.trees.Count * 30,
-            y = 180 + _level.trees.Count * 18,
+            x = treeStartX + _level.trees.Count * treeStepX,
+            y = treeY,
             itemType = ItemType.Plant,
             requiredSlotType = SlotType.Dirt,
             parameterN = 0,
@@ -849,11 +894,11 @@ public class LevelEditorWindow : EditorWindow
             _level.cells = new List<LevelCellData>();
         if (_level.trees == null)
             _level.trees = new List<TreeData>();
-        _level.screenWidth = Mathf.Clamp(_level.screenWidth <= 0 ? 540 : _level.screenWidth, 1, 4000);
-        _level.screenHeight = Mathf.Clamp(_level.screenHeight <= 0 ? 960 : _level.screenHeight, 1, 4000);
+        _level.screenWidth = Mathf.Clamp(_level.screenWidth <= 0 ? 1080 : _level.screenWidth, 1, 4000);
+        _level.screenHeight = Mathf.Clamp(_level.screenHeight <= 0 ? 2340 : _level.screenHeight, 1, 4000);
         _level.maxMoves = Mathf.Max(0, _level.maxMoves);
-        _level.slotSize = Mathf.Clamp(_level.slotSize <= 0 ? 48 : _level.slotSize, 12, 160);
-        _level.itemSize = Mathf.Clamp(_level.itemSize <= 0 ? 32 : _level.itemSize, 8, 160);
+        _level.slotSize = Mathf.Clamp(_level.slotSize <= 0 ? 125 : _level.slotSize, 12, 160);
+        _level.itemSize = Mathf.Clamp(_level.itemSize <= 0 ? 100 : _level.itemSize, 8, 160);
 
         HashSet<string> landIds = new HashSet<string>();
         for (int i = 0; i < _level.cells.Count; i++)
