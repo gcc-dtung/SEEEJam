@@ -5027,14 +5027,13 @@ GameObject:
   - component: {fileID: 1178352386}
   - component: {fileID: 1178352389}
   - component: {fileID: 1178352388}
-  - component: {fileID: 1178352387}
   m_Layer: 5
   m_Name: ShowToolTipUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1178352386
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5055,21 +5054,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1178352387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1178352385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5fb1ffa736119947a8b320131d88959, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShowTooltip
-  backgroundRectTransform: {fileID: 251130797}
-  itemName: {fileID: 307782544}
-  itemShowDuration: 0.5
 --- !u!114 &1178352388
 MonoBehaviour:
   m_ObjectHideFlags: 0

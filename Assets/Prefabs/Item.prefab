@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 8157684066309985560}
   - component: {fileID: 4013174744055880408}
   - component: {fileID: 2251225891551616367}
+  - component: {fileID: 5938120476182394057}
   - component: {fileID: 7879775832877597430}
+  - component: {fileID: 4829016375210943610}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -93,8 +95,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3982333b4c9d2274a8ea1eb63e54bfa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragItem
+  dragController: {fileID: 5938120476182394057}
+--- !u!114 &5938120476182394057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3885508869954039795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82af2a893ed24bfabedbe0151907e72c, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: Assembly-CSharp::DragController
   mainCamera: {fileID: 0}
-  itemViewRenderer: {fileID: 4958990698916900591}
   itemCollider: {fileID: 4013174744055880408}
   dragScaleMultiplier: 1.2
   dragOpacity: 0.5
@@ -104,6 +118,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentItem: {fileID: 7879775832877597430}
+  startingItemSlot: {fileID: 0}
 --- !u!114 &7879775832877597430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Item
   itemType: 0
   itemId: Naruto
+  itemView: {fileID: 4829016375210943610}
   conditions:
   - rid: -2
   references:
@@ -125,6 +141,19 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+--- !u!114 &4829016375210943610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3885508869954039795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a32466fbab44607a562cd6d924e8716, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: Assembly-CSharp::ItemView
+  spriteRenderer: {fileID: 4958990698916900591}
 --- !u!1 &8403102973055322552
 GameObject:
   m_ObjectHideFlags: 0
