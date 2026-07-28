@@ -14,4 +14,9 @@ public class NearSpecificTreeCondition : PlantCondition
         }
         return false;
     }
+
+    public override string GetDescription()
+    {
+        return $"Must be next to {targetTreeId}.";
+    }
 }

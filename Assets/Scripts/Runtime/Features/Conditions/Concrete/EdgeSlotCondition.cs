@@ -7,4 +7,9 @@ public class EdgeSlotCondition : PlantCondition
     {
         return itemSlot != null && itemSlot.IsEdge;
     }
+
+    public override string GetDescription()
+    {
+        return "Must be placed on an edge slot.";
+    }
 }

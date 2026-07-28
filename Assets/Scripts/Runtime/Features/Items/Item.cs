@@ -7,7 +7,6 @@ public class Item : MonoBehaviour
     [SerializeField] private SlotType itemSlotType;
     [SerializeField] private string itemId;
     [SerializeField] private string solutionSlotId;
-    [SerializeField] private PlantSmell smell;
     [SerializeField] private ItemView itemView;
     
     [SerializeReference]
@@ -39,7 +38,7 @@ public class Item : MonoBehaviour
     public ItemType ItemType => itemType;
     public string ItemId => itemId;
     public string SolutionSlotId => solutionSlotId;
-    public PlantSmell Smell => smell;
+    public IReadOnlyList<PlantCondition> Conditions => conditions;
     public bool IgnoresConditionsForRun => _ignoreConditionsForRun;
     public ItemView View
     {
@@ -55,17 +54,34 @@ public class Item : MonoBehaviour
         ItemType newItemType,
         SlotType newItemSlotType,
         string newItemId,
-        PlantSmell newSmell,
         List<PlantCondition> newConditions,
         string newSolutionSlotId = "")
     {
         itemType = newItemType;
         itemSlotType = newItemSlotType;
         itemId = newItemId;
-        smell = newSmell;
         conditions = newConditions ?? new List<PlantCondition>();
         solutionSlotId = newSolutionSlotId;
         _ignoreConditionsForRun = false;
+    }
+
+    public bool TryGetEmittedSmell(out PlantSmell emittedSmell)
+    {
+        if (conditions != null)
+        {
+            foreach (PlantCondition condition in conditions)
+            {
+                if (condition is EmitSmellCondition smellCondition &&
+                    smellCondition.Smell != PlantSmell.None)
+                {
+                    emittedSmell = smellCondition.Smell;
+                    return true;
+                }
+            }
+        }
+
+        emittedSmell = PlantSmell.None;
+        return false;
     }
 
     private bool CheckCondition(ItemSlot slot)

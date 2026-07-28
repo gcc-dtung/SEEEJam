@@ -14,8 +14,12 @@ public class NeighborSmellCondition : PlantCondition
         bool hasTargetSmellNearby = false;
         foreach (ItemSlot neighbor in itemSlot.Neighbors)
         {
-            if (!neighbor.HasCurrentItem || neighbor.currentItem.Smell != smell)
+            if (!neighbor.HasCurrentItem ||
+                !neighbor.currentItem.TryGetEmittedSmell(out PlantSmell emittedSmell) ||
+                emittedSmell != smell)
+            {
                 continue;
+            }
 
             hasTargetSmellNearby = true;
             break;
@@ -24,5 +28,13 @@ public class NeighborSmellCondition : PlantCondition
         return preference == SmellConditionPreference.Like
             ? hasTargetSmellNearby
             : !hasTargetSmellNearby;
+    }
+
+    public override string GetDescription()
+    {
+        string smellName = smell.ToString().ToLowerInvariant();
+        return preference == SmellConditionPreference.Like
+            ? $"Must be near a {smellName} smell."
+            : $"Must not be near a {smellName} smell.";
     }
 }

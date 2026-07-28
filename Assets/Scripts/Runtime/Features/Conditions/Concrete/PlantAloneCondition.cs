@@ -7,4 +7,9 @@ public class PlantAloneCondition : PlantCondition
         int actualTree = itemSlot.GetCountTreeAround();
         return actualTree == 0;
     }
+
+    public override string GetDescription()
+    {
+        return "Must be alone, with no neighboring trees.";
+    }
 }

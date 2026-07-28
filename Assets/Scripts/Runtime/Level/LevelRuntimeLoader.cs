@@ -122,7 +122,6 @@ public class LevelRuntimeLoader : MonoBehaviour
                     tree.itemType,
                     tree.requiredSlotType,
                     tree.treeId,
-                    tree.smell,
                     BuildPlantConditions(tree.conditions),
                     tree.solutionLandId);
                 items.Add(item);
@@ -152,6 +151,8 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new CornerSlotCondition());
             else if (data.conditionType == TreeConditionType.NeighborSmell && data.smell != PlantSmell.None)
                 conditions.Add(new NeighborSmellCondition { smell = data.smell, preference = data.smellPreference });
+            else if (data.conditionType == TreeConditionType.EmitSmell && data.smell != PlantSmell.None)
+                conditions.Add(new EmitSmellCondition { smell = data.smell });
         }
         return conditions;
     }

@@ -10,4 +10,9 @@ public class NearTreeCountCondition : PlantCondition
         int actualTree = itemSlot.GetCountTreeAround();
         return (actualTree == nCount);
     }
+
+    public override string GetDescription()
+    {
+        return $"Must have exactly {nCount} neighboring tree(s).";
+    }
 }

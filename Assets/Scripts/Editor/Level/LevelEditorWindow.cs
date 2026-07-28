@@ -508,7 +508,6 @@ public class LevelEditorWindow : EditorWindow
         tree.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", tree.itemType);
         tree.requiredSlotType = (SlotType)EditorGUILayout.EnumPopup("Required Slot", tree.requiredSlotType);
         tree.solutionLandId = DrawLandIdPopup("Solution Land", tree.solutionLandId);
-        tree.smell = (PlantSmell)EditorGUILayout.EnumPopup("Smell", tree.smell);
         tree.parameterN = EditorGUILayout.IntField("Parameter n", tree.parameterN);
 
         DrawPositionFields(ref tree.x, ref tree.y);
@@ -564,7 +563,6 @@ public class LevelEditorWindow : EditorWindow
             y = 180 + _level.trees.Count * 18,
             itemType = ItemType.Plant,
             requiredSlotType = SlotType.Dirt,
-            smell = PlantSmell.None,
             parameterN = 0,
             customNotes = "",
             conditions = new List<TreeConditionData>
@@ -628,6 +626,10 @@ public class LevelEditorWindow : EditorWindow
                 {
                     condition.smell = DrawSmellConditionTargetPopup("Smell", condition.smell);
                     condition.smellPreference = (SmellConditionPreference)EditorGUILayout.EnumPopup("Preference", condition.smellPreference);
+                }
+                else if (condition.conditionType == TreeConditionType.EmitSmell)
+                {
+                    condition.smell = DrawSmellConditionTargetPopup("Emits", condition.smell);
                 }
 
                 EditorGUILayout.EndVertical();
@@ -912,8 +914,12 @@ public class LevelEditorWindow : EditorWindow
 
             if (condition.conditionType == TreeConditionType.NearSpecificTree && FindTree(condition.targetTreeId) == null)
                 condition.targetTreeId = "";
-            if (condition.conditionType == TreeConditionType.NeighborSmell && condition.smell == PlantSmell.None)
+            if ((condition.conditionType == TreeConditionType.NeighborSmell ||
+                 condition.conditionType == TreeConditionType.EmitSmell) &&
+                condition.smell == PlantSmell.None)
+            {
                 condition.smell = PlantSmell.Perfume;
+            }
         }
     }
 

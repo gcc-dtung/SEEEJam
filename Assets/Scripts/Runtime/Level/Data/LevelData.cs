@@ -37,7 +37,8 @@ public enum TreeConditionType
     NearSpecificTree,
     EdgeSlot,
     CornerSlot,
-    NeighborSmell
+    NeighborSmell,
+    EmitSmell
 }
 
 [Serializable]
@@ -59,7 +60,6 @@ public class TreeData
     public int    y;
     public ItemType  itemType         = ItemType.Plant;
     public SlotType  requiredSlotType = SlotType.Dirt;
-    public PlantSmell smell = PlantSmell.None;
     public int parameterN = 0;
     public string customNotes = "";
     public List<TreeConditionData> conditions = new List<TreeConditionData>();

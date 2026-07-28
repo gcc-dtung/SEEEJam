@@ -227,10 +227,16 @@
             "y": 750,
             "itemType": 0,
             "requiredSlotType": 0,
-            "smell": 1,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
+                {
+                    "conditionType": 5,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                },
                 {
                     "conditionType": 2,
                     "n": 0,
@@ -247,10 +253,16 @@
             "y": 747,
             "itemType": 0,
             "requiredSlotType": 0,
-            "smell": 2,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
+                {
+                    "conditionType": 5,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 2,
+                    "smellPreference": 0
+                },
                 {
                     "conditionType": 3,
                     "n": 0,
@@ -267,7 +279,6 @@
             "y": 747,
             "itemType": 0,
             "requiredSlotType": 0,
-            "smell": 0,
             "parameterN": 1,
             "customNotes": "",
             "conditions": [
@@ -294,7 +305,6 @@
             "y": 742,
             "itemType": 0,
             "requiredSlotType": 0,
-            "smell": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": []

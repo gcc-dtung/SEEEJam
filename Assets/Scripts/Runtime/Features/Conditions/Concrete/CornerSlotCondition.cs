@@ -7,4 +7,9 @@ public class CornerSlotCondition : PlantCondition
     {
         return itemSlot != null && itemSlot.IsCorner;
     }
+
+    public override string GetDescription()
+    {
+        return "Must be placed on a corner slot.";
+    }
 }
