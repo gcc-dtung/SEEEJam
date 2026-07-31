@@ -536,7 +536,6 @@ MonoBehaviour:
   itemSlotType: 0
   itemId: Naruto
   solutionSlotId: 
-  smell: 0
   itemView: {fileID: 4829016375210943610}
   conditions:
   - rid: -2
