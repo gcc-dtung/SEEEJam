@@ -1,0 +1,359 @@
+{
+    "levelName": "Level6",
+    "maxMoves": 10,
+    "width": 5,
+    "height": 5,
+    "screenX": 0,
+    "screenY": 0,
+    "screenWidth": 1080,
+    "screenHeight": 2340,
+    "slotSize": 125,
+    "itemSize": 100,
+    "cells": [
+        {
+            "landId": "land_01",
+            "x": 240,
+            "y": 760,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_02",
+                "land_06",
+                "land_07"
+            ]
+        },
+        {
+            "landId": "land_02",
+            "x": 400,
+            "y": 760,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_01",
+                "land_03",
+                "land_07",
+                "land_06",
+                "land_08"
+            ]
+        },
+        {
+            "landId": "land_03",
+            "x": 560,
+            "y": 760,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_02",
+                "land_04",
+                "land_08",
+                "land_07",
+                "land_09"
+            ]
+        },
+        {
+            "landId": "land_04",
+            "x": 720,
+            "y": 760,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_03",
+                "land_05",
+                "land_09",
+                "land_08",
+                "land_10"
+            ]
+        },
+        {
+            "landId": "land_05",
+            "x": 880,
+            "y": 760,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_04",
+                "land_10",
+                "land_09"
+            ]
+        },
+        {
+            "landId": "land_06",
+            "x": 240,
+            "y": 920,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_01",
+                "land_07",
+                "land_02"
+            ]
+        },
+        {
+            "landId": "land_07",
+            "x": 400,
+            "y": 920,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_02",
+                "land_06",
+                "land_08",
+                "land_01",
+                "land_03"
+            ]
+        },
+        {
+            "landId": "land_08",
+            "x": 560,
+            "y": 920,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_03",
+                "land_07",
+                "land_09",
+                "land_02",
+                "land_04"
+            ]
+        },
+        {
+            "landId": "land_09",
+            "x": 720,
+            "y": 920,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_04",
+                "land_08",
+                "land_10",
+                "land_03",
+                "land_05"
+            ]
+        },
+        {
+            "landId": "land_10",
+            "x": 880,
+            "y": 920,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_05",
+                "land_09",
+                "land_04"
+            ]
+        },
+        {
+            "landId": "land_11",
+            "x": 400,
+            "y": 1200,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_12"
+            ]
+        },
+        {
+            "landId": "land_12",
+            "x": 560,
+            "y": 1200,
+            "slotType": 0,
+            "isCorner": false,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_13",
+                "land_11"
+            ]
+        },
+        {
+            "landId": "land_13",
+            "x": 720,
+            "y": 1200,
+            "slotType": 0,
+            "isCorner": true,
+            "isEdge": false,
+            "itemId": "",
+            "neighborIds": [
+                "land_12"
+            ]
+        }
+    ],
+    "trees": [
+        {
+            "treeId": "tree_01",
+            "solutionLandId": "",
+            "x": 300,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 4,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 0,
+                    "n": 4,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                },
+                {
+                    "conditionType": 4,
+                    "n": 4,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_02",
+            "solutionLandId": "",
+            "x": 440,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 3,
+                    "n": 0,
+                    "targetTreeId": "tree_03",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_03",
+            "solutionLandId": "",
+            "x": 580,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 2,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 5,
+                    "n": 2,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                },
+                {
+                    "conditionType": 1,
+                    "n": 2,
+                    "targetTreeId": "tree_02",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_04",
+            "solutionLandId": "",
+            "x": 720,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 4,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_05",
+            "solutionLandId": "",
+            "x": 860,
+            "y": 1620,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 1,
+                    "n": 0,
+                    "targetTreeId": "tree_01",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_06",
+            "solutionLandId": "",
+            "x": 300,
+            "y": 1760,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 6,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                },
+                {
+                    "conditionType": 3,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
+        },
+        {
+            "treeId": "tree_07",
+            "solutionLandId": "",
+            "x": 440,
+            "y": 1760,
+            "itemType": 0,
+            "requiredSlotType": 0,
+            "parameterN": 0,
+            "customNotes": "",
+            "conditions": [
+                {
+                    "conditionType": 4,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 1
+                }
+            ]
+        }
+    ]
+}
