@@ -88,6 +88,29 @@ public readonly struct BoosterInventoryChangedEvent
     }
 }
 
+public readonly struct OutOfBoosterRequestedEvent
+{
+    public BoosterType BoosterType { get; }
+
+    public OutOfBoosterRequestedEvent(BoosterType boosterType)
+    {
+        BoosterType = boosterType;
+    }
+}
+
+public readonly struct EconomyChangedEvent
+{
+    public int PreviousCoins { get; }
+    public int CurrentCoins { get; }
+    public int Delta => CurrentCoins - PreviousCoins;
+
+    public EconomyChangedEvent(int previousCoins, int currentCoins)
+    {
+        PreviousCoins = previousCoins;
+        CurrentCoins = currentCoins;
+    }
+}
+
 public readonly struct HintRevealedEvent
 {
     public Item Item { get; }

@@ -9,10 +9,6 @@ public enum BoosterType
 
 public class BoosterInventoryManager : SingletonMonoBehaviour<BoosterInventoryManager>
 {
-    private const string UndoCountKey = "SEEE.Boosters.Undo";
-    private const string RemoveConditionsCountKey = "SEEE.Boosters.RemoveConditions";
-    private const string HintCountKey = "SEEE.Boosters.Hint";
-
     [Header("First Launch Defaults")]
     [SerializeField, Min(0)] private int defaultUndoCount = 3;
     [SerializeField, Min(0)] private int defaultRemoveConditionsCount = 3;
@@ -25,7 +21,7 @@ public class BoosterInventoryManager : SingletonMonoBehaviour<BoosterInventoryMa
     protected override void Awake()
     {
         base.Awake();
-        LoadInventory();
+        InitializeDefaultInventory();
     }
 
     public int GetCount(BoosterType boosterType)
@@ -68,28 +64,38 @@ public class BoosterInventoryManager : SingletonMonoBehaviour<BoosterInventoryMa
 
     public void SetCount(BoosterType boosterType, int count)
     {
+        SetCount(boosterType, count, true);
+    }
+
+    public void ApplySavedCounts(int undoCount, int removeConditionsCount, int hintCount)
+    {
+        SetCount(BoosterType.Undo, undoCount, false);
+        SetCount(BoosterType.RemoveConditions, removeConditionsCount, false);
+        SetCount(BoosterType.Hint, hintCount, false);
+    }
+
+    private void SetCount(BoosterType boosterType, int count, bool saveGame)
+    {
         int normalizedCount = Mathf.Max(0, count);
         if (GetCount(boosterType) == normalizedCount)
             return;
 
         SetRuntimeCount(boosterType, normalizedCount);
-        PlayerPrefs.SetInt(GetStorageKey(boosterType), normalizedCount);
-        PlayerPrefs.Save();
         EventBus.Instance.Publish(new BoosterInventoryChangedEvent(boosterType, normalizedCount));
+
+        if (saveGame &&
+            SaveLoadManager.TryGetInstance(out SaveLoadManager saveLoadManager) &&
+            !saveLoadManager.IsApplyingData)
+        {
+            saveLoadManager.SaveGame();
+        }
     }
 
-    private void LoadInventory()
+    private void InitializeDefaultInventory()
     {
-        bool createdStorage = false;
-        _undoCount = LoadCount(UndoCountKey, defaultUndoCount, ref createdStorage);
-        _removeConditionsCount = LoadCount(
-            RemoveConditionsCountKey,
-            defaultRemoveConditionsCount,
-            ref createdStorage);
-        _hintCount = LoadCount(HintCountKey, defaultHintCount, ref createdStorage);
-
-        if (createdStorage)
-            PlayerPrefs.Save();
+        _undoCount = Mathf.Max(0, defaultUndoCount);
+        _removeConditionsCount = Mathf.Max(0, defaultRemoveConditionsCount);
+        _hintCount = Mathf.Max(0, defaultHintCount);
     }
 
     private void SetRuntimeCount(BoosterType boosterType, int count)
@@ -108,29 +114,4 @@ public class BoosterInventoryManager : SingletonMonoBehaviour<BoosterInventoryMa
         }
     }
 
-    private static string GetStorageKey(BoosterType boosterType)
-    {
-        switch (boosterType)
-        {
-            case BoosterType.Undo:
-                return UndoCountKey;
-            case BoosterType.RemoveConditions:
-                return RemoveConditionsCountKey;
-            case BoosterType.Hint:
-                return HintCountKey;
-            default:
-                return string.Empty;
-        }
-    }
-
-    private static int LoadCount(string key, int defaultCount, ref bool createdStorage)
-    {
-        if (PlayerPrefs.HasKey(key))
-            return Mathf.Max(0, PlayerPrefs.GetInt(key));
-
-        int normalizedDefault = Mathf.Max(0, defaultCount);
-        PlayerPrefs.SetInt(key, normalizedDefault);
-        createdStorage = true;
-        return normalizedDefault;
-    }
 }

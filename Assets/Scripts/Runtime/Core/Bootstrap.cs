@@ -29,6 +29,8 @@ public class Bootstrap : MonoBehaviour
 
     private void Start()
     {
+        _ = SaveLoadManager.Instance;
+
         if (loadOnStart)
             LevelManager.Instance.LoadCurrentLevel();
     }
@@ -40,6 +42,7 @@ public class Bootstrap : MonoBehaviour
         _ = LevelManager.Instance;
         _ = BoardManager.Instance;
         _ = MoveManager.Instance;
+        _ = EconomyManager.Instance;
         _ = BoosterInventoryManager.Instance;
         _ = BoosterManager.Instance;
     }

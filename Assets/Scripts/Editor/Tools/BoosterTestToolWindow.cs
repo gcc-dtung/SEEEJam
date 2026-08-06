@@ -1,12 +1,12 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
 public class BoosterTestToolWindow : EditorWindow
 {
-    private const string UndoCountKey = "SEEE.Boosters.Undo";
-    private const string RemoveConditionsCountKey = "SEEE.Boosters.RemoveConditions";
-    private const string HintCountKey = "SEEE.Boosters.Hint";
+    private const int DefaultBoosterCount = 3;
 
+    private int _coinCount;
     private int _undoCount;
     private int _removeConditionsCount;
     private int _hintCount;
@@ -16,7 +16,7 @@ public class BoosterTestToolWindow : EditorWindow
     public static void ShowWindow()
     {
         BoosterTestToolWindow window = GetWindow<BoosterTestToolWindow>("Booster Test Tool");
-        window.minSize = new Vector2(360f, 250f);
+        window.minSize = new Vector2(360f, 320f);
         window.RefreshCounts();
         window.Show();
     }
@@ -37,6 +37,9 @@ public class BoosterTestToolWindow : EditorWindow
         DrawHeader();
 
         EditorGUILayout.Space(8f);
+        DrawCoinRow();
+
+        EditorGUILayout.Space(8f);
         DrawBoosterRow("Undo", BoosterType.Undo, ref _undoCount);
         DrawBoosterRow("Remove Conditions", BoosterType.RemoveConditions, ref _removeConditionsCount);
         DrawBoosterRow("Hint", BoosterType.Hint, ref _hintCount);
@@ -54,9 +57,39 @@ public class BoosterTestToolWindow : EditorWindow
         EditorGUILayout.LabelField("Booster Inventory", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox(
             Application.isPlaying
-                ? "Play Mode: changes update runtime inventory and PlayerPrefs."
-                : "Edit Mode: changes update PlayerPrefs for the next Play session.",
+                ? "Play Mode: changes update runtime managers and JSON save."
+                : "Edit Mode: changes update JSON save for the next Play session.",
             MessageType.Info);
+    }
+
+    private void DrawCoinRow()
+    {
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Coins", EditorStyles.boldLabel, GUILayout.Width(140f));
+
+        EditorGUI.BeginChangeCheck();
+        int editedCount = EditorGUILayout.IntField(Mathf.Max(0, _coinCount), GUILayout.MinWidth(60f));
+        if (EditorGUI.EndChangeCheck())
+        {
+            _coinCount = Mathf.Max(0, editedCount);
+            SetCoins(_coinCount);
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("+100"))
+            ChangeCoins(100);
+        if (GUILayout.Button("+1000"))
+            ChangeCoins(1000);
+        if (GUILayout.Button("Set 0"))
+        {
+            _coinCount = 0;
+            SetCoins(_coinCount);
+        }
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
     }
 
     private void DrawBoosterRow(string label, BoosterType boosterType, ref int count)
@@ -112,6 +145,12 @@ public class BoosterTestToolWindow : EditorWindow
         SetCount(boosterType, count);
     }
 
+    private void ChangeCoins(int delta)
+    {
+        _coinCount = Mathf.Max(0, _coinCount + delta);
+        SetCoins(_coinCount);
+    }
+
     private void SetAll(int count)
     {
         _undoCount = Mathf.Max(0, count);
@@ -121,6 +160,24 @@ public class BoosterTestToolWindow : EditorWindow
         SetCount(BoosterType.Undo, _undoCount);
         SetCount(BoosterType.RemoveConditions, _removeConditionsCount);
         SetCount(BoosterType.Hint, _hintCount);
+    }
+
+    private void SetCoins(int count)
+    {
+        int normalizedCount = Mathf.Max(0, count);
+
+        if (Application.isPlaying &&
+            EconomyManager.TryGetInstance(out EconomyManager economyManager))
+        {
+            economyManager.SetCoins(normalizedCount);
+            RefreshCounts();
+            return;
+        }
+
+        GameData saveData = LoadSavedData();
+        saveData.coinCount = normalizedCount;
+        SaveEditedData(saveData);
+        RefreshCounts();
     }
 
     private void SetCount(BoosterType boosterType, int count)
@@ -135,26 +192,34 @@ public class BoosterTestToolWindow : EditorWindow
             return;
         }
 
-        PlayerPrefs.SetInt(GetStorageKey(boosterType), normalizedCount);
-        PlayerPrefs.Save();
+        GameData saveData = LoadSavedData();
+        SetSavedBoosterCount(saveData, boosterType, normalizedCount);
+        SaveEditedData(saveData);
         RefreshCounts();
     }
 
     private void RefreshCounts()
     {
+        GameData saveData = LoadSavedData();
+        _coinCount = Mathf.Max(0, saveData.coinCount);
+        _undoCount = Mathf.Max(0, saveData.undoBoosterCount);
+        _removeConditionsCount = Mathf.Max(0, saveData.removeConditionsBoosterCount);
+        _hintCount = Mathf.Max(0, saveData.hintBoosterCount);
+
         if (Application.isPlaying &&
             BoosterInventoryManager.TryGetInstance(out BoosterInventoryManager inventoryManager))
         {
             _undoCount = inventoryManager.GetCount(BoosterType.Undo);
             _removeConditionsCount = inventoryManager.GetCount(BoosterType.RemoveConditions);
             _hintCount = inventoryManager.GetCount(BoosterType.Hint);
-            Repaint();
-            return;
         }
 
-        _undoCount = Mathf.Max(0, PlayerPrefs.GetInt(UndoCountKey, 3));
-        _removeConditionsCount = Mathf.Max(0, PlayerPrefs.GetInt(RemoveConditionsCountKey, 3));
-        _hintCount = Mathf.Max(0, PlayerPrefs.GetInt(HintCountKey, 3));
+        if (Application.isPlaying &&
+            EconomyManager.TryGetInstance(out EconomyManager economyManager))
+        {
+            _coinCount = economyManager.GetCoins();
+        }
+
         Repaint();
     }
 
@@ -165,18 +230,56 @@ public class BoosterTestToolWindow : EditorWindow
             RefreshCounts();
     }
 
-    private static string GetStorageKey(BoosterType boosterType)
+    private static GameData LoadSavedData()
+    {
+        JsonDataService dataService = new JsonDataService();
+        if (!dataService.HasData(Constants.SaveLoad.FileName))
+            return CreateDefaultData();
+
+        try
+        {
+            GameData saveData = dataService.LoadData<GameData>(Constants.SaveLoad.FileName);
+            return saveData ?? CreateDefaultData();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError("[BoosterTestToolWindow] Save file failed to load. Reason: " + exception.Message);
+            return CreateDefaultData();
+        }
+    }
+
+    private static void SaveEditedData(GameData saveData)
+    {
+        if (saveData == null)
+            saveData = CreateDefaultData();
+
+        saveData.savedAtUtcTicks = DateTime.UtcNow.Ticks;
+        new JsonDataService().SaveData(Constants.SaveLoad.FileName, saveData);
+    }
+
+    private static GameData CreateDefaultData()
+    {
+        return new GameData
+        {
+            undoBoosterCount = DefaultBoosterCount,
+            removeConditionsBoosterCount = DefaultBoosterCount,
+            hintBoosterCount = DefaultBoosterCount
+        };
+    }
+
+    private static void SetSavedBoosterCount(GameData saveData, BoosterType boosterType, int count)
     {
         switch (boosterType)
         {
             case BoosterType.Undo:
-                return UndoCountKey;
+                saveData.undoBoosterCount = count;
+                break;
             case BoosterType.RemoveConditions:
-                return RemoveConditionsCountKey;
+                saveData.removeConditionsBoosterCount = count;
+                break;
             case BoosterType.Hint:
-                return HintCountKey;
-            default:
-                return string.Empty;
+                saveData.hintBoosterCount = count;
+                break;
         }
     }
 }

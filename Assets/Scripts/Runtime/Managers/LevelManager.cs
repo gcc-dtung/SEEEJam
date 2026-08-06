@@ -79,7 +79,19 @@ public class LevelManager : SingletonMonoBehaviour<LevelManager>
         GameManager.Instance.SetState(GameState.LoadingLevel);
         bool didLoad = _levelLoader.LoadLevelAsset(levelAsset);
         CompleteLevelLoad(didLoad);
+        SaveProgressIfNeeded(didLoad);
         return didLoad;
+    }
+
+    public void SetCurrentLevelIndex(int levelIndex)
+    {
+        if (_levelSequence == null || _levelSequence.Length == 0)
+        {
+            CurrentLevelIndex = Mathf.Max(0, levelIndex);
+            return;
+        }
+
+        CurrentLevelIndex = Mathf.Clamp(levelIndex, 0, _levelSequence.Length - 1);
     }
 
     public bool ReloadLevel()
@@ -171,5 +183,17 @@ public class LevelManager : SingletonMonoBehaviour<LevelManager>
         GameManager.Instance.SetState(GameState.Playing);
         if (RemainingMoves <= 0)
             GameManager.Instance.SetState(GameState.Lost);
+    }
+
+    private static void SaveProgressIfNeeded(bool didLoad)
+    {
+        if (!didLoad)
+            return;
+
+        if (SaveLoadManager.TryGetInstance(out SaveLoadManager saveLoadManager) &&
+            !saveLoadManager.IsApplyingData)
+        {
+            saveLoadManager.SaveGame();
+        }
     }
 }

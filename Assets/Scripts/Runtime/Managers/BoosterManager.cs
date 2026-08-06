@@ -108,6 +108,7 @@ public class BoosterManager : SingletonMonoBehaviour<BoosterManager>
         if (!BoosterInventoryManager.Instance.HasBooster(boosterType))
         {
             CancelSelection();
+            PublishOutOfBooster(boosterType);
             return true;
         }
 
@@ -143,8 +144,12 @@ public class BoosterManager : SingletonMonoBehaviour<BoosterManager>
         if (GameManager.Instance.CurrentState != GameState.Playing)
             return false;
 
-        if (!BoosterInventoryManager.Instance.HasBooster(GetBoosterType(mode)))
+        BoosterType boosterType = GetBoosterType(mode);
+        if (!BoosterInventoryManager.Instance.HasBooster(boosterType))
+        {
+            PublishOutOfBooster(boosterType);
             return false;
+        }
 
         SelectionMode = mode;
         EventBus.Instance.Publish(new BoosterSelectionChangedEvent(SelectionMode));
@@ -256,5 +261,10 @@ public class BoosterManager : SingletonMonoBehaviour<BoosterManager>
     {
         if (!BoosterInventoryManager.Instance.TryConsume(boosterType))
             Debug.LogError("[BoosterManager] Booster succeeded but inventory could not be consumed: " + boosterType);
+    }
+
+    private static void PublishOutOfBooster(BoosterType boosterType)
+    {
+        EventBus.Instance.Publish(new OutOfBoosterRequestedEvent(boosterType));
     }
 }

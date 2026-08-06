@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 72b1d63e329e9d441bf5fc1532bf3abe
+guid: 860121e35173a4245a444d5505b2b267
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4592131911987074465
-    second: b(1)_0
+      213: 3772465896483071814
+    second: remove_des_button_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,67 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TooltipBubbleTooltipBubble_0
+      name: remove_des_button_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 243
-        width: 722
-        height: 101
+        x: 11
+        y: 11
+        width: 203
+        height: 202
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 95c21ccef38c73945926621b2c2b39f2
-      internalID: -965731719
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TooltipBubbleTooltipBubble_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 108
-        width: 722
-        height: 135
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4b35065ab3d89c04598102e152c122a0
-      internalID: 1686769387
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TooltipBubbleTooltipBubble_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 722
-        height: 108
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2c598512363c2724f8c0d18d41889b9e
-      internalID: 1340900470
+      spriteID: 6472627debd7a5430800000000000000
+      internalID: 3772465896483071814
       vertices: []
       indices: 
       edges: []
@@ -169,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 40d09aa8b847c594ea3c158b32a45add
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -177,13 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":3.0},"gridSpriteSize":{"x":722.0,"y":118.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      TooltipBubbleTooltipBubble_0: -965731719
-      TooltipBubbleTooltipBubble_1: 1686769387
-      TooltipBubbleTooltipBubble_2: 1340900470
+      remove_des_button_0: 3772465896483071814
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

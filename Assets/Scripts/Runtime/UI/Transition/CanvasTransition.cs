@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,15 +31,18 @@ public class CanvasTransition : MonoBehaviour
     private Material circleSourceMaterial;
     private bool isPlaying;
 
-    private static readonly int RadiusId = Shader.PropertyToID("_Radius");
+    private static readonly int RadiusId = Shader.PropertyToID(Constants.ShaderPropertyNames.Radius);
 
+    public bool IsPlaying => isPlaying;
+
+    public float CoverDuration => Mathf.Max(0.01f, squareDuration);
+    public float RevealDuration => Mathf.Max(0.01f, circleDuration);
     public float TotalDuration => Mathf.Max(0.01f, squareDuration + circleDuration);
 
     private void Awake()
     {
         EnsureCircleMaterial();
-        //
-        // gameObject.SetActive(false);
+        HideVisuals();
     }
 
     private void OnDestroy()
@@ -54,12 +58,65 @@ public class CanvasTransition : MonoBehaviour
 
     public async Awaitable PlayAsync(Action onCovered)
     {
-        if (isPlaying)
+        if (!BeginCover())
             return;
 
-        isPlaying = true;
+        await PlaySquareInAsync();
+
+        onCovered?.Invoke();
+        await PlayRevealAsync();
+    }
+
+    public async Awaitable PlayCoverAsync()
+    {
+        if (!BeginCover())
+            return;
+
+        await PlaySquareInAsync();
+    }
+
+    public IEnumerator PlayCoverRoutine()
+    {
+        if (!BeginCover())
+            yield break;
+
+        yield return PlaySquareInRoutine();
+    }
+
+    public async Awaitable PlayRevealAsync()
+    {
+        if (!isPlaying)
+            return;
+
+        squareCover.gameObject.SetActive(false);
+        circleOverlay.gameObject.SetActive(true);
+
+        await PlayCircleRevealAsync();
+
+        Hide();
+    }
+
+    public IEnumerator PlayRevealRoutine()
+    {
+        if (!isPlaying)
+            yield break;
+
+        squareCover.gameObject.SetActive(false);
+        circleOverlay.gameObject.SetActive(true);
+
+        yield return PlayCircleRevealRoutine();
+
+        Hide();
+    }
+
+    private bool BeginCover()
+    {
+        if (isPlaying)
+            return false;
+
         EnsureCircleMaterial();
         gameObject.SetActive(true);
+        BringToFront();
 
         circleOverlay.gameObject.SetActive(false);
         squareCover.gameObject.SetActive(true);
@@ -67,29 +124,21 @@ public class CanvasTransition : MonoBehaviour
         squareCover.anchoredPosition = squareStartPos;
         if (!SetCircleRadius(0f))
         {
-            isPlaying = false;
-            return;
+            gameObject.SetActive(false);
+            return false;
         }
 
-        await PlaySquareInAsync();
-
-        onCovered?.Invoke();
-        squareCover.gameObject.SetActive(false);
-        circleOverlay.gameObject.SetActive(true);
-
-        await PlayCircleRevealAsync();
-
-        gameObject.SetActive(false);
-        isPlaying = false;
+        isPlaying = true;
+        return true;
     }
 
     private async Awaitable PlaySquareInAsync()
     {
         float time = 0f;
 
-        while (time < squareDuration)
+        while (time < CoverDuration)
         {
-            float t = time / squareDuration;
+            float t = time / CoverDuration;
             float curvedT = squareCurve.Evaluate(t);
 
             squareCover.anchoredPosition = Vector2.LerpUnclamped(
@@ -105,19 +154,59 @@ public class CanvasTransition : MonoBehaviour
         squareCover.anchoredPosition = squareEndPos;
     }
 
+    private IEnumerator PlaySquareInRoutine()
+    {
+        float time = 0f;
+
+        while (time < CoverDuration)
+        {
+            float t = time / CoverDuration;
+            float curvedT = squareCurve.Evaluate(t);
+
+            squareCover.anchoredPosition = Vector2.LerpUnclamped(
+                squareStartPos,
+                squareEndPos,
+                curvedT
+            );
+
+            time += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        squareCover.anchoredPosition = squareEndPos;
+    }
+
     private async Awaitable PlayCircleRevealAsync()
     {
         float time = 0f;
 
-        while (time < circleDuration)
+        while (time < RevealDuration)
         {
-            float t = time / circleDuration;
+            float t = time / RevealDuration;
             float radius = radiusCurve.Evaluate(t);
 
-        SetCircleRadius(radius);
+            SetCircleRadius(radius);
 
             time += Time.unscaledDeltaTime;
             await Awaitable.NextFrameAsync();
+        }
+
+        SetCircleRadius(radiusCurve.Evaluate(1f));
+    }
+
+    private IEnumerator PlayCircleRevealRoutine()
+    {
+        float time = 0f;
+
+        while (time < RevealDuration)
+        {
+            float t = time / RevealDuration;
+            float radius = radiusCurve.Evaluate(t);
+
+            SetCircleRadius(radius);
+
+            time += Time.unscaledDeltaTime;
+            yield return null;
         }
 
         SetCircleRadius(radiusCurve.Evaluate(1f));
@@ -214,5 +303,40 @@ public class CanvasTransition : MonoBehaviour
         circleMaterial.name = $"{sourceMaterial.name} (Canvas Transition Instance)";
         circleMaterial.hideFlags = HideFlags.DontSave;
         circleOverlay.material = circleMaterial;
+    }
+
+    private void BringToFront()
+    {
+        transform.SetAsLastSibling();
+
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas == null)
+            return;
+
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 1000;
+    }
+
+    private void Hide()
+    {
+        isPlaying = false;
+        HideVisuals();
+        gameObject.SetActive(false);
+    }
+
+    public void HideImmediate()
+    {
+        Hide();
+    }
+
+    private void HideVisuals()
+    {
+        SetCircleRadius(0f);
+
+        if (squareCover != null)
+            squareCover.gameObject.SetActive(false);
+
+        if (circleOverlay != null)
+            circleOverlay.gameObject.SetActive(false);
     }
 }
