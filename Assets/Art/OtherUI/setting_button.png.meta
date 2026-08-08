@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 860121e35173a4245a444d5505b2b267
+guid: 176d14963666fa445a7677f914f9b576
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3772465896483071814
-    second: remove_des_button_0
+      213: 3822675230927641974
+    second: setting_button_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 16384
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: remove_des_button_0
+      name: setting_button_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 11
-        width: 203
-        height: 202
+        x: 3
+        y: 3
+        width: 165
+        height: 153
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6472627debd7a5430800000000000000
-      internalID: 3772465896483071814
+      spriteID: 67d502f7ededc0530800000000000000
+      internalID: 3822675230927641974
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      remove_des_button_0: 3772465896483071814
+      setting_button_0: 3822675230927641974
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

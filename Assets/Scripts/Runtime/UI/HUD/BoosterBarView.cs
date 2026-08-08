@@ -9,6 +9,8 @@ public class BoosterBarView : MonoBehaviour
     [SerializeField] private Button hintButton;
     [SerializeField] private TMP_Text removeConditionsCountText;
     [SerializeField] private TMP_Text hintCountText;
+    [SerializeField] private Image removeConditionsZeroCountImage;
+    [SerializeField] private Image hintZeroCountImage;
 
     private void Awake()
     {
@@ -78,6 +80,7 @@ public class BoosterBarView : MonoBehaviour
     private void UpdateCount(BoosterType boosterType, int count)
     {
         TMP_Text countText = GetCountText(boosterType);
+        Image zeroCountImage = GetZeroCountImage(boosterType);
         if (countText == null)
             return;
 
@@ -87,10 +90,16 @@ public class BoosterBarView : MonoBehaviour
             return;
         }
 
-        if (!countText.gameObject.activeSelf)
-            countText.gameObject.SetActive(true);
+        int normalizedCount = Mathf.Max(0, count);
+        bool hasCount = normalizedCount > 0;
 
-        countText.text = Mathf.Max(0, count).ToString();
+        countText.gameObject.SetActive(hasCount);
+
+        if (zeroCountImage != null)
+            zeroCountImage.gameObject.SetActive(!hasCount);
+
+        if (hasCount)
+            countText.text = normalizedCount.ToString();
     }
 
     private TMP_Text GetCountText(BoosterType boosterType)
@@ -101,6 +110,19 @@ public class BoosterBarView : MonoBehaviour
                 return removeConditionsCountText;
             case BoosterType.Hint:
                 return hintCountText;
+            default:
+                return null;
+        }
+    }
+
+    private Image GetZeroCountImage(BoosterType boosterType)
+    {
+        switch (boosterType)
+        {
+            case BoosterType.RemoveConditions:
+                return removeConditionsZeroCountImage;
+            case BoosterType.Hint:
+                return hintZeroCountImage;
             default:
                 return null;
         }
