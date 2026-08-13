@@ -35,6 +35,7 @@ public class LevelEditorWindow : EditorWindow
     private Vector2 _inspectorScroll;
     private SelectionKind _selectionKind = SelectionKind.None;
     private int _selectedLandIndex = -1;
+    private readonly HashSet<int> _selectedLandIndices = new HashSet<int>();
     private int _selectedTreeIndex = -1;
     private int _dragLandIndex = -1;
     private int _dragTreeIndex = -1;
@@ -49,6 +50,10 @@ public class LevelEditorWindow : EditorWindow
     private bool _isPanningCanvas;
     private bool _isSpacePressed;
     private bool _snapEnabled;
+    private float _autoNeighborDistance = 200f;
+    private bool _autoNeighborUseSelectedOnly;
+    private readonly Dictionary<int, Vector2Int> _dragLandStartPositions = new Dictionary<int, Vector2Int>();
+    private Vector2 _dragLandStartMouseModel;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowWindow()
@@ -165,6 +170,22 @@ public class LevelEditorWindow : EditorWindow
         EditorGUILayout.Space(6);
         _snapEnabled = EditorGUILayout.ToggleLeft("Snap to 20", _snapEnabled);
 
+        EditorGUILayout.Space(8);
+        GUILayout.Label("Auto Neighbor", EditorStyles.boldLabel);
+        _autoNeighborDistance = Mathf.Max(1f, EditorGUILayout.FloatField("Max Distance", _autoNeighborDistance));
+        _autoNeighborUseSelectedOnly = EditorGUILayout.ToggleLeft("Selected Lands Only", _autoNeighborUseSelectedOnly);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Auto Connect (Replace)", GUILayout.Height(24)))
+            AutoConnectNeighborsByDistance(_autoNeighborDistance, true, _autoNeighborUseSelectedOnly);
+        if (GUILayout.Button("Auto Connect (Add)", GUILayout.Height(24)))
+            AutoConnectNeighborsByDistance(_autoNeighborDistance, false, _autoNeighborUseSelectedOnly);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(8);
+        GUILayout.Label("Auto Solve", EditorStyles.boldLabel);
+        if (GUILayout.Button("Auto Solve", GUILayout.Height(28)))
+            AutoSolveTrees();
+
         EditorGUILayout.Space(10);
         GUILayout.Label("Lands", EditorStyles.boldLabel);
         _landScroll = EditorGUILayout.BeginScrollView(_landScroll, GUILayout.MinHeight(90));
@@ -184,7 +205,9 @@ public class LevelEditorWindow : EditorWindow
 
     private void DrawListButton(int index, SelectionKind kind)
     {
-        bool selected = _selectionKind == kind && GetSelectedIndex() == index;
+        bool selected = kind == SelectionKind.Land
+            ? IsLandSelected(index)
+            : _selectionKind == kind && GetSelectedIndex() == index;
         string label = kind == SelectionKind.Land
             ? _level.cells[index].landId + "  (" + _level.cells[index].slotType + ")"
             : _level.trees[index].treeId;
@@ -192,7 +215,13 @@ public class LevelEditorWindow : EditorWindow
         Color previous = GUI.backgroundColor;
         GUI.backgroundColor = selected ? new Color(0.5f, 0.7f, 1f) : previous;
         if (GUILayout.Button(label, GUILayout.Height(24)))
-            Select(kind, index);
+        {
+            bool multiSelect = Event.current != null && (Event.current.control || Event.current.command);
+            if (kind == SelectionKind.Land && multiSelect)
+                ToggleLandSelection(index);
+            else
+                Select(kind, index);
+        }
         GUI.backgroundColor = previous;
     }
 
@@ -284,7 +313,7 @@ public class LevelEditorWindow : EditorWindow
             LevelCellData land = _level.cells[i];
             Rect nodeRect = NodeRect(rect, land.x, land.y, _level.slotSize);
             Color color = SlotColors.TryGetValue(land.slotType, out Color slotColor) ? slotColor : Color.gray;
-            DrawNode(nodeRect, color, _selectionKind == SelectionKind.Land && _selectedLandIndex == i, land.landId);
+            DrawNode(nodeRect, color, IsLandSelected(i), land.landId);
         }
     }
 
@@ -371,6 +400,7 @@ public class LevelEditorWindow : EditorWindow
         {
             _dragLandIndex = -1;
             _dragTreeIndex = -1;
+            _dragLandStartPositions.Clear();
             _isPanningCanvas = false;
             return;
         }
@@ -425,11 +455,37 @@ public class LevelEditorWindow : EditorWindow
                 Rect nodeRect = NodeRect(rect, _level.cells[i].x, _level.cells[i].y, _level.slotSize);
                 if (!nodeRect.Contains(e.mousePosition))
                     continue;
-                Select(SelectionKind.Land, i);
+
+                bool multiSelect = e.control || e.command;
+                if (multiSelect)
+                {
+                    ToggleLandSelection(i);
+                    _dragLandIndex = -1;
+                    _dragTreeIndex = -1;
+                    _dragLandStartPositions.Clear();
+                    e.Use();
+                    return;
+                }
+
+                if (!IsLandSelected(i))
+                    Select(SelectionKind.Land, i);
+
                 _dragLandIndex = i;
                 _dragTreeIndex = -1;
                 _dragOffset = e.mousePosition - new Vector2(nodeRect.x, nodeRect.y);
                 _dragNodeSize = nodeRect.width;
+
+                _dragLandStartPositions.Clear();
+                _dragLandStartMouseModel = FromCanvas(rect, ClampToRect(e.mousePosition, rect));
+                foreach (int landIndex in _selectedLandIndices)
+                {
+                    if (landIndex < 0 || landIndex >= _level.cells.Count)
+                        continue;
+
+                    LevelCellData selectedLand = _level.cells[landIndex];
+                    _dragLandStartPositions[landIndex] = new Vector2Int(selectedLand.x, selectedLand.y);
+                }
+
                 e.Use();
                 return;
             }
@@ -443,11 +499,21 @@ public class LevelEditorWindow : EditorWindow
             Vector2 clampedMousePosition = ClampToRect(e.mousePosition, rect);
             if (_dragLandIndex >= 0 && _dragLandIndex < _level.cells.Count)
             {
-                Vector2 pos = FromCanvas(rect, clampedMousePosition - _dragOffset + Vector2.one * (_dragNodeSize * 0.5f));
-                float clampedLandX = Mathf.Clamp(pos.x, 100f, 1000f);
-                float clampedLandY = Mathf.Clamp(pos.y, 620f, 1340f);
-                _level.cells[_dragLandIndex].x = _snapEnabled ? SnapValue(clampedLandX) : Mathf.RoundToInt(clampedLandX);
-                _level.cells[_dragLandIndex].y = _snapEnabled ? SnapValue(clampedLandY) : Mathf.RoundToInt(clampedLandY);
+                Vector2 currentMouseModel = FromCanvas(rect, clampedMousePosition);
+                Vector2 modelDelta = currentMouseModel - _dragLandStartMouseModel;
+
+                foreach (KeyValuePair<int, Vector2Int> pair in _dragLandStartPositions)
+                {
+                    int landIndex = pair.Key;
+                    if (landIndex < 0 || landIndex >= _level.cells.Count)
+                        continue;
+
+                    float targetX = Mathf.Clamp(pair.Value.x + modelDelta.x, 100f, 1000f);
+                    float targetY = Mathf.Clamp(pair.Value.y + modelDelta.y, 620f, 1340f);
+                    _level.cells[landIndex].x = _snapEnabled ? SnapValue(targetX) : Mathf.RoundToInt(targetX);
+                    _level.cells[landIndex].y = _snapEnabled ? SnapValue(targetY) : Mathf.RoundToInt(targetY);
+                }
+
                 Repaint();
                 e.Use();
             }
@@ -491,7 +557,12 @@ public class LevelEditorWindow : EditorWindow
         _inspectorScroll = EditorGUILayout.BeginScrollView(_inspectorScroll);
 
         if (_selectionKind == SelectionKind.Land && IsValidLandSelection())
-            DrawLandInspector(_level.cells[_selectedLandIndex]);
+        {
+            if (_selectedLandIndices.Count > 1)
+                DrawMultiLandInspector();
+            else
+                DrawLandInspector(_level.cells[_selectedLandIndex]);
+        }
         else if (_selectionKind == SelectionKind.Tree && IsValidTreeSelection())
             DrawTreeInspector(_level.trees[_selectedTreeIndex]);
         else
@@ -510,6 +581,7 @@ public class LevelEditorWindow : EditorWindow
             RenameLandId(oldId, land.landId);
 
         land.slotType = (SlotType)EditorGUILayout.EnumPopup("Type", land.slotType);
+        land.row = (BoardRow)EditorGUILayout.EnumPopup("Row", land.row);
         land.isCorner = EditorGUILayout.ToggleLeft("Corner", land.isCorner);
         land.isEdge = EditorGUILayout.ToggleLeft("Edge", land.isEdge);
         land.itemId = EditorGUILayout.TextField("Item ID", land.itemId ?? "");
@@ -531,6 +603,70 @@ public class LevelEditorWindow : EditorWindow
 
         EditorGUILayout.Space(10);
         if (GUILayout.Button("Delete Land", GUILayout.Height(28)))
+            DeleteSelectedLand();
+    }
+
+    private void DrawMultiLandInspector()
+    {
+        List<int> selectedIndices = GetSortedSelectedLandIndices();
+        if (selectedIndices.Count <= 1)
+        {
+            DrawLandInspector(_level.cells[_selectedLandIndex]);
+            return;
+        }
+
+        GUILayout.Label("Lands (" + selectedIndices.Count + ")", EditorStyles.boldLabel);
+        EditorGUILayout.HelpBox("Multi-edit mode. Changes apply to all selected lands.", MessageType.Info);
+
+        LevelCellData first = _level.cells[selectedIndices[0]];
+
+        bool mixedType = HasMixedSlotType(selectedIndices, first.slotType);
+        EditorGUI.showMixedValue = mixedType;
+        EditorGUI.BeginChangeCheck();
+        SlotType slotType = (SlotType)EditorGUILayout.EnumPopup("Type", first.slotType);
+        if (EditorGUI.EndChangeCheck())
+            ApplySlotTypeToSelectedLands(selectedIndices, slotType);
+        EditorGUI.showMixedValue = false;
+
+        bool mixedRow = HasMixedRow(selectedIndices, first.row);
+        EditorGUI.showMixedValue = mixedRow;
+        EditorGUI.BeginChangeCheck();
+        BoardRow row = (BoardRow)EditorGUILayout.EnumPopup("Row", first.row);
+        if (EditorGUI.EndChangeCheck())
+            ApplyRowToSelectedLands(selectedIndices, row);
+        EditorGUI.showMixedValue = false;
+
+        bool mixedCorner = HasMixedCorner(selectedIndices, first.isCorner);
+        EditorGUI.showMixedValue = mixedCorner;
+        EditorGUI.BeginChangeCheck();
+        bool isCorner = EditorGUILayout.ToggleLeft("Corner", first.isCorner);
+        if (EditorGUI.EndChangeCheck())
+            ApplyCornerToSelectedLands(selectedIndices, isCorner);
+        EditorGUI.showMixedValue = false;
+
+        bool mixedEdge = HasMixedEdge(selectedIndices, first.isEdge);
+        EditorGUI.showMixedValue = mixedEdge;
+        EditorGUI.BeginChangeCheck();
+        bool isEdge = EditorGUILayout.ToggleLeft("Edge", first.isEdge);
+        if (EditorGUI.EndChangeCheck())
+            ApplyEdgeToSelectedLands(selectedIndices, isEdge);
+        EditorGUI.showMixedValue = false;
+
+        int x = first.x;
+        int y = first.y;
+        DrawPositionFields(ref x, ref y);
+        if (x != first.x || y != first.y)
+        {
+            int deltaX = x - first.x;
+            int deltaY = y - first.y;
+            ApplyPositionDeltaToSelectedLands(selectedIndices, deltaX, deltaY);
+        }
+
+        EditorGUILayout.Space(6);
+        EditorGUILayout.LabelField("Selected IDs", string.Join(", ", GetSelectedLandIds(selectedIndices)));
+
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Delete Selected Lands", GUILayout.Height(28)))
             DeleteSelectedLand();
     }
 
@@ -567,6 +703,7 @@ public class LevelEditorWindow : EditorWindow
             x = 80 + _level.cells.Count * 30,
             y = 80 + _level.cells.Count * 18,
             slotType = SlotType.Dirt,
+            row = BoardRow.None,
             isCorner = false,
             isEdge = false,
             itemId = "",
@@ -816,13 +953,35 @@ public class LevelEditorWindow : EditorWindow
     {
         if (!IsValidLandSelection())
             return;
-        string id = _level.cells[_selectedLandIndex].landId;
-        _level.cells.RemoveAt(_selectedLandIndex);
+
+        List<int> removeIndices = GetSortedSelectedLandIndices();
+        if (removeIndices.Count == 0)
+            return;
+
+        HashSet<string> removedIds = new HashSet<string>();
+        for (int i = 0; i < removeIndices.Count; i++)
+        {
+            int index = removeIndices[i];
+            if (index >= 0 && index < _level.cells.Count)
+                removedIds.Add(_level.cells[index].landId);
+        }
+
+        for (int i = removeIndices.Count - 1; i >= 0; i--)
+        {
+            int index = removeIndices[i];
+            if (index >= 0 && index < _level.cells.Count)
+                _level.cells.RemoveAt(index);
+        }
+
         foreach (LevelCellData land in _level.cells)
-            land.neighborIds.Remove(id);
+            for (int i = land.neighborIds.Count - 1; i >= 0; i--)
+                if (removedIds.Contains(land.neighborIds[i]))
+                    land.neighborIds.RemoveAt(i);
+
         foreach (TreeData tree in _level.trees)
-            if (tree.solutionLandId == id)
+            if (removedIds.Contains(tree.solutionLandId))
                 tree.solutionLandId = "";
+
         Select(SelectionKind.None, -1);
         Repaint();
     }
@@ -968,6 +1127,247 @@ public class LevelEditorWindow : EditorWindow
         }
     }
 
+    private void AutoConnectNeighborsByDistance(float maxDistance, bool replaceExisting, bool selectedOnly)
+    {
+        List<LevelCellData> targets = GetAutoNeighborTargets(selectedOnly);
+        if (targets.Count < 2)
+        {
+            Debug.LogWarning("[LevelEditor] Auto Neighbor needs at least 2 lands in the target set.");
+            return;
+        }
+
+        HashSet<string> targetIds = new HashSet<string>();
+        for (int i = 0; i < targets.Count; i++)
+            targetIds.Add(targets[i].landId);
+
+        if (replaceExisting)
+        {
+            for (int i = 0; i < targets.Count; i++)
+            {
+                LevelCellData land = targets[i];
+                for (int neighborIndex = land.neighborIds.Count - 1; neighborIndex >= 0; neighborIndex--)
+                {
+                    if (!targetIds.Contains(land.neighborIds[neighborIndex]))
+                        continue;
+
+                    land.neighborIds.RemoveAt(neighborIndex);
+                }
+            }
+        }
+
+        float maxDistanceSqr = maxDistance * maxDistance;
+        int linkCount = 0;
+        for (int i = 0; i < targets.Count; i++)
+        {
+            LevelCellData a = targets[i];
+            for (int j = i + 1; j < targets.Count; j++)
+            {
+                LevelCellData b = targets[j];
+                float dx = a.x - b.x;
+                float dy = a.y - b.y;
+                float distanceSqr = dx * dx + dy * dy;
+                if (distanceSqr > maxDistanceSqr)
+                    continue;
+
+                bool wasConnected = a.neighborIds.Contains(b.landId) && b.neighborIds.Contains(a.landId);
+                SetNeighborId(a.neighborIds, b.landId, true);
+                SetNeighborId(b.neighborIds, a.landId, true);
+                if (!wasConnected)
+                    linkCount++;
+            }
+        }
+
+        Repaint();
+        Debug.Log("[LevelEditor] Auto Neighbor connected " + linkCount + " link(s) with max distance " + maxDistance + ".");
+    }
+
+    private List<LevelCellData> GetAutoNeighborTargets(bool selectedOnly)
+    {
+        List<LevelCellData> targets = new List<LevelCellData>();
+        if (!selectedOnly)
+        {
+            targets.AddRange(_level.cells);
+            return targets;
+        }
+
+        List<int> selectedIndices = GetSortedSelectedLandIndices();
+        for (int i = 0; i < selectedIndices.Count; i++)
+            targets.Add(_level.cells[selectedIndices[i]]);
+
+        return targets;
+    }
+
+    private void AutoSolveTrees()
+    {
+        bool selectedSolve = _selectionKind == SelectionKind.Tree && IsValidTreeSelection();
+        List<TreeData> treesToSolve = selectedSolve
+            ? new List<TreeData> { _level.trees[_selectedTreeIndex] }
+            : new List<TreeData>(_level.trees);
+
+        if (treesToSolve.Count == 0)
+        {
+            Debug.LogWarning("[LevelEditor] Auto Solve has no trees to solve.");
+            return;
+        }
+
+        int solvedCount = 0;
+        for (int i = 0; i < treesToSolve.Count; i++)
+        {
+            TreeData tree = treesToSolve[i];
+            if (tree == null)
+                continue;
+
+            string solutionId = FindAutoSolveLandId(tree);
+            if (string.IsNullOrEmpty(solutionId))
+                continue;
+
+            tree.solutionLandId = solutionId;
+            solvedCount++;
+        }
+
+        if (solvedCount == 0)
+            Debug.LogWarning("[LevelEditor] Auto Solve found no valid land for the tree(s).");
+        else
+            Debug.Log("[LevelEditor] Auto Solve set solution land for " + solvedCount + " tree(s).");
+
+        Repaint();
+    }
+
+    private string FindAutoSolveLandId(TreeData tree)
+    {
+        if (tree == null || _level == null || _level.cells == null || _level.cells.Count == 0)
+            return "";
+
+        for (int i = 0; i < _level.cells.Count; i++)
+        {
+            LevelCellData land = _level.cells[i];
+            if (land != null && TreeMatchesAllConditions(tree, land))
+                return land.landId;
+        }
+
+        return "";
+    }
+
+    private bool TreeMatchesAllConditions(TreeData tree, LevelCellData land)
+    {
+        if (tree == null || tree.conditions == null || land == null)
+            return false;
+
+        for (int i = 0; i < tree.conditions.Count; i++)
+        {
+            TreeConditionData condition = tree.conditions[i];
+            if (condition == null)
+                continue;
+
+            if (!ConditionMatchesLand(condition, land, tree))
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool ConditionMatchesLand(TreeConditionData condition, LevelCellData land, TreeData ownerTree)
+    {
+        switch (condition.conditionType)
+        {
+            case TreeConditionType.NearTreeCount:
+                return GetNeighborTreeCount(land, ownerTree) == condition.n;
+            case TreeConditionType.NearSpecificTree:
+                if (string.IsNullOrWhiteSpace(condition.targetTreeId))
+                    return false;
+                return IsTreePlacedNearLand(land, condition.targetTreeId);
+            case TreeConditionType.EdgeSlot:
+                return land.isEdge;
+            case TreeConditionType.CornerSlot:
+                return land.isCorner;
+            case TreeConditionType.Row1Slot:
+                return land.row == BoardRow.Row1;
+            case TreeConditionType.Row2Slot:
+                return land.row == BoardRow.Row2;
+            case TreeConditionType.Row3Slot:
+                return land.row == BoardRow.Row3;
+            case TreeConditionType.PlantAlone:
+                return GetNeighborTreeCount(land, ownerTree) == 0;
+            case TreeConditionType.Anywhere:
+                return true;
+            case TreeConditionType.NeighborSmell:
+            case TreeConditionType.EmitSmell:
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private int GetNeighborTreeCount(LevelCellData land, TreeData ownerTree)
+    {
+        if (land == null || _level == null || _level.cells == null)
+            return 0;
+
+        int count = 0;
+        for (int i = 0; i < land.neighborIds.Count; i++)
+        {
+            string neighborId = land.neighborIds[i];
+            if (string.IsNullOrWhiteSpace(neighborId))
+                continue;
+
+            LevelCellData neighbor = FindLand(neighborId);
+            if (neighbor == null)
+                continue;
+
+            if (IsLandUsedAsTreeSolution(neighbor, ownerTree))
+                count++;
+        }
+
+        return count;
+    }
+
+    private bool IsTreePlacedNearLand(LevelCellData land, string targetTreeId)
+    {
+        if (land == null || string.IsNullOrWhiteSpace(targetTreeId))
+            return false;
+
+        for (int i = 0; i < land.neighborIds.Count; i++)
+        {
+            string neighborId = land.neighborIds[i];
+            if (string.IsNullOrWhiteSpace(neighborId))
+                continue;
+
+            LevelCellData neighbor = FindLand(neighborId);
+            if (neighbor == null)
+                continue;
+
+            for (int j = 0; j < _level.trees.Count; j++)
+            {
+                TreeData tree = _level.trees[j];
+                if (tree == null)
+                    continue;
+
+                if (tree.treeId == targetTreeId && tree.solutionLandId == neighbor.landId)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsLandUsedAsTreeSolution(LevelCellData land, TreeData ignoreTree)
+    {
+        if (land == null)
+            return false;
+
+        for (int i = 0; i < _level.trees.Count; i++)
+        {
+            TreeData tree = _level.trees[i];
+            if (tree == null || tree == ignoreTree)
+                continue;
+
+            if (tree.solutionLandId == land.landId)
+                return true;
+        }
+
+        return false;
+    }
+
     private static string MakeUniqueId(string requestedId, HashSet<string> usedIds)
     {
         string baseId = requestedId.Trim();
@@ -1061,9 +1461,144 @@ public class LevelEditorWindow : EditorWindow
     private void Select(SelectionKind kind, int index)
     {
         _selectionKind = kind;
-        _selectedLandIndex = kind == SelectionKind.Land ? index : -1;
+        if (kind == SelectionKind.Land)
+        {
+            _selectedLandIndex = index;
+            _selectedLandIndices.Clear();
+            if (index >= 0 && index < _level.cells.Count)
+                _selectedLandIndices.Add(index);
+        }
+        else
+        {
+            _selectedLandIndex = -1;
+            _selectedLandIndices.Clear();
+        }
+
         _selectedTreeIndex = kind == SelectionKind.Tree ? index : -1;
         Repaint();
+    }
+
+    private void ToggleLandSelection(int index)
+    {
+        if (index < 0 || index >= _level.cells.Count)
+            return;
+
+        if (_selectionKind != SelectionKind.Land)
+        {
+            _selectionKind = SelectionKind.Land;
+            _selectedTreeIndex = -1;
+            _selectedLandIndices.Clear();
+        }
+
+        if (_selectedLandIndices.Contains(index))
+        {
+            if (_selectedLandIndices.Count > 1)
+                _selectedLandIndices.Remove(index);
+        }
+        else
+        {
+            _selectedLandIndices.Add(index);
+        }
+
+        _selectedLandIndex = index;
+        Repaint();
+    }
+
+    private bool IsLandSelected(int index)
+    {
+        return _selectionKind == SelectionKind.Land && _selectedLandIndices.Contains(index);
+    }
+
+    private List<int> GetSortedSelectedLandIndices()
+    {
+        List<int> indices = new List<int>();
+        foreach (int index in _selectedLandIndices)
+        {
+            if (index >= 0 && index < _level.cells.Count)
+                indices.Add(index);
+        }
+
+        if (indices.Count == 0 && IsValidLandSelection())
+            indices.Add(_selectedLandIndex);
+
+        indices.Sort();
+        return indices;
+    }
+
+    private bool HasMixedSlotType(List<int> selectedIndices, SlotType first)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            if (_level.cells[selectedIndices[i]].slotType != first)
+                return true;
+        return false;
+    }
+
+    private bool HasMixedRow(List<int> selectedIndices, BoardRow first)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            if (_level.cells[selectedIndices[i]].row != first)
+                return true;
+        return false;
+    }
+
+    private bool HasMixedCorner(List<int> selectedIndices, bool first)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            if (_level.cells[selectedIndices[i]].isCorner != first)
+                return true;
+        return false;
+    }
+
+    private bool HasMixedEdge(List<int> selectedIndices, bool first)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            if (_level.cells[selectedIndices[i]].isEdge != first)
+                return true;
+        return false;
+    }
+
+    private void ApplySlotTypeToSelectedLands(List<int> selectedIndices, SlotType slotType)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            _level.cells[selectedIndices[i]].slotType = slotType;
+    }
+
+    private void ApplyRowToSelectedLands(List<int> selectedIndices, BoardRow row)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            _level.cells[selectedIndices[i]].row = row;
+    }
+
+    private void ApplyCornerToSelectedLands(List<int> selectedIndices, bool isCorner)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            _level.cells[selectedIndices[i]].isCorner = isCorner;
+    }
+
+    private void ApplyEdgeToSelectedLands(List<int> selectedIndices, bool isEdge)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+            _level.cells[selectedIndices[i]].isEdge = isEdge;
+    }
+
+    private void ApplyPositionDeltaToSelectedLands(List<int> selectedIndices, int deltaX, int deltaY)
+    {
+        for (int i = 0; i < selectedIndices.Count; i++)
+        {
+            LevelCellData land = _level.cells[selectedIndices[i]];
+            float targetX = Mathf.Clamp(land.x + deltaX, 100f, 1000f);
+            float targetY = Mathf.Clamp(land.y + deltaY, 620f, 1340f);
+            land.x = _snapEnabled ? SnapValue(targetX) : Mathf.RoundToInt(targetX);
+            land.y = _snapEnabled ? SnapValue(targetY) : Mathf.RoundToInt(targetY);
+        }
+    }
+
+    private string[] GetSelectedLandIds(List<int> selectedIndices)
+    {
+        string[] ids = new string[selectedIndices.Count];
+        for (int i = 0; i < selectedIndices.Count; i++)
+            ids[i] = _level.cells[selectedIndices[i]].landId;
+        return ids;
     }
 
     private int GetSelectedIndex()
@@ -1077,7 +1612,13 @@ public class LevelEditorWindow : EditorWindow
 
     private bool IsValidLandSelection()
     {
-        return _selectedLandIndex >= 0 && _selectedLandIndex < _level.cells.Count;
+        if (_selectedLandIndex < 0 || _selectedLandIndex >= _level.cells.Count)
+            return false;
+
+        if (_selectedLandIndices.Count == 0)
+            _selectedLandIndices.Add(_selectedLandIndex);
+
+        return true;
     }
 
     private bool IsValidTreeSelection()

@@ -9,10 +9,20 @@ public class LevelCellData
     public int x;
     public int y;
     public SlotType slotType;
+    public BoardRow row = BoardRow.None;
     public bool isCorner;
     public bool isEdge;
     public string itemId; // optional pre-placed item
     public List<string> neighborIds = new List<string>();
+}
+
+[Serializable]
+public enum BoardRow
+{
+    None,
+    Row1,
+    Row2,
+    Row3
 }
 
 [Serializable]
@@ -37,6 +47,9 @@ public enum TreeConditionType
     NearSpecificTree,
     EdgeSlot,
     CornerSlot,
+    Row1Slot,
+    Row2Slot,
+    Row3Slot,
     NeighborSmell,
     EmitSmell,
     PlantAlone,

@@ -8,6 +8,7 @@ public class ItemSlot : MonoBehaviour
     [Header("Config")] 
     [SerializeField] private string slotId;
     [SerializeField] private SlotType type;
+    [SerializeField] private BoardRow row;
     [SerializeField] private bool isCorner;
     [SerializeField] private bool isEdge;
     [SerializeField] private List<ItemSlot> neighbors;
@@ -18,6 +19,7 @@ public class ItemSlot : MonoBehaviour
     
     public string SlotId => slotId;
     public SlotType Type => type;
+    public BoardRow Row => row;
     public bool IsCorner => isCorner;
     public bool IsEdge => isEdge;
     public Item currentItem;
@@ -113,13 +115,15 @@ public class ItemSlot : MonoBehaviour
         List<ItemSlot> slotNeighbors = null,
         bool slotIsCorner = false,
         bool slotIsEdge = false,
-        string newSlotId = "")
+        string newSlotId = "",
+        BoardRow slotRow = BoardRow.None)
     {
         slotId = newSlotId;
         type = slotType;
         neighbors = slotNeighbors ?? new List<ItemSlot>();
         isCorner = slotIsCorner;
         isEdge = slotIsEdge;
+        row = slotRow;
     }
 
     public bool CanPlaceItem(Item item)

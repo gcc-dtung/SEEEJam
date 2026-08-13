@@ -77,7 +77,7 @@ public class LevelRuntimeLoader : MonoBehaviour
             ItemSlot slot = Instantiate(slotPrefab, ToWorldPosition(level, land.x, land.y), Quaternion.identity, slotRoot);
             slot.name = string.IsNullOrWhiteSpace(land.landId) ? "LandSlot" : land.landId;
             ApplyEditorSize(slot.gameObject, level, level.slotSize);
-            slot.Configure(land.slotType, null, land.isCorner, land.isEdge, land.landId);
+            slot.Configure(land.slotType, null, land.isCorner, land.isEdge, land.landId, land.row);
             landSlots[land.landId] = slot;
             _spawnedObjects.Add(slot.gameObject);
         }
@@ -149,6 +149,12 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new EdgeSlotCondition());
             else if (data.conditionType == TreeConditionType.CornerSlot)
                 conditions.Add(new CornerSlotCondition());
+            else if (data.conditionType == TreeConditionType.Row1Slot)
+                conditions.Add(new RowSlotCondition { requiredRow = BoardRow.Row1 });
+            else if (data.conditionType == TreeConditionType.Row2Slot)
+                conditions.Add(new RowSlotCondition { requiredRow = BoardRow.Row2 });
+            else if (data.conditionType == TreeConditionType.Row3Slot)
+                conditions.Add(new RowSlotCondition { requiredRow = BoardRow.Row3 });
             else if (data.conditionType == TreeConditionType.NeighborSmell && data.smell != PlantSmell.None)
                 conditions.Add(new NeighborSmellCondition { smell = data.smell, preference = data.smellPreference });
             else if (data.conditionType == TreeConditionType.EmitSmell && data.smell != PlantSmell.None)

@@ -1,0 +1,14 @@
+{
+    "levelName": "Level14",
+    "maxMoves": 30,
+    "width": 5,
+    "height": 5,
+    "screenX": 0,
+    "screenY": 0,
+    "screenWidth": 1080,
+    "screenHeight": 2340,
+    "slotSize": 125,
+    "itemSize": 100,
+    "cells": [],
+    "trees": []
+}
