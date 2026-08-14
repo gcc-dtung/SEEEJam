@@ -1,6 +1,13 @@
 using System;
 using UnityEngine;
 
+[Serializable]
+public enum StartLevelMode
+{
+    FirstLevel,
+    SavedProgress
+}
+
 [DisallowMultipleComponent]
 public class FlowManager : SingletonMonoBehaviour<FlowManager>
 {
@@ -9,6 +16,10 @@ public class FlowManager : SingletonMonoBehaviour<FlowManager>
 
     [Header("Next Level Transition")]
     [SerializeField] private NextLevelTransition nextLevelTransition;
+
+    [Header("Start Game")]
+    [SerializeField] private StartLevelMode startLevelMode = StartLevelMode.FirstLevel;
+    [SerializeField] private bool loadLevelOnStartButton = true;
 
     private bool isChangingFlow;
 
@@ -23,6 +34,16 @@ public class FlowManager : SingletonMonoBehaviour<FlowManager>
 
     public void StartGame()
     {
+        if (loadLevelOnStartButton)
+        {
+            LevelManager levelManager = LevelManager.Instance;
+            if (startLevelMode == StartLevelMode.FirstLevel)
+                levelManager.SetCurrentLevelIndex(0);
+
+            if (!levelManager.LoadCurrentLevel())
+                Debug.LogWarning("[FlowManager] StartGame could not load the requested level.", this);
+        }
+
         CanvasManager canvasManager = FindFirstObjectByType<CanvasManager>(FindObjectsInactive.Include);
         if (canvasManager != null)
             canvasManager.ShowGameplayCanvas();
