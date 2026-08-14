@@ -4754,6 +4754,7 @@ GameObject:
   - component: {fileID: 1606776115}
   - component: {fileID: 1606776116}
   - component: {fileID: 1606776117}
+  - component: {fileID: 1606776118}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -4937,6 +4938,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlowManager
   canvasTransition: {fileID: 279407436}
   nextLevelTransition: {fileID: 523536033}
+--- !u!114 &1606776118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606776105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69071d7086cd456aadbc32d62d6cd434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  music: []
+  soundEffects:
+  - id: CayVui
+    clip: {fileID: 8300000, guid: aa6961528bc7cac4aa7b32c3712e7d97, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  - id: DatCayXuong
+    clip: {fileID: 8300000, guid: 5cac85843451d554f9cc5ea175978fea, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  - id: NhatCayLen
+    clip: {fileID: 8300000, guid: 7a0f1685a231c5a4581c7312c8025b49, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  - id: PressAnyButton
+    clip: {fileID: 8300000, guid: 68c74431d8b936249ba9e2b2c0bffbbf, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  - id: TooltipShow
+    clip: {fileID: 8300000, guid: 93fad33c8511a684cabb0382d7e6bdb0, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  - id: Win
+    clip: {fileID: 8300000, guid: 4777f9f597154f949b9de854621baf06, type: 3}
+    volume: 0
+    pitch: 0
+    loop: 0
+  musicMixerGroup: {fileID: 0}
+  sfxMixerGroup: {fileID: 0}
+  soundEffectPoolSize: 8
+  defaultMusicFadeDuration: 0.5
 --- !u!1 &1671538595
 GameObject:
   m_ObjectHideFlags: 0

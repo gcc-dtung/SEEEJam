@@ -45,5 +45,6 @@ public class Bootstrap : MonoBehaviour
         _ = EconomyManager.Instance;
         _ = BoosterInventoryManager.Instance;
         _ = BoosterManager.Instance;
+        _ = AudioManager.Instance;
     }
 }
