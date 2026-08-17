@@ -90,7 +90,7 @@ public class TooltipPopup : MonoBehaviour
             return;
 
         if (gameEvent.Item == _ownerItem)
-            Show(_ownerItem.ItemId, BuildTooltipContent(_ownerItem));
+            Show(_ownerItem.DisplayName, BuildTooltipContent(_ownerItem));
         else
             Hide();
     }
@@ -146,9 +146,9 @@ public class TooltipPopup : MonoBehaviour
             -0.1f);
 
         float topCenterY = bottomHeight * 0.5f + middleHeight + topHeight * 0.5f;
-        nameText.alignment = TextAlignmentOptions.Center;
         nameText.transform.localPosition = new Vector3(0f, topCenterY, -0.1f);
 
+        ClampToCamera();
         ConfigureSorting();
         PlayTransition(1f, 1f);
     }
@@ -248,6 +248,46 @@ public class TooltipPopup : MonoBehaviour
         _tooltipSequence = sequence;
         if (onComplete != null)
             _tooltipSequence.OnComplete(onComplete);
+    }
+
+    private void ClampToCamera()
+    {
+        if (_mainCamera == null || tooltipTransform == null)
+            return;
+
+        // Tooltip sprites are centered on tooltipTransform.position.x
+        float tooltipHalfWidth  = middle.sprite.bounds.size.x * middle.transform.lossyScale.x * 0.5f;
+
+        // Total tooltip height so we can clamp the top edge too
+        float bottomH = bottom.sprite.bounds.size.y * bottom.transform.lossyScale.y;
+        float middleH = middle.sprite.bounds.size.y * middle.transform.lossyScale.y;
+        float topH    = top.sprite.bounds.size.y    * top.transform.lossyScale.y;
+        float tooltipTotalHeight = bottomH + middleH + topH;
+
+        // Convert camera viewport corners to world space (z = 0 for 2D)
+        float depth = Mathf.Abs(_mainCamera.transform.position.z);
+        Vector3 bottomLeft  = _mainCamera.ViewportToWorldPoint(new Vector3(0f, 0f, depth));
+        Vector3 topRight    = _mainCamera.ViewportToWorldPoint(new Vector3(1f, 1f, depth));
+
+        float camLeft   = bottomLeft.x;
+        float camRight  = topRight.x;
+        float camTop    = topRight.y;
+
+        const float margin = 0.05f;
+
+        Vector3 pos = tooltipTransform.position;
+
+        // Horizontal: clamp so neither left nor right edge goes outside
+        pos.x = Mathf.Clamp(pos.x,
+            camLeft  + tooltipHalfWidth  + margin,
+            camRight - tooltipHalfWidth  - margin);
+
+        // Vertical: if the tooltip top goes above the camera, push it down
+        float tooltipTop = pos.y + tooltipTotalHeight;
+        if (tooltipTop > camTop - margin)
+            pos.y -= tooltipTop - (camTop - margin);
+
+        tooltipTransform.position = pos;
     }
 
     private void ResizeInternal(float desiredMiddleHeight)

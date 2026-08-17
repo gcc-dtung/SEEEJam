@@ -70,6 +70,11 @@ public class TreeConditionData
 public class TreeData
 {
     public string treeId      = "tree_01";
+    /// <summary>
+    /// Optional human-friendly display name shown in tooltips.
+    /// Leave blank to use the auto-generated name from TreeNameRegistry.
+    /// </summary>
+    public string displayName = "";
     public string solutionLandId = "";
     public int    x;
     public int    y;

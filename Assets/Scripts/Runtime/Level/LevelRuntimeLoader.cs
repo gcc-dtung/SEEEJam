@@ -122,8 +122,9 @@ public class LevelRuntimeLoader : MonoBehaviour
                     tree.itemType,
                     tree.requiredSlotType,
                     tree.treeId,
-                    BuildPlantConditions(tree.conditions),
-                    tree.solutionLandId);
+                    BuildPlantConditions(tree.conditions, level.trees),
+                    tree.solutionLandId,
+                    tree.displayName);
                 items.Add(item);
             }
 
@@ -133,7 +134,7 @@ public class LevelRuntimeLoader : MonoBehaviour
         return items;
     }
 
-    private List<PlantCondition> BuildPlantConditions(List<TreeConditionData> conditionData)
+    private List<PlantCondition> BuildPlantConditions(List<TreeConditionData> conditionData, List<TreeData> allTrees = null)
     {
         List<PlantCondition> conditions = new List<PlantCondition>();
         if (conditionData == null)
@@ -144,7 +145,10 @@ public class LevelRuntimeLoader : MonoBehaviour
             if (data.conditionType == TreeConditionType.NearTreeCount)
                 conditions.Add(new NearTreeCountCondition { nCount = data.n });
             else if (data.conditionType == TreeConditionType.NearSpecificTree && !string.IsNullOrWhiteSpace(data.targetTreeId))
-                conditions.Add(new NearSpecificTreeCondition { targetTreeId = data.targetTreeId });
+            {
+                string targetDisplay = ResolveDisplayName(data.targetTreeId, allTrees);
+                conditions.Add(new NearSpecificTreeCondition { targetTreeId = data.targetTreeId, targetDisplayName = targetDisplay });
+            }
             else if (data.conditionType == TreeConditionType.EdgeSlot)
                 conditions.Add(new EdgeSlotCondition());
             else if (data.conditionType == TreeConditionType.CornerSlot)
@@ -165,6 +169,19 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new AnywhereCondition());
         }
         return conditions;
+    }
+
+    private static string ResolveDisplayName(string treeId, List<TreeData> allTrees)
+    {
+        if (allTrees != null)
+        {
+            foreach (TreeData t in allTrees)
+            {
+                if (t.treeId == treeId && !string.IsNullOrWhiteSpace(t.displayName))
+                    return t.displayName;
+            }
+        }
+        return TreeNameRegistry.GetDisplayName(treeId);
     }
 
     private Vector3 ToWorldPosition(LevelData level, int x, int y)
