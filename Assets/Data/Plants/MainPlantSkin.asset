@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d98f4b8b4b2f2840a392287c9020a85, type: 3}
+  m_Name: MainPlantSkin
+  m_EditorClassIdentifier: Assembly-CSharp::PlantSkinSO
+  baseSkins:
+  - skinType: 0
+    normalHappySkin: {fileID: -120459652678722498, guid: 5157c9da0f260a04182a9725d0da162f, type: 3}
+    sadSkin: {fileID: 7434276822770039302, guid: 9fe44ce70e248ca44adc8e0f46659d62, type: 3}
+  - skinType: 1
+    normalHappySkin: {fileID: -3405495423853031273, guid: 53a279a8cab82a94d96c6dc6762ff70b, type: 3}
+    sadSkin: {fileID: -7251571647162267069, guid: b3f94383148b60344bb62688bf913caf, type: 3}
+  - skinType: 2
+    normalHappySkin: {fileID: 6006986660130359876, guid: abcde8877e77aa1428cd156a4b59b4ca, type: 3}
+    sadSkin: {fileID: 7069321215000627357, guid: 68c4a07676b6d274bbaf2526f28d8ce2, type: 3}
+  - skinType: 3
+    normalHappySkin: {fileID: -4593982710790916606, guid: 0e49d1fcc81af144dbec2fc542f88334, type: 3}
+    sadSkin: {fileID: -4476856608209015507, guid: e6a59c52dd4cef54e9d86dc6f2449147, type: 3}
+  - skinType: 4
+    normalHappySkin: {fileID: -4729993889813597530, guid: e67d3f8c35eeaa449b60d85c68a6d917, type: 3}
+    sadSkin: {fileID: -7509058083554409064, guid: 7ea5de0b23d89fe4abc5d6be3d245b83, type: 3}
+  - skinType: 5
+    normalHappySkin: {fileID: -8883449060467459026, guid: c413671e92effd4419ac4ca6328dafd7, type: 3}
+    sadSkin: {fileID: -3667107078102375881, guid: 5c1e10210df55d646a1e02173142f864, type: 3}
+  - skinType: 6
+    normalHappySkin: {fileID: 4461257610856927136, guid: 53e78dbe781a2744f9f142a77a49b057, type: 3}
+    sadSkin: {fileID: -5671683876503960806, guid: 154b317790cdfd34bbb5ddcbcdaaafcd, type: 3}
+  normalFace: {fileID: -855298285791758126, guid: 198935186ee130c4c8098a42a8c12f4c, type: 3}
+  happyFace: {fileID: 6937817954938267909, guid: af9a317609bc8a44797a16817f0e0213, type: 3}
+  angryFace: {fileID: -6470460504253458178, guid: 70d8914698e4910468f3bf1a2668c950, type: 3}
+  traitSkins: []

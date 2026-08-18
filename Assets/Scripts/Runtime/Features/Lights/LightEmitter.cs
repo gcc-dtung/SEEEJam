@@ -64,27 +64,26 @@ public class LightEmitter : MonoBehaviour
         if (item == null || item.ItemType != ItemType.Plant)
             return false;
 
-        Vector2 rayDirection = direction.ToVector();
-        Vector2 rayOrigin = (Vector2)transform.position + rayOriginOffset;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection, range, raycastMask);
-
-        float closestPlantDistance = float.PositiveInfinity;
-        Item closestPlant = null;
         Item sourceItem = GetComponent<Item>();
+        if (sourceItem == null || sourceItem.CurrentSlot == null || sourceItem.CurrentSlot.Type == SlotType.Wait)
+            return false;
+
+        Vector2 rayDirection = direction.ToVector();
+        Vector2 rayOrigin = sourceItem.CurrentSlot != null
+            ? (Vector2)sourceItem.CurrentSlot.transform.position + rayOriginOffset
+            : (Vector2)transform.position + rayOriginOffset;
+
+        Vector2 boxSize = new Vector2(0.8f, 0.8f);
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(rayOrigin, boxSize, 0f, rayDirection, range, raycastMask);
+
         for (int i = 0; i < hits.Length; i++)
         {
             Item hitItem = hits[i].collider.GetComponentInParent<Item>();
-            if (hitItem == null || hitItem == sourceItem || hitItem.ItemType != ItemType.Plant)
-                continue;
-
-            if (hits[i].distance < closestPlantDistance)
-            {
-                closestPlantDistance = hits[i].distance;
-                closestPlant = hitItem;
-            }
+            if (hitItem == item)
+                return true;
         }
 
-        return closestPlant == item;
+        return false;
     }
 
     public static bool IsItemLitByAny(Item item)

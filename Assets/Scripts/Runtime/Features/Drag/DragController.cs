@@ -115,6 +115,9 @@ public class DragController : MonoBehaviour
         if (GameManager.Instance.CurrentState != GameState.Playing)
             return;
 
+        if (itemCollider != null)
+            itemCollider.enabled = true;
+
         if (mainCamera != null)
         {
             ItemSlot targetSlot = _slotQueryService.GetSlotAt(GetWorldPosition(eventData.position));
@@ -123,9 +126,6 @@ public class DragController : MonoBehaviour
 
         currentItem.View.RestoreAppearance(viewTweenDuration);
         TweenToOriginalPosition();
-
-        if (itemCollider != null)
-            itemCollider.enabled = true;
 
         EventBus.Instance.Publish(new DragEndedEvent(dragItem));
         _currentHoverItemSlot = null;
@@ -211,6 +211,11 @@ public class DragController : MonoBehaviour
             transform.position,
             targetPosition,
             positionTweenDuration,
-            value => transform.position = value);
+            value => transform.position = value)
+            .OnComplete(() =>
+            {
+                if (BoardManager.TryGetInstance(out BoardManager boardManager))
+                    boardManager.NotifyBoardChanged();
+            });
     }
 }

@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Art set for one family of plants. A plant is drawn in three layers:
-/// body/skin, face, and an optional trait overlay.
+/// Art set for plants. Contains 7 base skin pairs (normal/happy & sad),
+/// 3 face expressions, and optional trait overlays.
 /// </summary>
 [CreateAssetMenu(fileName = "PlantSkin", menuName = "SEEE/Plants/Plant Skin")]
 public class PlantSkinSO : ScriptableObject
 {
-    [Header("Base Skin")]
-    [SerializeField] private Sprite[] baseSkins;
+    [Header("7 Base Skin Pairs")]
+    [SerializeField] private List<PlantBaseSkinEntry> baseSkins = new List<PlantBaseSkinEntry>();
 
     [Header("Face")]
     [SerializeField] private Sprite normalFace;
@@ -19,12 +19,27 @@ public class PlantSkinSO : ScriptableObject
     [Header("Trait Overlay")]
     [SerializeField] private PlantTraitSkin[] traitSkins;
 
-    public Sprite GetBaseSkin(int index = 0)
+    public Sprite GetBaseSkin(PlantBaseSkinType skinType, PlantVisualState state)
     {
-        if (baseSkins == null || baseSkins.Length == 0)
-            return null;
+        if (baseSkins != null)
+        {
+            for (int i = 0; i < baseSkins.Count; i++)
+            {
+                if (baseSkins[i] != null && baseSkins[i].skinType == skinType)
+                {
+                    return state == PlantVisualState.Angry
+                        ? baseSkins[i].sadSkin
+                        : baseSkins[i].normalHappySkin;
+                }
+            }
+        }
 
-        return baseSkins[Mathf.Clamp(index, 0, baseSkins.Length - 1)];
+        return null;
+    }
+
+    public Sprite GetBaseSkin(int index, PlantVisualState state)
+    {
+        return GetBaseSkin((PlantBaseSkinType)index, state);
     }
 
     public Sprite GetFace(PlantVisualState state)
@@ -68,6 +83,32 @@ public class PlantSkinSO : ScriptableObject
 
         return null;
     }
+
+    public void SetData(
+        List<PlantBaseSkinEntry> newBaseSkins,
+        Sprite newNormalFace,
+        Sprite newHappyFace,
+        Sprite newAngryFace,
+        PlantTraitSkin[] newTraitSkins = null)
+    {
+        baseSkins = newBaseSkins ?? new List<PlantBaseSkinEntry>();
+        normalFace = newNormalFace;
+        happyFace = newHappyFace;
+        angryFace = newAngryFace;
+        traitSkins = newTraitSkins;
+    }
+}
+
+[System.Serializable]
+public class PlantBaseSkinEntry
+{
+    public PlantBaseSkinType skinType;
+
+    [Tooltip("Skin khi Bình thường (Normal) và Vui vẻ (Happy)")]
+    public Sprite normalHappySkin;
+
+    [Tooltip("Skin khi Buồn / Tức giận / Đặt sai vị trí (Angry)")]
+    public Sprite sadSkin;
 }
 
 [System.Serializable]

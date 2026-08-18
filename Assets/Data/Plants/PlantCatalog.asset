@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4c76621d5d0d44db0c2b3659c73872, type: 3}
+  m_Name: PlantCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::PlantCatalogSO
+  plants:
+  - {fileID: 11400000, guid: 4e961e72756aa6f4c9d2a208535babec, type: 2}
+  - {fileID: 11400000, guid: 73becee2d8cc8a94183d88740e696bee, type: 2}
+  - {fileID: 11400000, guid: edc5118dad48baf409ddc4769abf47d1, type: 2}
+  - {fileID: 11400000, guid: 4f743de2d2d812c4f90e3a7e21fad7d2, type: 2}
+  - {fileID: 11400000, guid: 08f0fd169b087f04f969cb51967ea7ad, type: 2}
+  - {fileID: 11400000, guid: adf6dcb8693d5e448ab16edbcd3b2215, type: 2}
+  - {fileID: 11400000, guid: df2a9e91f871a8e4baf26a963d9c1d36, type: 2}

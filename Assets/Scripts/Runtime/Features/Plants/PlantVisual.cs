@@ -17,7 +17,7 @@ public class PlantVisual : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private PlantSkinSO skinSO;
-    [SerializeField, Min(0)] private int baseSkinIndex;
+    [SerializeField] private PlantBaseSkinType baseSkinType;
     [SerializeField] private List<PlantTrait> traits = new List<PlantTrait>();
 
     [Header("Layers")]
@@ -47,13 +47,13 @@ public class PlantVisual : MonoBehaviour
         if (data == null)
             return;
 
-        Configure(data.Skin, data.BaseSkinIndex, data.Traits);
+        Configure(data.Skin, data.BaseSkinType, data.Traits);
     }
 
-    public void Configure(PlantSkinSO skin, int skinIndex, IReadOnlyList<PlantTrait> selectedTraits)
+    public void Configure(PlantSkinSO skin, PlantBaseSkinType skinType, IReadOnlyList<PlantTrait> selectedTraits)
     {
         skinSO = skin;
-        baseSkinIndex = Mathf.Max(0, skinIndex);
+        baseSkinType = skinType;
         traits.Clear();
 
         if (selectedTraits != null)
@@ -66,12 +66,18 @@ public class PlantVisual : MonoBehaviour
         Refresh();
     }
 
+    public void Configure(PlantSkinSO skin, int skinIndex, IReadOnlyList<PlantTrait> selectedTraits)
+    {
+        Configure(skin, (PlantBaseSkinType)Mathf.Clamp(skinIndex, 0, 6), selectedTraits);
+    }
+
     public void SetState(PlantVisualState state)
     {
         if (_state == state)
             return;
 
         _state = state;
+        ApplySkin();
         ApplyFace();
     }
 
@@ -106,7 +112,7 @@ public class PlantVisual : MonoBehaviour
         if (skinSO == null || skinRenderer == null)
             return;
 
-        Sprite body = skinSO.GetBaseSkin(baseSkinIndex);
+        Sprite body = skinSO.GetBaseSkin(baseSkinType, _state);
         if (body != null)
             skinRenderer.sprite = body;
     }
