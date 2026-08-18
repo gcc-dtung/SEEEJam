@@ -783,10 +783,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f99489e4e78e5945a65bdb84f6035c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelRuntimeLoader
-  levelJson: {fileID: 4900000, guid: b22122682329f3244b06512581e52689, type: 3}
+  levelJson: {fileID: 4900000, guid: ef8eaa165d9e00448a652b3d4c5d085e, type: 3}
   loadOnStart: 1
   slotPrefab: {fileID: 1139939403105882617, guid: d0e7f3445156de94cb1496243345e2be, type: 3}
   treeItemPrefab: {fileID: 2251225891551616367, guid: 9aa898fd05fbc2540908a249040a8a03, type: 3}
+  plantCatalog: {fileID: 0}
   targetCamera: {fileID: 997584460}
   mapScreenPreviewToCamera: 1
   slotRoot: {fileID: 1892816587}
@@ -5529,6 +5530,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlowManager
   canvasTransition: {fileID: 279407436}
   nextLevelTransition: {fileID: 523536033}
+  startLevelMode: 0
+  loadLevelOnStartButton: 1
 --- !u!114 &1606776118
 MonoBehaviour:
   m_ObjectHideFlags: 0
