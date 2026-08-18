@@ -12,6 +12,9 @@ public class LevelRuntimeLoader : MonoBehaviour
     [SerializeField] private ItemSlot slotPrefab;
     [SerializeField] private DragItem treeItemPrefab;
 
+    [Header("Plant Visuals")]
+    [SerializeField] private PlantCatalogSO plantCatalog;
+
     [Header("Placement")]
     [SerializeField] private Camera targetCamera;
     [SerializeField] private bool mapScreenPreviewToCamera = true;
@@ -125,6 +128,8 @@ public class LevelRuntimeLoader : MonoBehaviour
                     BuildPlantConditions(tree.conditions, level.trees),
                     tree.solutionLandId,
                     tree.displayName);
+
+                ApplyPlantData(item, tree);
                 items.Add(item);
             }
 
@@ -132,6 +137,20 @@ public class LevelRuntimeLoader : MonoBehaviour
             _spawnedObjects.Add(dragItem.gameObject);
         }
         return items;
+    }
+
+    private void ApplyPlantData(Item item, TreeData tree)
+    {
+        if (string.IsNullOrWhiteSpace(tree.plantDataId))
+            return;
+
+        if (plantCatalog != null && plantCatalog.TryGetPlant(tree.plantDataId, out PlantDataSO plantData))
+        {
+            item.ApplyPlantData(plantData);
+            return;
+        }
+
+        Debug.LogWarning($"[LevelRuntimeLoader] Plant data '{tree.plantDataId}' was not found for tree '{tree.treeId}'.", this);
     }
 
     private List<PlantCondition> BuildPlantConditions(List<TreeConditionData> conditionData, List<TreeData> allTrees = null)

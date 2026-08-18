@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     [SerializeField] private string displayName;
     [SerializeField] private string solutionSlotId;
     [SerializeField] private ItemView itemView;
+    [SerializeField] private PlantVisual plantVisual;
     
     [SerializeReference]
     [SubclassSelector]
@@ -53,6 +54,20 @@ public class Item : MonoBehaviour
         }
     }
     public ItemSlot CurrentSlot => currentSlot;
+
+    public void ApplyPlantData(PlantDataSO plantData)
+    {
+        if (plantData == null)
+            return;
+
+        if (plantVisual == null)
+            plantVisual = GetComponent<PlantVisual>();
+
+        if (plantVisual == null)
+            plantVisual = gameObject.AddComponent<PlantVisual>();
+
+        plantVisual.Configure(plantData);
+    }
 
     public void Configure(
         ItemType newItemType,
@@ -109,14 +124,17 @@ public class Item : MonoBehaviour
         if (slot.Type == SlotType.Wait)
         {
             View.ShowNormal();
+            ApplyPlantVisualState(PlantVisualState.Normal);
         }
         else if (CheckCondition(slot))
         {
             View.ShowCorrect();
+            ApplyPlantVisualState(PlantVisualState.Happy);
         }
         else
         {
             View.ShowWrong();
+            ApplyPlantVisualState(PlantVisualState.Angry);
         }
     }
 
@@ -155,6 +173,14 @@ public class Item : MonoBehaviour
 
         if (itemView == null)
             itemView = gameObject.AddComponent<ItemView>();
+    }
+
+    private void ApplyPlantVisualState(PlantVisualState state)
+    {
+        if (plantVisual == null)
+            plantVisual = GetComponent<PlantVisual>();
+
+        plantVisual?.SetState(state);
     }
     
     #endregion

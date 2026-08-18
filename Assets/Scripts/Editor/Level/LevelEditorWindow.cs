@@ -689,6 +689,10 @@ public class LevelEditorWindow : EditorWindow
             EditorGUI.EndDisabledGroup();
         }
 
+        tree.plantDataId = EditorGUILayout.TextField(
+            new GUIContent("Plant Data ID", "Optional ID from the Plant Catalog assigned to LevelRuntimeLoader."),
+            tree.plantDataId ?? "");
+
         tree.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", tree.itemType);
         tree.requiredSlotType = (SlotType)EditorGUILayout.EnumPopup("Required Slot", tree.requiredSlotType);
         tree.solutionLandId = DrawLandIdPopup("Solution Land", tree.solutionLandId);

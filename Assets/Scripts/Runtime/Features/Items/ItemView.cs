@@ -6,6 +6,7 @@ public class ItemView : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     private Transform _visualTransform;
+    private PlantVisual _plantVisual;
     private Vector3 _normalScale = Vector3.one;
     private Tween _opacityTween;
     private Tween _scaleTween;
@@ -86,6 +87,7 @@ public class ItemView : MonoBehaviour
 
             spriteRenderer.sortingLayerID = sortingLayerId;
             spriteRenderer.sortingOrder = sortingOrder;
+            _plantVisual?.SyncSortingWithSkin();
             return;
         }
 
@@ -94,6 +96,7 @@ public class ItemView : MonoBehaviour
 
         spriteRenderer.sortingLayerID = _normalSortingLayerId;
         spriteRenderer.sortingOrder = _normalSortingOrder;
+        _plantVisual?.SyncSortingWithSkin();
         _hasBoosterSortingOverride = false;
     }
 
@@ -145,5 +148,8 @@ public class ItemView : MonoBehaviour
             _visualTransform = spriteRenderer.transform;
             _normalScale = _visualTransform.localScale;
         }
+
+        if (_plantVisual == null)
+            _plantVisual = GetComponent<PlantVisual>();
     }
 }

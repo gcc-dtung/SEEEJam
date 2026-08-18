@@ -70,6 +70,8 @@ public class TreeConditionData
 public class TreeData
 {
     public string treeId      = "tree_01";
+    /// <summary>Optional key resolved through LevelRuntimeLoader's Plant Catalog.</summary>
+    public string plantDataId = "";
     /// <summary>
     /// Optional human-friendly display name shown in tooltips.
     /// Leave blank to use the auto-generated name from TreeNameRegistry.
