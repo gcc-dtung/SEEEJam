@@ -11,6 +11,7 @@ public class LevelRuntimeLoader : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private ItemSlot slotPrefab;
     [SerializeField] private DragItem treeItemPrefab;
+    [SerializeField] private DragItem lightItemPrefab;
 
     [Header("Plant Visuals")]
     [SerializeField] private PlantCatalogSO plantCatalog;
@@ -114,7 +115,10 @@ public class LevelRuntimeLoader : MonoBehaviour
             _spawnedObjects.Add(waitSlot.gameObject);
 
             Vector3 itemPosition = waitSlot.transform.position + new Vector3(0f, 0f, itemInputZOffset);
-            DragItem dragItem = Instantiate(treeItemPrefab, itemPosition, Quaternion.identity, itemRoot);
+            DragItem itemPrefab = tree.itemType == ItemType.Light && lightItemPrefab != null
+                ? lightItemPrefab
+                : treeItemPrefab;
+            DragItem dragItem = Instantiate(itemPrefab, itemPosition, Quaternion.identity, itemRoot);
             dragItem.name = tree.treeId;
             ApplyEditorSize(dragItem.gameObject, level, level.itemSize);
 
@@ -129,8 +133,19 @@ public class LevelRuntimeLoader : MonoBehaviour
                     tree.solutionLandId,
                     tree.displayName);
 
-                ApplyPlantData(item, tree);
-                items.Add(item);
+                if (tree.itemType == ItemType.Light)
+                {
+                    LightEmitter lightEmitter = item.GetComponent<LightEmitter>();
+                    if (lightEmitter == null)
+                        lightEmitter = item.gameObject.AddComponent<LightEmitter>();
+
+                    lightEmitter.Configure(tree.lightDirection);
+                }
+                else
+                {
+                    ApplyPlantData(item, tree);
+                    items.Add(item);
+                }
             }
 
             dragItem.ConfigureStart(waitSlot, itemInputZOffset);
@@ -186,6 +201,8 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new PlantAloneCondition());
             else if (data.conditionType == TreeConditionType.Anywhere)
                 conditions.Add(new AnywhereCondition());
+            else if (data.conditionType == TreeConditionType.RequiresLight)
+                conditions.Add(new RequiresLightCondition());
         }
         return conditions;
     }

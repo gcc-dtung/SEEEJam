@@ -24,6 +24,7 @@ public class ItemSlot : MonoBehaviour
     public bool IsEdge => isEdge;
     public Item currentItem;
     public bool HasCurrentItem => currentItem != null;
+    public Item CurrentItem => currentItem;
     public List<ItemSlot> Neighbors => neighbors;
     #endregion
 

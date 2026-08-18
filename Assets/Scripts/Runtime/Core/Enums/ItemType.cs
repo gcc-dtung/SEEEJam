@@ -1,5 +1,6 @@
 ﻿
 public enum ItemType
 {
-    Plant
+    Plant,
+    Light
 }

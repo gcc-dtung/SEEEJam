@@ -121,6 +121,12 @@ public class Item : MonoBehaviour
     {
         currentSlot = slot;
 
+        if (itemType == ItemType.Light)
+        {
+            View.ShowNormal();
+            return;
+        }
+
         if (slot.Type == SlotType.Wait)
         {
             View.ShowNormal();

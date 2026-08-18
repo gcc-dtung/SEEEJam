@@ -166,6 +166,8 @@ public class LevelEditorWindow : EditorWindow
             AddLand();
         if (GUILayout.Button("Add Tree", GUILayout.Height(32)))
             AddTree();
+        if (GUILayout.Button("Add Light", GUILayout.Height(32)))
+            AddLight();
 
         EditorGUILayout.Space(6);
         _snapEnabled = EditorGUILayout.ToggleLeft("Snap to 20", _snapEnabled);
@@ -695,6 +697,8 @@ public class LevelEditorWindow : EditorWindow
 
         tree.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", tree.itemType);
         tree.requiredSlotType = (SlotType)EditorGUILayout.EnumPopup("Required Slot", tree.requiredSlotType);
+        if (tree.itemType == ItemType.Light)
+            tree.lightDirection = (LightDirection)EditorGUILayout.EnumPopup("Light Direction", tree.lightDirection);
         tree.solutionLandId = DrawLandIdPopup("Solution Land", tree.solutionLandId);
         tree.parameterN = EditorGUILayout.IntField("Parameter n", tree.parameterN);
 
@@ -773,6 +777,27 @@ public class LevelEditorWindow : EditorWindow
             }
         };
         _level.trees.Add(tree);
+        Select(SelectionKind.Tree, _level.trees.Count - 1);
+        Repaint();
+    }
+
+    private void AddLight()
+    {
+        const int itemStartX = 100;
+        const int itemStepX = 150;
+        const int itemY = 1614;
+        TreeData light = new TreeData
+        {
+            treeId = NextTreeId(),
+            x = itemStartX + _level.trees.Count * itemStepX,
+            y = itemY,
+            itemType = ItemType.Light,
+            requiredSlotType = SlotType.Dirt,
+            lightDirection = LightDirection.Up,
+            conditions = new List<TreeConditionData>()
+        };
+
+        _level.trees.Add(light);
         Select(SelectionKind.Tree, _level.trees.Count - 1);
         Repaint();
     }

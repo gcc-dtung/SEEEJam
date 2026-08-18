@@ -53,7 +53,8 @@ public enum TreeConditionType
     NeighborSmell,
     EmitSmell,
     PlantAlone,
-    Anywhere
+    Anywhere,
+    RequiresLight
 }
 
 [Serializable]
@@ -81,6 +82,7 @@ public class TreeData
     public int    x;
     public int    y;
     public ItemType  itemType         = ItemType.Plant;
+    public LightDirection lightDirection = LightDirection.Up;
     public SlotType  requiredSlotType = SlotType.Dirt;
     public int parameterN = 0;
     public string customNotes = "";
