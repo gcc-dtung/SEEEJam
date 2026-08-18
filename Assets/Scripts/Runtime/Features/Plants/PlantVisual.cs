@@ -81,6 +81,15 @@ public class PlantVisual : MonoBehaviour
         ApplyFace();
     }
 
+    public void AddTrait(PlantTrait trait)
+    {
+        if (trait != PlantTrait.None && !traits.Contains(trait))
+        {
+            traits.Add(trait);
+            ApplyTrait();
+        }
+    }
+
     public void Refresh()
     {
         ApplySkin();
@@ -140,6 +149,20 @@ public class PlantVisual : MonoBehaviour
     private void EnsureRenderers()
     {
         if (skinRenderer == null)
+        {
+            ItemView itemView = GetComponent<ItemView>();
+            if (itemView != null && itemView.SpriteRenderer != null)
+                skinRenderer = itemView.SpriteRenderer;
+        }
+
+        if (skinRenderer == null)
+        {
+            Transform viewChild = transform.Find("View");
+            if (viewChild != null)
+                skinRenderer = viewChild.GetComponent<SpriteRenderer>();
+        }
+
+        if (skinRenderer == null)
             skinRenderer = GetComponent<SpriteRenderer>();
 
         if (skinRenderer == null)
@@ -148,18 +171,21 @@ public class PlantVisual : MonoBehaviour
         if (skinRenderer == null)
             return;
 
+        Transform parentTransform = skinRenderer.transform;
+
         if (faceRenderer == null)
-            faceRenderer = CreateLayer("Face Layer", 1);
+            faceRenderer = CreateLayer("Face Layer", 1, parentTransform);
 
         if (traitRenderer == null)
-            traitRenderer = CreateLayer("Trait Layer", 2);
+            traitRenderer = CreateLayer("Trait Layer", 2, parentTransform);
 
         SyncSortingWithSkin();
     }
 
-    private SpriteRenderer CreateLayer(string layerName, int sortingOffset)
+    private SpriteRenderer CreateLayer(string layerName, int sortingOffset, Transform parent)
     {
-        Transform existingLayer = transform.Find(layerName);
+        Transform targetParent = parent != null ? parent : transform;
+        Transform existingLayer = targetParent.Find(layerName);
         SpriteRenderer layerRenderer = existingLayer != null
             ? existingLayer.GetComponent<SpriteRenderer>()
             : null;
@@ -167,7 +193,7 @@ public class PlantVisual : MonoBehaviour
         if (layerRenderer == null)
         {
             GameObject layer = new GameObject(layerName);
-            layer.transform.SetParent(transform, false);
+            layer.transform.SetParent(targetParent, false);
             layerRenderer = layer.AddComponent<SpriteRenderer>();
         }
 

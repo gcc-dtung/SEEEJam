@@ -36,7 +36,22 @@ public static class GeneratePlantVisualAssets
             });
         }
 
-        // 3. Create or update PlantSkinSO
+        // 3. Load Trait Sprites (Hiệu ứng tỏa mùi)
+        Sprite perfumeTrait = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Nhan vat/Hieuung/toara muithom.png");
+        if (perfumeTrait == null)
+            perfumeTrait = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Nhan vat/Hieuung/toa mui thom( hoa).png");
+
+        Sprite disgustTrait = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Nhan vat/Hieuung/toara muithoi.png");
+        if (disgustTrait == null)
+            disgustTrait = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Nhan vat/Hieuung/toa ra mui thoi cb.png");
+
+        List<PlantTraitSkin> traitSkinList = new List<PlantTraitSkin>();
+        if (perfumeTrait != null)
+            traitSkinList.Add(new PlantTraitSkin { trait = PlantTrait.Perfume, sprite = perfumeTrait });
+        if (disgustTrait != null)
+            traitSkinList.Add(new PlantTraitSkin { trait = PlantTrait.Disgust, sprite = disgustTrait });
+
+        // 4. Create or update PlantSkinSO
         PlantSkinSO skinSO = AssetDatabase.LoadAssetAtPath<PlantSkinSO>(MainSkinPath);
         if (skinSO == null)
         {
@@ -44,7 +59,7 @@ public static class GeneratePlantVisualAssets
             AssetDatabase.CreateAsset(skinSO, MainSkinPath);
         }
 
-        skinSO.SetData(entries, normalFace, happyFace, angryFace);
+        skinSO.SetData(entries, normalFace, happyFace, angryFace, traitSkinList.ToArray());
         EditorUtility.SetDirty(skinSO);
 
         // 4. Create 7 PlantDataSO
@@ -93,9 +108,36 @@ public static class GeneratePlantVisualAssets
         }
 
         EditorUtility.SetDirty(catalog);
+
+        // 6. Save to Resources for runtime automatic fallback
+        string resourcesFolder = "Assets/Resources";
+        if (!Directory.Exists(resourcesFolder))
+            Directory.CreateDirectory(resourcesFolder);
+
+        string resourcesCatalogPath = $"{resourcesFolder}/PlantCatalog.asset";
+        PlantCatalogSO resCatalog = AssetDatabase.LoadAssetAtPath<PlantCatalogSO>(resourcesCatalogPath);
+        if (resCatalog == null)
+        {
+            AssetDatabase.CopyAsset(CatalogPath, resourcesCatalogPath);
+        }
+
+        // 7. Auto-assign to LevelRuntimeLoader in active scene if open
+        LevelRuntimeLoader runtimeLoader = Object.FindFirstObjectByType<LevelRuntimeLoader>();
+        if (runtimeLoader != null)
+        {
+            SerializedObject loaderSerialized = new SerializedObject(runtimeLoader);
+            SerializedProperty catalogField = loaderSerialized.FindProperty("plantCatalog");
+            if (catalogField != null)
+            {
+                catalogField.objectReferenceValue = catalog;
+                loaderSerialized.ApplyModifiedProperties();
+                EditorUtility.SetDirty(runtimeLoader);
+            }
+        }
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log($"[SEEE] Successfully generated PlantSkinSO, 7 PlantDataSO, and PlantCatalogSO at: {TargetFolder}");
+        Debug.Log($"[SEEE] Successfully generated PlantSkinSO, 7 PlantDataSO, and PlantCatalogSO at: {TargetFolder} and auto-assigned to LevelRuntimeLoader!");
     }
 }

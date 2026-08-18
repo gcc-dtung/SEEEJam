@@ -37,4 +37,10 @@ MonoBehaviour:
   normalFace: {fileID: -855298285791758126, guid: 198935186ee130c4c8098a42a8c12f4c, type: 3}
   happyFace: {fileID: 6937817954938267909, guid: af9a317609bc8a44797a16817f0e0213, type: 3}
   angryFace: {fileID: -6470460504253458178, guid: 70d8914698e4910468f3bf1a2668c950, type: 3}
-  traitSkins: []
+  traitSkins:
+  - trait: 0
+    sprite: {fileID: 0}
+  - trait: 1
+    sprite: {fileID: -3708626188232468648, guid: e60eecf4597140746b5264e89baa1366, type: 3}
+  - trait: 2
+    sprite: {fileID: -2172487505923521042, guid: b8c81c1969a9944499d1ced7dbf46a09, type: 3}

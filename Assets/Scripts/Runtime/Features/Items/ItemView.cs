@@ -5,6 +5,15 @@ public class ItemView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    public SpriteRenderer SpriteRenderer
+    {
+        get
+        {
+            EnsureReferences();
+            return spriteRenderer;
+        }
+    }
+
     private Transform _visualTransform;
     private PlantVisual _plantVisual;
     private Vector3 _normalScale = Vector3.one;
@@ -33,11 +42,21 @@ public class ItemView : MonoBehaviour
 
     public void ShowCorrect()
     {
+        if (_plantVisual != null)
+        {
+            SetColor(Color.white);
+            return;
+        }
         SetColor(Color.blue);
     }
 
     public void ShowWrong()
     {
+        if (_plantVisual != null)
+        {
+            SetColor(Color.white);
+            return;
+        }
         SetColor(Color.red);
     }
 

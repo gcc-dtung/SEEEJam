@@ -28,9 +28,15 @@ public class LevelRuntimeLoader : MonoBehaviour
 
     private readonly List<GameObject> _spawnedObjects = new List<GameObject>();
 
+    private void Awake()
+    {
+        EnsurePlantCatalog();
+    }
+
     private void Start()
     {
         EnsureRuntimeInteraction();
+        EnsurePlantCatalog();
         if (loadOnStart && !Bootstrap.HasBootstrapped)
             LevelManager.Instance.LoadAssignedLevel(this);
     }
@@ -43,6 +49,7 @@ public class LevelRuntimeLoader : MonoBehaviour
     public bool LoadLevelAsset(TextAsset levelAsset)
     {
         EnsureRuntimeInteraction();
+        EnsurePlantCatalog();
         if (levelAsset == null)
         {
             Debug.LogWarning("[LevelRuntimeLoader] No level JSON assigned.");
@@ -62,6 +69,7 @@ public class LevelRuntimeLoader : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
+        EnsurePlantCatalog();
         BoosterManager.Instance.ResetForLevel();
         ClearSpawnedObjects();
         MoveManager.Instance.ClearHistory();
@@ -154,18 +162,35 @@ public class LevelRuntimeLoader : MonoBehaviour
         return items;
     }
 
-    private void ApplyPlantData(Item item, TreeData tree)
+    public void EnsurePlantCatalog()
     {
-        if (string.IsNullOrWhiteSpace(tree.plantDataId))
+        if (plantCatalog != null)
             return;
 
-        if (plantCatalog != null && plantCatalog.TryGetPlant(tree.plantDataId, out PlantDataSO plantData))
+        plantCatalog = Resources.Load<PlantCatalogSO>("PlantCatalog");
+#if UNITY_EDITOR
+        if (plantCatalog == null)
+        {
+            plantCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<PlantCatalogSO>("Assets/Data/Plants/PlantCatalog.asset");
+        }
+#endif
+    }
+
+    private void ApplyPlantData(Item item, TreeData tree)
+    {
+        if (item == null || tree == null)
+            return;
+
+        EnsurePlantCatalog();
+
+        if (plantCatalog != null && plantCatalog.TryGetPlantOrDefault(tree.plantDataId ?? tree.treeId, out PlantDataSO plantData))
         {
             item.ApplyPlantData(plantData);
             return;
         }
 
-        Debug.LogWarning($"[LevelRuntimeLoader] Plant data '{tree.plantDataId}' was not found for tree '{tree.treeId}'.", this);
+        if (!string.IsNullOrWhiteSpace(tree.plantDataId))
+            Debug.LogWarning($"[LevelRuntimeLoader] Plant data '{tree.plantDataId}' was not found for tree '{tree.treeId}'.", this);
     }
 
     private List<PlantCondition> BuildPlantConditions(List<TreeConditionData> conditionData, List<TreeData> allTrees = null)

@@ -67,6 +67,7 @@ public class Item : MonoBehaviour
             plantVisual = gameObject.AddComponent<PlantVisual>();
 
         plantVisual.Configure(plantData);
+        SyncEmittedSmellTrait();
     }
 
     public void Configure(
@@ -84,6 +85,7 @@ public class Item : MonoBehaviour
         conditions = newConditions ?? new List<PlantCondition>();
         solutionSlotId = newSolutionSlotId;
         _ignoreConditionsForRun = false;
+        SyncEmittedSmellTrait();
     }
 
     public bool TryGetEmittedSmell(out PlantSmell emittedSmell)
@@ -105,13 +107,27 @@ public class Item : MonoBehaviour
         return false;
     }
 
+    public void SyncEmittedSmellTrait()
+    {
+        if (plantVisual == null)
+            plantVisual = GetComponent<PlantVisual>();
+
+        if (plantVisual != null && TryGetEmittedSmell(out PlantSmell smell))
+        {
+            if (smell == PlantSmell.Perfume)
+                plantVisual.AddTrait(PlantTrait.Perfume);
+            else if (smell == PlantSmell.Disgust)
+                plantVisual.AddTrait(PlantTrait.Disgust);
+        }
+    }
+
     private bool CheckCondition(ItemSlot slot)
     {
         if (_ignoreConditionsForRun)
             return true;
 
-        if(conditions!= null)
-            foreach(PlantCondition cond in conditions)
+        if (conditions != null)
+            foreach (PlantCondition cond in conditions)
                 if (!cond.CheckCondition(slot))
                     return false;
         return true;

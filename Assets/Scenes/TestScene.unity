@@ -783,7 +783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f99489e4e78e5945a65bdb84f6035c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelRuntimeLoader
-  levelJson: {fileID: 4900000, guid: ef8eaa165d9e00448a652b3d4c5d085e, type: 3}
+  levelJson: {fileID: 4900000, guid: b50e4df565cdb9d45a6f987cba6d5c3a, type: 3}
   loadOnStart: 1
   slotPrefab: {fileID: 1139939403105882617, guid: d0e7f3445156de94cb1496243345e2be, type: 3}
   treeItemPrefab: {fileID: 2251225891551616367, guid: 9aa898fd05fbc2540908a249040a8a03, type: 3}
@@ -5474,6 +5474,7 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 2ee73195aef21104d8193c6372d053c3, type: 3}
   - {fileID: 4900000, guid: 0512826bd16af8e4bb5454c24fecbeb5, type: 3}
   - {fileID: 4900000, guid: d678a125dab6c8741933288543212df7, type: 3}
+  - {fileID: 4900000, guid: b50e4df565cdb9d45a6f987cba6d5c3a, type: 3}
   loadOnStart: 1
 --- !u!114 &1606776114
 MonoBehaviour:
