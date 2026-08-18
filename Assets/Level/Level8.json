@@ -15,6 +15,7 @@
             "x": 240,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -29,6 +30,7 @@
             "x": 400,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -43,6 +45,7 @@
             "x": 240,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -57,6 +60,7 @@
             "x": 400,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -71,6 +75,7 @@
             "x": 720,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -85,6 +90,7 @@
             "x": 880,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -99,6 +105,7 @@
             "x": 720,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -113,6 +120,7 @@
             "x": 880,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -127,6 +135,7 @@
             "x": 240,
             "y": 1180,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -139,6 +148,7 @@
             "x": 400,
             "y": 1180,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -150,6 +160,7 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "displayName": "",
             "solutionLandId": "",
             "x": 300,
             "y": 1620,
@@ -169,6 +180,7 @@
         },
         {
             "treeId": "tree_02",
+            "displayName": "",
             "solutionLandId": "",
             "x": 440,
             "y": 1620,
@@ -188,6 +200,7 @@
         },
         {
             "treeId": "tree_03",
+            "displayName": "",
             "solutionLandId": "",
             "x": 580,
             "y": 1620,
@@ -214,6 +227,7 @@
         },
         {
             "treeId": "tree_04",
+            "displayName": "",
             "solutionLandId": "",
             "x": 720,
             "y": 1620,
@@ -230,6 +244,44 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_01",
+            "prefabPath": "platform_2x2",
+            "x": 163,
+            "y": 703,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 315,
+            "height": 375,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_2x2",
+            "x": 652,
+            "y": 699,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 315,
+            "height": 375,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_03",
+            "prefabPath": "platform_2x1",
+            "x": 165,
+            "y": 1130,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 315,
+            "height": 200,
+            "sortingOrder": -1
         }
     ]
 }

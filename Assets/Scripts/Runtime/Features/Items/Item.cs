@@ -16,10 +16,12 @@ public class Item : MonoBehaviour
 
     private ItemSlot currentSlot;
     private bool _ignoreConditionsForRun;
+    private BoxCollider2D _interactionCollider;
 
     private void Awake()
     {
         EnsureItemView();
+        AutoFitInteractionCollider();
     }
 
     private void OnEnable()
@@ -155,6 +157,19 @@ public class Item : MonoBehaviour
 
         if (itemView == null)
             itemView = gameObject.AddComponent<ItemView>();
+    }
+
+    private void AutoFitInteractionCollider()
+    {
+        if (_interactionCollider == null)
+            _interactionCollider = GetComponent<BoxCollider2D>();
+
+        if (_interactionCollider == null || itemView == null || itemView.SpriteRenderer == null)
+            return;
+
+        Bounds worldBounds = itemView.SpriteRenderer.bounds;
+        _interactionCollider.offset = transform.InverseTransformPoint(worldBounds.center);
+        _interactionCollider.size = new Vector2(worldBounds.size.x, worldBounds.size.y);
     }
     
     #endregion

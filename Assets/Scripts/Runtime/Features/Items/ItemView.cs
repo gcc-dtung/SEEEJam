@@ -5,6 +5,8 @@ public class ItemView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    public SpriteRenderer SpriteRenderer => spriteRenderer;
+
     private Transform _visualTransform;
     private Vector3 _normalScale = Vector3.one;
     private Tween _opacityTween;

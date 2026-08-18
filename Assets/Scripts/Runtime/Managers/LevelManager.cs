@@ -132,7 +132,10 @@ public class LevelManager : SingletonMonoBehaviour<LevelManager>
         MaxMoves = level != null ? Mathf.Max(0, level.maxMoves) : 0;
         RemainingMoves = MaxMoves;
 
-        CurrentLevelName = level != null ? level.levelName : string.Empty;
+        // Always derive the displayed level number from the 1-based index instead of
+        // trusting the JSON's "levelName" field, so it can never show "Level 0" or a
+        // mismatched name (e.g. a copy-pasted level with a stale levelName).
+        CurrentLevelName = "Level " + (CurrentLevelIndex + 1);
 
         EventBus.Instance.Publish(new LevelChangedEvent(CurrentLevelName));
         EventBus.Instance.Publish(new MovesChangedEvent(RemainingMoves, MaxMoves));

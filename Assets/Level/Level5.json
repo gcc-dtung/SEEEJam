@@ -15,6 +15,7 @@
             "x": 240,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -29,6 +30,7 @@
             "x": 400,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -45,6 +47,7 @@
             "x": 560,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -61,6 +64,7 @@
             "x": 720,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -77,6 +81,7 @@
             "x": 880,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -91,6 +96,7 @@
             "x": 240,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -105,6 +111,7 @@
             "x": 400,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -121,6 +128,7 @@
             "x": 560,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -137,6 +145,7 @@
             "x": 720,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -150,9 +159,10 @@
         },
         {
             "landId": "land_10",
-            "x": 880,
-            "y": 920,
+            "x": 882,
+            "y": 918,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -167,6 +177,7 @@
             "x": 400,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -179,6 +190,7 @@
             "x": 560,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -192,6 +204,7 @@
             "x": 720,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -203,6 +216,7 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "displayName": "",
             "solutionLandId": "",
             "x": 300,
             "y": 1620,
@@ -222,6 +236,7 @@
         },
         {
             "treeId": "tree_02",
+            "displayName": "",
             "solutionLandId": "",
             "x": 440,
             "y": 1620,
@@ -241,6 +256,7 @@
         },
         {
             "treeId": "tree_03",
+            "displayName": "",
             "solutionLandId": "",
             "x": 580,
             "y": 1620,
@@ -260,6 +276,7 @@
         },
         {
             "treeId": "tree_04",
+            "displayName": "",
             "solutionLandId": "",
             "x": 720,
             "y": 1620,
@@ -279,6 +296,7 @@
         },
         {
             "treeId": "tree_05",
+            "displayName": "",
             "solutionLandId": "",
             "x": 860,
             "y": 1620,
@@ -295,6 +313,32 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_01",
+            "prefabPath": "platform_5x2",
+            "x": 167,
+            "y": 709,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 789,
+            "height": 400,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_3x1",
+            "x": 328,
+            "y": 1160,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 460,
+            "height": 190,
+            "sortingOrder": -1
         }
     ]
 }

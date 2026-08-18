@@ -1,5 +1,5 @@
 {
-    "levelName": "Level1",
+    "levelName": "Level2",
     "maxMoves": 10,
     "width": 5,
     "height": 5,
@@ -15,6 +15,7 @@
             "x": 420,
             "y": 840,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -27,6 +28,7 @@
             "x": 420,
             "y": 980,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -40,6 +42,7 @@
             "x": 420,
             "y": 1120,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -51,6 +54,7 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "displayName": "",
             "solutionLandId": "",
             "x": 360,
             "y": 1620,
@@ -70,6 +74,7 @@
         },
         {
             "treeId": "tree_02",
+            "displayName": "",
             "solutionLandId": "",
             "x": 540,
             "y": 1620,
@@ -89,6 +94,7 @@
         },
         {
             "treeId": "tree_03",
+            "displayName": "",
             "solutionLandId": "",
             "x": 720,
             "y": 1620,
@@ -105,6 +111,20 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_1x3",
+            "x": 350,
+            "y": 801,
+            "sizeMode": 0,
+            "widthInLands": 1.0,
+            "heightInLands": 4.0,
+            "width": 140,
+            "height": 450,
+            "sortingOrder": -1
         }
     ]
 }

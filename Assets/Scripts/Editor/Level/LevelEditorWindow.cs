@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LevelEditorWindow : EditorWindow
 {
-    private enum SelectionKind { None, Land, Tree }
+    private enum SelectionKind { None, Land, Tree, Decor }
 
     private const float SidebarMinWidth = 180f;
     private const float SidebarMaxWidth = 620f;
@@ -18,6 +18,7 @@ public class LevelEditorWindow : EditorWindow
     private const float CanvasMinZoom = 0.25f;
     private const float CanvasMaxZoom = 2.5f;
     private const string LevelFolderRelativePath = "Assets/Level";
+    private const string DecorClipboardPrefix = "IsThisLandTaken.Decor:";
 
     private static readonly Dictionary<SlotType, Color> SlotColors = new Dictionary<SlotType, Color>
     {
@@ -30,6 +31,7 @@ public class LevelEditorWindow : EditorWindow
 
     private LevelData _level = new LevelData();
     private string _currentJsonPath = "";
+    private Vector2 _sidebarScroll;
     private Vector2 _landScroll;
     private Vector2 _treeScroll;
     private Vector2 _inspectorScroll;
@@ -54,6 +56,10 @@ public class LevelEditorWindow : EditorWindow
     private bool _autoNeighborUseSelectedOnly;
     private readonly Dictionary<int, Vector2Int> _dragLandStartPositions = new Dictionary<int, Vector2Int>();
     private Vector2 _dragLandStartMouseModel;
+    private int     _selectedDecorIndex = -1;
+    private Vector2 _decorScroll;
+    private int     _dragDecorIndex  = -1;
+    private Vector2 _dragDecorOffset;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowWindow()
@@ -127,6 +133,7 @@ public class LevelEditorWindow : EditorWindow
     private void DrawSidebar()
     {
         EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(GetSidebarWidth()), GUILayout.ExpandHeight(true));
+        _sidebarScroll = EditorGUILayout.BeginScrollView(_sidebarScroll, GUILayout.ExpandHeight(true));
         GUILayout.Label("Level JSON", EditorStyles.boldLabel);
         _level.levelName = EditorGUILayout.TextField("Name", _level.levelName);
         _level.maxMoves = EditorGUILayout.IntField("Moves", _level.maxMoves);
@@ -188,18 +195,38 @@ public class LevelEditorWindow : EditorWindow
 
         EditorGUILayout.Space(10);
         GUILayout.Label("Lands", EditorStyles.boldLabel);
-        _landScroll = EditorGUILayout.BeginScrollView(_landScroll, GUILayout.MinHeight(90));
+        _landScroll = EditorGUILayout.BeginScrollView(_landScroll, GUILayout.Height(110));
         for (int i = 0; i < _level.cells.Count; i++)
             DrawListButton(i, SelectionKind.Land);
         EditorGUILayout.EndScrollView();
 
         EditorGUILayout.Space(4);
         GUILayout.Label("Trees", EditorStyles.boldLabel);
-        _treeScroll = EditorGUILayout.BeginScrollView(_treeScroll, GUILayout.MinHeight(90));
+        _treeScroll = EditorGUILayout.BeginScrollView(_treeScroll, GUILayout.Height(110));
         for (int i = 0; i < _level.trees.Count; i++)
             DrawListButton(i, SelectionKind.Tree);
         EditorGUILayout.EndScrollView();
 
+        EditorGUILayout.Space(4);
+        GUILayout.Label("Decorations", EditorStyles.boldLabel);
+        if (GUILayout.Button("Add Decor", GUILayout.Height(24)))
+            AddDecor();
+        _decorScroll = EditorGUILayout.BeginScrollView(_decorScroll, GUILayout.Height(90));
+        if (_level.decorations != null)
+        {
+            for (int i = 0; i < _level.decorations.Count; i++)
+            {
+                bool decorSelected = _selectionKind == SelectionKind.Decor && _selectedDecorIndex == i;
+                Color prev = GUI.backgroundColor;
+                GUI.backgroundColor = decorSelected ? new Color(0.5f, 0.7f, 1f) : prev;
+                if (GUILayout.Button(_level.decorations[i].decorId, GUILayout.Height(24)))
+                    Select(SelectionKind.Decor, i);
+                GUI.backgroundColor = prev;
+            }
+        }
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.EndScrollView();
         EditorGUILayout.EndVertical();
     }
 
@@ -238,6 +265,7 @@ public class LevelEditorWindow : EditorWindow
 
         DrawCanvasGrid(canvasRect);
         DrawRegionBounds(canvasRect);
+        DrawDecorNodes(canvasRect);
         DrawLandNodes(canvasRect);
         DrawTreeNodes(canvasRect);
         HandleCanvasEvents(canvasRect);
@@ -358,6 +386,48 @@ public class LevelEditorWindow : EditorWindow
         }
     }
 
+    private void DrawDecorNodes(Rect canvasRect)
+    {
+        if (_level.decorations == null || _level.decorations.Count == 0)
+            return;
+
+        for (int i = 0; i < _level.decorations.Count; i++)
+        {
+            DecorData decor = _level.decorations[i];
+            Vector2 topLeft = ToCanvas(canvasRect, decor.x, decor.y);
+            Rect nodeRect   = new Rect(topLeft.x, topLeft.y,
+                                        decor.width  * _canvasZoom,
+                                        decor.height * _canvasZoom);
+
+            bool selected = _selectionKind == SelectionKind.Decor && _selectedDecorIndex == i;
+
+            Color fill = selected
+                ? new Color(1f, 0.85f, 0.2f, 0.22f)
+                : new Color(0.45f, 0.75f, 1f, 0.13f);
+            EditorGUI.DrawRect(nodeRect, fill);
+
+            Handles.BeginGUI();
+            Handles.color = selected ? new Color(1f, 0.85f, 0.2f, 1f) : new Color(0.45f, 0.75f, 1f, 0.85f);
+            float lw = selected ? 2.5f : 1.5f;
+            Handles.DrawAAPolyLine(lw,
+                new Vector3(nodeRect.xMin, nodeRect.yMin),
+                new Vector3(nodeRect.xMax, nodeRect.yMin),
+                new Vector3(nodeRect.xMax, nodeRect.yMax),
+                new Vector3(nodeRect.xMin, nodeRect.yMax),
+                new Vector3(nodeRect.xMin, nodeRect.yMin));
+            Handles.EndGUI();
+
+            GUIStyle ls = new GUIStyle(EditorStyles.miniLabel)
+            {
+                normal = { textColor = selected ? Color.yellow : new Color(0.7f, 0.9f, 1f) },
+                padding = new RectOffset(4, 0, 2, 0)
+            };
+            string label = decor.decorId + (string.IsNullOrWhiteSpace(decor.prefabPath) ? " (no prefab)" : "");
+            GUI.Label(nodeRect, label, ls);
+            EditorGUIUtility.AddCursorRect(nodeRect, MouseCursor.MoveArrow);
+        }
+    }
+
     private void DrawNode(Rect rect, Color color, bool selected, string label)
     {
         Color fillColor = selected ? Color.yellow : color;
@@ -382,7 +452,7 @@ public class LevelEditorWindow : EditorWindow
     private void HandleCanvasEvents(Rect rect)
     {
         Event e = Event.current;
-        bool isDraggingNode = _dragLandIndex >= 0 || _dragTreeIndex >= 0;
+        bool isDraggingNode = _dragLandIndex >= 0 || _dragTreeIndex >= 0 || _dragDecorIndex >= 0;
 
         if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Space)
         {
@@ -398,8 +468,9 @@ public class LevelEditorWindow : EditorWindow
 
         if (e.type == EventType.MouseUp)
         {
-            _dragLandIndex = -1;
-            _dragTreeIndex = -1;
+            _dragLandIndex   = -1;
+            _dragTreeIndex   = -1;
+            _dragDecorIndex  = -1;
             _dragLandStartPositions.Clear();
             _isPanningCanvas = false;
             return;
@@ -490,6 +561,29 @@ public class LevelEditorWindow : EditorWindow
                 return;
             }
 
+            // Decor hit test — lowest priority (background objects)
+            if (_level.decorations != null)
+            {
+                for (int i = _level.decorations.Count - 1; i >= 0; i--)
+                {
+                    DecorData decor = _level.decorations[i];
+                    Vector2 decorTL  = ToCanvas(rect, decor.x, decor.y);
+                    Rect decorRect   = new Rect(decorTL.x, decorTL.y,
+                                                decor.width  * _canvasZoom,
+                                                decor.height * _canvasZoom);
+                    if (!decorRect.Contains(e.mousePosition))
+                        continue;
+
+                    Select(SelectionKind.Decor, i);
+                    _dragDecorIndex = i;
+                    _dragLandIndex  = -1;
+                    _dragTreeIndex  = -1;
+                    _dragDecorOffset = e.mousePosition - decorTL;
+                    e.Use();
+                    return;
+                }
+            }
+
             Select(SelectionKind.None, -1);
             e.Use();
         }
@@ -524,6 +618,15 @@ public class LevelEditorWindow : EditorWindow
                 float clampedY = Mathf.Clamp(pos.y, 1614f, 1820f);
                 _level.trees[_dragTreeIndex].x = _snapEnabled ? SnapValue(clampedX) : Mathf.RoundToInt(clampedX);
                 _level.trees[_dragTreeIndex].y = _snapEnabled ? SnapValue(clampedY) : Mathf.RoundToInt(clampedY);
+                Repaint();
+                e.Use();
+            }
+            else if (_dragDecorIndex >= 0 && _level.decorations != null && _dragDecorIndex < _level.decorations.Count)
+            {
+                DecorData draggingDecor = _level.decorations[_dragDecorIndex];
+                Vector2 newTopLeft = FromCanvas(rect, clampedMousePosition - _dragDecorOffset);
+                draggingDecor.x = _snapEnabled ? SnapValue(newTopLeft.x) : Mathf.RoundToInt(newTopLeft.x);
+                draggingDecor.y = _snapEnabled ? SnapValue(newTopLeft.y) : Mathf.RoundToInt(newTopLeft.y);
                 Repaint();
                 e.Use();
             }
@@ -565,6 +668,8 @@ public class LevelEditorWindow : EditorWindow
         }
         else if (_selectionKind == SelectionKind.Tree && IsValidTreeSelection())
             DrawTreeInspector(_level.trees[_selectedTreeIndex]);
+        else if (_selectionKind == SelectionKind.Decor && IsValidDecorSelection())
+            DrawDecorInspector(_level.decorations[_selectedDecorIndex]);
         else
             EditorGUILayout.HelpBox("Select a land or tree node to edit position, type, attributes and neighbors.", MessageType.Info);
 
@@ -706,6 +811,76 @@ public class LevelEditorWindow : EditorWindow
             DeleteSelectedTree();
     }
 
+    private void DrawDecorInspector(DecorData decor)
+    {
+        GUILayout.Label("Decoration", EditorStyles.boldLabel);
+        decor.decorId = EditorGUILayout.TextField("ID", decor.decorId);
+
+        EditorGUILayout.Space(4);
+        GUILayout.Label("Prefab", EditorStyles.boldLabel);
+
+        // Convenience object-picker — auto-extracts the Resources-relative path
+        GameObject currentPrefab = string.IsNullOrWhiteSpace(decor.prefabPath)
+            ? null
+            : Resources.Load<GameObject>(decor.prefabPath);
+
+        EditorGUI.BeginChangeCheck();
+        GameObject picked = (GameObject)EditorGUILayout.ObjectField(
+            "Prefab (Resources)", currentPrefab, typeof(GameObject), false);
+        if (EditorGUI.EndChangeCheck() && picked != null)
+        {
+            string assetPath = AssetDatabase.GetAssetPath(picked);
+            const string resFolder = "/Resources/";
+            int idx = assetPath.IndexOf(resFolder, StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+                decor.prefabPath = Path.ChangeExtension(
+                    assetPath.Substring(idx + resFolder.Length), null);
+            else
+                Debug.LogWarning("[LevelEditor] Decor prefab must be inside a Resources/ folder.");
+        }
+
+        decor.prefabPath = EditorGUILayout.TextField("  Path", decor.prefabPath ?? "");
+        if (!string.IsNullOrWhiteSpace(decor.prefabPath) && currentPrefab == null)
+            EditorGUILayout.HelpBox("Not found: Resources/" + decor.prefabPath, MessageType.Warning);
+        else
+            EditorGUILayout.HelpBox("Path inside any Resources/ folder, no extension.", MessageType.None);
+
+        EditorGUILayout.Space(4);
+        DrawPositionFields(ref decor.x, ref decor.y);
+
+        EditorGUILayout.Space(4);
+        GUILayout.Label("Size", EditorStyles.boldLabel);
+        decor.sizeMode = DecorSizeMode.Normal;
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Size (px)");
+        GUILayout.Label("W", GUILayout.Width(14));
+        decor.width  = Mathf.Max(1, EditorGUILayout.IntField(decor.width,  GUILayout.Width(58)));
+        GUILayout.Space(8);
+        GUILayout.Label("H", GUILayout.Width(14));
+        decor.height = Mathf.Max(1, EditorGUILayout.IntField(decor.height, GUILayout.Width(58)));
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.HelpBox("Direct pixel size, same units as Screen W/H.", MessageType.None);
+
+        decor.sortingOrder = EditorGUILayout.IntField("Sorting Order", decor.sortingOrder);
+
+        EditorGUILayout.Space(10);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Copy Decor", GUILayout.Height(28)))
+            CopySelectedDecorToClipboard();
+
+        EditorGUI.BeginDisabledGroup(!HasDecorClipboard());
+        if (GUILayout.Button("Paste Decor", GUILayout.Height(28)))
+            PasteDecorFromClipboard();
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(10);
+        if (GUILayout.Button("Delete Decor", GUILayout.Height(28)))
+            DeleteSelectedDecor();
+    }
+
     private void AddLand()
     {
         LevelCellData land = new LevelCellData
@@ -771,6 +946,89 @@ public class LevelEditorWindow : EditorWindow
         _level.trees.Add(tree);
         Select(SelectionKind.Tree, _level.trees.Count - 1);
         Repaint();
+    }
+
+    private void AddDecor()
+    {
+        if (_level.decorations == null)
+            _level.decorations = new List<DecorData>();
+        DecorData decor = new DecorData
+        {
+            decorId       = NextDecorId(),
+            prefabPath    = "",
+            x             = _level.screenX,
+            y             = _level.screenY,
+            sizeMode      = DecorSizeMode.Normal,
+            width         = Mathf.RoundToInt(3f * _level.slotSize),
+            height        = Mathf.RoundToInt(3f * _level.slotSize),
+            sortingOrder  = -1
+        };
+        _level.decorations.Add(decor);
+        Select(SelectionKind.Decor, _level.decorations.Count - 1);
+        Repaint();
+    }
+
+    private void CopySelectedDecorToClipboard()
+    {
+        if (!IsValidDecorSelection())
+            return;
+
+        DecorData decorCopy = CloneDecor(_level.decorations[_selectedDecorIndex]);
+        EditorGUIUtility.systemCopyBuffer = DecorClipboardPrefix + JsonUtility.ToJson(decorCopy, true);
+        Debug.Log("[LevelEditor] Copied decor to clipboard.");
+    }
+
+    private void PasteDecorFromClipboard()
+    {
+        if (!TryGetDecorFromClipboard(out DecorData decorCopy))
+        {
+            Debug.LogWarning("[LevelEditor] Clipboard does not contain a decor.");
+            return;
+        }
+
+        if (_level.decorations == null)
+            _level.decorations = new List<DecorData>();
+
+        decorCopy.decorId = NextDecorId();
+        decorCopy.sizeMode = DecorSizeMode.Normal;
+        decorCopy.width = Mathf.Max(1, decorCopy.width);
+        decorCopy.height = Mathf.Max(1, decorCopy.height);
+
+        _level.decorations.Add(decorCopy);
+        Select(SelectionKind.Decor, _level.decorations.Count - 1);
+        Repaint();
+        Debug.Log("[LevelEditor] Pasted decor from clipboard.");
+    }
+
+    private static DecorData CloneDecor(DecorData source)
+    {
+        return source == null ? null : JsonUtility.FromJson<DecorData>(JsonUtility.ToJson(source, true));
+    }
+
+    private static bool TryGetDecorFromClipboard(out DecorData decor)
+    {
+        string clipboard = EditorGUIUtility.systemCopyBuffer;
+        if (string.IsNullOrWhiteSpace(clipboard) || !clipboard.StartsWith(DecorClipboardPrefix, StringComparison.Ordinal))
+        {
+            decor = null;
+            return false;
+        }
+
+        try
+        {
+            decor = JsonUtility.FromJson<DecorData>(clipboard.Substring(DecorClipboardPrefix.Length));
+            return decor != null;
+        }
+        catch
+        {
+            decor = null;
+            return false;
+        }
+    }
+
+    private static bool HasDecorClipboard()
+    {
+        return TryGetDecorFromClipboard(out _);
     }
 
     private void DrawTreeConditions(TreeData tree)
@@ -1009,6 +1267,15 @@ public class LevelEditorWindow : EditorWindow
         Repaint();
     }
 
+    private void DeleteSelectedDecor()
+    {
+        if (!IsValidDecorSelection())
+            return;
+        _level.decorations.RemoveAt(_selectedDecorIndex);
+        Select(SelectionKind.None, -1);
+        Repaint();
+    }
+
     private void SetLandNeighbor(LevelCellData a, LevelCellData b, bool connected)
     {
         SetNeighborId(a.neighborIds, b.landId, connected);
@@ -1094,6 +1361,21 @@ public class LevelEditorWindow : EditorWindow
             if (tree.conditions == null)
                 tree.conditions = new List<TreeConditionData>();
             NormalizeTreeConditions(tree);
+        }
+
+        if (_level.decorations == null)
+            _level.decorations = new List<DecorData>();
+        HashSet<string> decorIds = new HashSet<string>();
+        for (int i = 0; i < _level.decorations.Count; i++)
+        {
+            DecorData decor = _level.decorations[i];
+            if (string.IsNullOrWhiteSpace(decor.decorId))
+                decor.decorId = "decor_" + (i + 1).ToString("D2");
+            decor.decorId = MakeUniqueId(decor.decorId, decorIds);
+
+            decor.sizeMode = DecorSizeMode.Normal;
+            decor.width  = Mathf.Max(1, decor.width);
+            decor.height = Mathf.Max(1, decor.height);
         }
     }
 
@@ -1428,6 +1710,20 @@ public class LevelEditorWindow : EditorWindow
         return id;
     }
 
+    private string NextDecorId()
+    {
+        if (_level.decorations == null)
+            return "decor_01";
+        int index = _level.decorations.Count + 1;
+        string id;
+        do
+        {
+            id = "decor_" + index.ToString("D2");
+            index++;
+        } while (_level.decorations.Exists(d => d.decorId == id));
+        return id;
+    }
+
     private LevelCellData FindLand(string id)
     {
         return _level.cells.Find(land => land.landId == id);
@@ -1485,7 +1781,8 @@ public class LevelEditorWindow : EditorWindow
             _selectedLandIndices.Clear();
         }
 
-        _selectedTreeIndex = kind == SelectionKind.Tree ? index : -1;
+        _selectedTreeIndex  = kind == SelectionKind.Tree  ? index : -1;
+        _selectedDecorIndex = kind == SelectionKind.Decor ? index : -1;
         Repaint();
     }
 
@@ -1618,6 +1915,8 @@ public class LevelEditorWindow : EditorWindow
             return _selectedLandIndex;
         if (_selectionKind == SelectionKind.Tree)
             return _selectedTreeIndex;
+        if (_selectionKind == SelectionKind.Decor)
+            return _selectedDecorIndex;
         return -1;
     }
 
@@ -1635,5 +1934,12 @@ public class LevelEditorWindow : EditorWindow
     private bool IsValidTreeSelection()
     {
         return _selectedTreeIndex >= 0 && _selectedTreeIndex < _level.trees.Count;
+    }
+
+    private bool IsValidDecorSelection()
+    {
+        return _level.decorations != null
+            && _selectedDecorIndex >= 0
+            && _selectedDecorIndex < _level.decorations.Count;
     }
 }
