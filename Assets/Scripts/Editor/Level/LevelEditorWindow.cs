@@ -678,6 +678,17 @@ public class LevelEditorWindow : EditorWindow
         if (tree.treeId != oldId)
             RenameTreeId(oldId, tree.treeId);
 
+        string autoName = TreeNameRegistry.GetDisplayName(tree.treeId);
+        tree.displayName = EditorGUILayout.TextField(
+            new GUIContent("Display Name", $"Name shown in-game. Leave blank to use auto: \"{autoName}\""),
+            tree.displayName ?? "");
+        if (string.IsNullOrWhiteSpace(tree.displayName))
+        {
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.TextField("  (auto)", autoName);
+            EditorGUI.EndDisabledGroup();
+        }
+
         tree.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", tree.itemType);
         tree.requiredSlotType = (SlotType)EditorGUILayout.EnumPopup("Required Slot", tree.requiredSlotType);
         tree.solutionLandId = DrawLandIdPopup("Solution Land", tree.solutionLandId);

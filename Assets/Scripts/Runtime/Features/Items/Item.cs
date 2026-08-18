@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemType itemType;
     [SerializeField] private SlotType itemSlotType;
     [SerializeField] private string itemId;
+    [SerializeField] private string displayName;
     [SerializeField] private string solutionSlotId;
     [SerializeField] private ItemView itemView;
     
@@ -37,6 +38,9 @@ public class Item : MonoBehaviour
     public SlotType ItemSlotType => itemSlotType;
     public ItemType ItemType => itemType;
     public string ItemId => itemId;
+    public string DisplayName => string.IsNullOrWhiteSpace(displayName)
+        ? TreeNameRegistry.GetDisplayName(itemId)
+        : displayName;
     public string SolutionSlotId => solutionSlotId;
     public IReadOnlyList<PlantCondition> Conditions => conditions;
     public bool IgnoresConditionsForRun => _ignoreConditionsForRun;
@@ -55,11 +59,13 @@ public class Item : MonoBehaviour
         SlotType newItemSlotType,
         string newItemId,
         List<PlantCondition> newConditions,
-        string newSolutionSlotId = "")
+        string newSolutionSlotId = "",
+        string newDisplayName = "")
     {
         itemType = newItemType;
         itemSlotType = newItemSlotType;
         itemId = newItemId;
+        displayName = newDisplayName ?? "";
         conditions = newConditions ?? new List<PlantCondition>();
         solutionSlotId = newSolutionSlotId;
         _ignoreConditionsForRun = false;

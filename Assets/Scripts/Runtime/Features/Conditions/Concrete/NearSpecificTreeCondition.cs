@@ -4,6 +4,7 @@ using System;
 public class NearSpecificTreeCondition : PlantCondition
 {
     public string targetTreeId;
+    public string targetDisplayName;
 
     public override bool CheckCondition(ItemSlot itemSlot)
     {
@@ -17,6 +18,9 @@ public class NearSpecificTreeCondition : PlantCondition
 
     public override string GetDescription()
     {
-        return $"I want to plant near {targetTreeId}.";
+        string name = string.IsNullOrWhiteSpace(targetDisplayName)
+            ? TreeNameRegistry.GetDisplayName(targetTreeId)
+            : targetDisplayName;
+        return $"I want to plant near {name}.";
     }
 }
