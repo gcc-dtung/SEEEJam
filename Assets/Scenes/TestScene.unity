@@ -787,6 +787,7 @@ MonoBehaviour:
   loadOnStart: 1
   slotPrefab: {fileID: 1139939403105882617, guid: d0e7f3445156de94cb1496243345e2be, type: 3}
   treeItemPrefab: {fileID: 2251225891551616367, guid: 9aa898fd05fbc2540908a249040a8a03, type: 3}
+  lightItemPrefab: {fileID: 1248499350841937669, guid: c6b6638d02626dc4186f385ceea71ee9, type: 3}
   plantCatalog: {fileID: 0}
   targetCamera: {fileID: 997584460}
   mapScreenPreviewToCamera: 1
@@ -5473,7 +5474,7 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 2ee73195aef21104d8193c6372d053c3, type: 3}
   - {fileID: 4900000, guid: 0512826bd16af8e4bb5454c24fecbeb5, type: 3}
   - {fileID: 4900000, guid: d678a125dab6c8741933288543212df7, type: 3}
-  loadOnStart: 0
+  loadOnStart: 1
 --- !u!114 &1606776114
 MonoBehaviour:
   m_ObjectHideFlags: 0
