@@ -148,7 +148,7 @@ public class LevelEditorWindow : EditorWindow
         _level.screenHeight = EditorGUILayout.IntField("H", _level.screenHeight);
         EditorGUILayout.EndHorizontal();
         _level.slotSize = EditorGUILayout.IntSlider("Slot Size", _level.slotSize, 12, 160);
-        _level.itemSize = EditorGUILayout.IntSlider("Item Size", _level.itemSize, 8, 160);
+        _level.itemSize = EditorGUILayout.IntSlider("Item Size", _level.itemSize, 8, 300);
 
         EditorGUILayout.Space(4);
         EditorGUILayout.LabelField("File", string.IsNullOrEmpty(_currentJsonPath) ? "Not saved yet" : Path.GetFileName(_currentJsonPath));
@@ -1335,7 +1335,7 @@ public class LevelEditorWindow : EditorWindow
         _level.screenHeight = Mathf.Clamp(_level.screenHeight <= 0 ? 2340 : _level.screenHeight, 1, 4000);
         _level.maxMoves = Mathf.Max(0, _level.maxMoves);
         _level.slotSize = Mathf.Clamp(_level.slotSize <= 0 ? 125 : _level.slotSize, 12, 160);
-        _level.itemSize = Mathf.Clamp(_level.itemSize <= 0 ? 100 : _level.itemSize, 8, 160);
+        _level.itemSize = Mathf.Clamp(_level.itemSize <= 0 ? 100 : _level.itemSize, 8, 300);
 
         HashSet<string> landIds = new HashSet<string>();
         for (int i = 0; i < _level.cells.Count; i++)

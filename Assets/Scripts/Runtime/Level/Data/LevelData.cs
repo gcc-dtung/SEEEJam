@@ -134,7 +134,7 @@ public class LevelData
     public int screenWidth = 1080;
     public int screenHeight = 2340;
     public int slotSize = 125;
-    public int itemSize = 100;
+    public int itemSize = 220;
     public List<LevelCellData> cells       = new List<LevelCellData>();
     public List<TreeData>      trees       = new List<TreeData>();
     public List<DecorData>     decorations = new List<DecorData>();
