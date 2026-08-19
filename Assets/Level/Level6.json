@@ -8,7 +8,7 @@
     "screenWidth": 1080,
     "screenHeight": 2340,
     "slotSize": 125,
-    "itemSize": 100,
+    "itemSize": 220,
     "cells": [
         {
             "landId": "land_01",
@@ -354,6 +354,32 @@
                     "smellPreference": 1
                 }
             ]
+        }
+    ],
+        "decorations": [
+        {
+            "decorId": "decor_01",
+            "prefabPath": "platform_5x2",
+            "x": 167,
+            "y": 709,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 789,
+            "height": 400,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_3x1",
+            "x": 328,
+            "y": 1160,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 460,
+            "height": 190,
+            "sortingOrder": -1
         }
     ]
 }

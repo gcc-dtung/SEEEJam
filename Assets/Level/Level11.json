@@ -8,7 +8,7 @@
     "screenWidth": 1080,
     "screenHeight": 2340,
     "slotSize": 125,
-    "itemSize": 100,
+    "itemSize": 220,
     "cells": [
         {
             "landId": "land_01",

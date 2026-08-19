@@ -3,17 +3,23 @@ using UnityEngine;
 
 public class ItemView : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [Header("Character")]
+    [SerializeField] private SpriteRenderer characterRenderer;
 
-    public SpriteRenderer SpriteRenderer
-    {
-        get
-        {
-            EnsureReferences();
-            return spriteRenderer;
-        }
-    }
+    [Header("Tree Visuals")]
+    [SerializeField] private SpriteRenderer expressionRenderer;
+    [SerializeField] private SpriteRenderer effectRenderer;
+    [SerializeField] private TreeVisualDatabase treeVisualDatabase;
 
+    [Header("Shared Bieu Cam")]
+    [SerializeField] private Sprite happyExpressionSprite;
+    [SerializeField] private Sprite sadExpressionSprite;
+
+    [Header("Shared Effect")]
+    [SerializeField] private Sprite goodSmellEffectSprite;
+    [SerializeField] private Sprite badSmellEffectSprite;
+
+    private TreeVisualEntry _activeEntry;
     private Transform _visualTransform;
     private PlantVisual _plantVisual;
     private Vector3 _normalScale = Vector3.one;
@@ -22,6 +28,15 @@ public class ItemView : MonoBehaviour
     private bool _hasBoosterSortingOverride;
     private int _normalSortingLayerId;
     private int _normalSortingOrder;
+
+    public SpriteRenderer SpriteRenderer
+    {
+        get
+        {
+            EnsureReferences();
+            return characterRenderer;
+        }
+    }
 
     private void Awake()
     {
@@ -47,7 +62,6 @@ public class ItemView : MonoBehaviour
             SetColor(Color.white);
             return;
         }
-        SetColor(Color.blue);
     }
 
     public void ShowWrong()
@@ -57,7 +71,79 @@ public class ItemView : MonoBehaviour
             SetColor(Color.white);
             return;
         }
-        SetColor(Color.red);
+    }
+
+    public void ApplyTreeVisualProfile(string treeKey, string fallbackKey = "")
+    {
+        EnsureTreeVisualDatabase();
+
+        if (treeVisualDatabase != null)
+            _activeEntry = treeVisualDatabase.FindEntry(treeKey) ?? treeVisualDatabase.FindEntry(fallbackKey);
+        else
+            _activeEntry = null;
+
+        ApplyCurrentProfile();
+    }
+
+    public void SetMood(bool isHappy)
+    {
+        EnsureReferences();
+
+        if (_activeEntry == null)
+            return;
+
+        Sprite targetCharacterSprite = isHappy
+            ? _activeEntry.happyCharacterSprite
+            : _activeEntry.sadCharacterSprite;
+
+        if (characterRenderer != null && targetCharacterSprite != null)
+            characterRenderer.sprite = targetCharacterSprite;
+
+        Sprite targetExpressionSprite = isHappy
+            ? happyExpressionSprite
+            : sadExpressionSprite;
+
+        if (expressionRenderer != null && targetExpressionSprite != null)
+            expressionRenderer.sprite = targetExpressionSprite;
+    }
+
+    public void SetEffect(PlantSmell smell)
+    {
+        EnsureReferences();
+
+        if (_activeEntry == null || effectRenderer == null)
+            return;
+
+        if (smell == PlantSmell.None)
+        {
+            effectRenderer.enabled = false;
+            return;
+        }
+
+        effectRenderer.enabled = true;
+        Sprite targetEffectSprite = smell == PlantSmell.Disgust
+            ? badSmellEffectSprite
+            : goodSmellEffectSprite;
+
+        if (targetEffectSprite != null)
+            effectRenderer.sprite = targetEffectSprite;
+    }
+
+    public void ApplyCurrentProfile()
+    {
+        EnsureReferences();
+
+        if (_activeEntry == null)
+            return;
+
+        if (characterRenderer != null && _activeEntry.sadCharacterSprite != null)
+            characterRenderer.sprite = _activeEntry.sadCharacterSprite;
+
+        if (expressionRenderer != null && sadExpressionSprite != null)
+            expressionRenderer.sprite = sadExpressionSprite;
+
+        if (effectRenderer != null)
+            effectRenderer.enabled = false;
     }
 
     public void SetDragAppearance(float scaleMultiplier, float opacity, float duration)
@@ -81,31 +167,41 @@ public class ItemView : MonoBehaviour
         if (_visualTransform != null)
             _visualTransform.localScale = _normalScale;
 
-        if (spriteRenderer != null)
+        if (characterRenderer != null)
         {
-            Color color = spriteRenderer.color;
+            Color color = characterRenderer.color;
             color.a = 1f;
-            spriteRenderer.color = color;
+            characterRenderer.color = color;
         }
     }
 
     public void SetBoosterSelectionFocus(bool focused, int sortingLayerId, int sortingOrder)
     {
         EnsureReferences();
-        if (spriteRenderer == null)
+        if (characterRenderer == null)
             return;
 
         if (focused)
         {
             if (!_hasBoosterSortingOverride)
             {
-                _normalSortingLayerId = spriteRenderer.sortingLayerID;
-                _normalSortingOrder = spriteRenderer.sortingOrder;
+                _normalSortingLayerId = characterRenderer.sortingLayerID;
+                _normalSortingOrder = characterRenderer.sortingOrder;
                 _hasBoosterSortingOverride = true;
             }
 
-            spriteRenderer.sortingLayerID = sortingLayerId;
-            spriteRenderer.sortingOrder = sortingOrder;
+            characterRenderer.sortingLayerID = sortingLayerId;
+            characterRenderer.sortingOrder = sortingOrder;
+            if (expressionRenderer != null)
+            {
+                expressionRenderer.sortingLayerID = sortingLayerId;
+                expressionRenderer.sortingOrder = sortingOrder + 1;
+            }
+            if (effectRenderer != null)
+            {
+                effectRenderer.sortingLayerID = sortingLayerId;
+                effectRenderer.sortingOrder = sortingOrder + 2;
+            }
             _plantVisual?.SyncSortingWithSkin();
             return;
         }
@@ -113,8 +209,18 @@ public class ItemView : MonoBehaviour
         if (!_hasBoosterSortingOverride)
             return;
 
-        spriteRenderer.sortingLayerID = _normalSortingLayerId;
-        spriteRenderer.sortingOrder = _normalSortingOrder;
+        characterRenderer.sortingLayerID = _normalSortingLayerId;
+        characterRenderer.sortingOrder = _normalSortingOrder;
+        if (expressionRenderer != null)
+        {
+            expressionRenderer.sortingLayerID = _normalSortingLayerId;
+            expressionRenderer.sortingOrder = _normalSortingOrder + 1;
+        }
+        if (effectRenderer != null)
+        {
+            effectRenderer.sortingLayerID = _normalSortingLayerId;
+            effectRenderer.sortingOrder = _normalSortingOrder + 2;
+        }
         _plantVisual?.SyncSortingWithSkin();
         _hasBoosterSortingOverride = false;
     }
@@ -122,11 +228,11 @@ public class ItemView : MonoBehaviour
     private void SetColor(Color color)
     {
         EnsureReferences();
-        if (spriteRenderer == null)
+        if (characterRenderer == null)
             return;
 
-        color.a = spriteRenderer.color.a;
-        spriteRenderer.color = color;
+        color.a = characterRenderer.color.a;
+        characterRenderer.color = color;
     }
 
     private void TweenScale(Vector3 targetScale, float duration)
@@ -143,32 +249,38 @@ public class ItemView : MonoBehaviour
 
     private void TweenOpacity(float opacity, float duration)
     {
-        if (spriteRenderer == null)
+        if (characterRenderer == null)
             return;
 
         if (_opacityTween.isAlive)
             _opacityTween.Stop();
 
-        Color currentColor = spriteRenderer.color;
+        Color currentColor = characterRenderer.color;
         Color targetColor = currentColor;
         targetColor.a = opacity;
 
         if (currentColor != targetColor)
-            _opacityTween = Tween.Custom(currentColor, targetColor, duration, value => spriteRenderer.color = value);
+            _opacityTween = Tween.Custom(currentColor, targetColor, duration, value => characterRenderer.color = value);
     }
 
     private void EnsureReferences()
     {
-        if (spriteRenderer == null)
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (characterRenderer == null)
+            characterRenderer = GetComponentInChildren<SpriteRenderer>(true);
 
-        if (_visualTransform == null && spriteRenderer != null)
+        if (_visualTransform == null && characterRenderer != null)
         {
-            _visualTransform = spriteRenderer.transform;
+            _visualTransform = characterRenderer.transform;
             _normalScale = _visualTransform.localScale;
         }
 
         if (_plantVisual == null)
             _plantVisual = GetComponent<PlantVisual>();
+    }
+
+    private void EnsureTreeVisualDatabase()
+    {
+        if (treeVisualDatabase == null)
+            treeVisualDatabase = Resources.Load<TreeVisualDatabase>("TreeVisualDatabase");
     }
 }

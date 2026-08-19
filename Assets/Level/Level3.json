@@ -8,13 +8,14 @@
     "screenWidth": 1080,
     "screenHeight": 2340,
     "slotSize": 125,
-    "itemSize": 100,
+    "itemSize": 220,
     "cells": [
         {
             "landId": "land_01",
             "x": 420,
             "y": 840,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -27,6 +28,7 @@
             "x": 420,
             "y": 980,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -40,6 +42,7 @@
             "x": 420,
             "y": 1120,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -52,6 +55,7 @@
             "x": 720,
             "y": 838,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -64,6 +68,7 @@
             "x": 720,
             "y": 980,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -77,6 +82,7 @@
             "x": 720,
             "y": 1124,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -88,6 +94,7 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "displayName": "",
             "solutionLandId": "",
             "x": 360,
             "y": 1620,
@@ -107,6 +114,7 @@
         },
         {
             "treeId": "tree_02",
+            "displayName": "",
             "solutionLandId": "",
             "x": 500,
             "y": 1620,
@@ -126,6 +134,7 @@
         },
         {
             "treeId": "tree_03",
+            "displayName": "",
             "solutionLandId": "",
             "x": 640,
             "y": 1620,
@@ -145,6 +154,7 @@
         },
         {
             "treeId": "tree_04",
+            "displayName": "",
             "solutionLandId": "",
             "x": 780,
             "y": 1620,
@@ -161,6 +171,32 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_1x3",
+            "x": 350,
+            "y": 801,
+            "sizeMode": 0,
+            "widthInLands": 1.0,
+            "heightInLands": 4.0,
+            "width": 140,
+            "height": 450,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_03",
+            "prefabPath": "platform_1x3",
+            "x": 651,
+            "y": 805,
+            "sizeMode": 0,
+            "widthInLands": 1.0,
+            "heightInLands": 4.0,
+            "width": 140,
+            "height": 450,
+            "sortingOrder": -1
         }
     ]
 }

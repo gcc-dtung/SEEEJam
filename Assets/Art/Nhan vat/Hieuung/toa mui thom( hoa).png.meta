@@ -1,10 +1,49 @@
 fileFormatVersion: 2
-guid: e60eecf4597140746b5264e89baa1366
+guid: d7fc9adbfead0dc41b76528e21bd6a22
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -3708626188232468648
     second: toa mui thom( hoa)_0
+  - first:
+      213: 2729799476541655665
+    second: toa mui thom( hoa)_1
+  - first:
+      213: -8173089671716049193
+    second: toa mui thom( hoa)_2
+  - first:
+      213: 1587564429447615437
+    second: toa mui thom( hoa)_3
+  - first:
+      213: -6145441032068746925
+    second: toa mui thom( hoa)_4
+  - first:
+      213: 5582397599750489241
+    second: toa mui thom( hoa)_5
+  - first:
+      213: 3563740924846241821
+    second: toa mui thom( hoa)_6
+  - first:
+      213: -1184140682206715134
+    second: toa mui thom( hoa)_7
+  - first:
+      213: 2611224775669024101
+    second: toa mui thom( hoa)_8
+  - first:
+      213: -6489376112136965881
+    second: toa mui thom( hoa)_9
+  - first:
+      213: 7235260819115797184
+    second: toa mui thom( hoa)_10
+  - first:
+      213: 1164296216904164795
+    second: toa mui thom( hoa)_11
+  - first:
+      213: -7992283238401756052
+    second: toa mui thom( hoa)_12
+  - first:
+      213: -8359871947836736686
+    second: toa mui thom( hoa)_13
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +85,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -96,6 +135,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -103,10 +155,10 @@ TextureImporter:
       name: toa mui thom( hoa)_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 152
-        height: 152
+        x: 63
+        y: 135
+        width: 15
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,11 +173,297 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_1
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 126
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17a005b292232e520800000000000000
+      internalID: 2729799476541655665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_2
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 110
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7de63f71f3a539e80800000000000000
+      internalID: -8173089671716049193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_3
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 103
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc35543ff69280610800000000000000
+      internalID: 1587564429447615437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_4
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 103
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 351be67f0f107baa0800000000000000
+      internalID: -6145441032068746925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_5
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 84
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9940f184a09a87d40800000000000000
+      internalID: 5582397599750489241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_6
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 77
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d187bf85d73f47130800000000000000
+      internalID: 3563740924846241821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_7
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 77
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 203eaf8c256119fe0800000000000000
+      internalID: -1184140682206715134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_8
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 84
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 565837e391fec3420800000000000000
+      internalID: 2611224775669024101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_9
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 59
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 701bb26eeca11f5a0800000000000000
+      internalID: -6489376112136965881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_10
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 65
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cae2b4816fc86460800000000000000
+      internalID: 7235260819115797184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_11
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 45
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb567e59d39682010800000000000000
+      internalID: 1164296216904164795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_12
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 35
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6431c65db4b51190800000000000000
+      internalID: -7992283238401756052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toa mui thom( hoa)_13
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 40
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25b307581c4cbfb80800000000000000
+      internalID: -8359871947836736686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -136,6 +474,19 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       toa mui thom( hoa)_0: -3708626188232468648
+      toa mui thom( hoa)_1: 2729799476541655665
+      toa mui thom( hoa)_10: 7235260819115797184
+      toa mui thom( hoa)_11: 1164296216904164795
+      toa mui thom( hoa)_12: -7992283238401756052
+      toa mui thom( hoa)_13: -8359871947836736686
+      toa mui thom( hoa)_2: -8173089671716049193
+      toa mui thom( hoa)_3: 1587564429447615437
+      toa mui thom( hoa)_4: -6145441032068746925
+      toa mui thom( hoa)_5: 5582397599750489241
+      toa mui thom( hoa)_6: 3563740924846241821
+      toa mui thom( hoa)_7: -1184140682206715134
+      toa mui thom( hoa)_8: 2611224775669024101
+      toa mui thom( hoa)_9: -6489376112136965881
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

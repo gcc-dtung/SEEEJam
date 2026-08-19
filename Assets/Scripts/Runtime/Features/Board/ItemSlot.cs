@@ -23,6 +23,7 @@ public class ItemSlot : MonoBehaviour
     public bool IsCorner => isCorner;
     public bool IsEdge => isEdge;
     public Item currentItem;
+    public Item HoverItem => _hoverItem;
     public bool HasCurrentItem => currentItem != null;
     public Item CurrentItem => currentItem;
     public List<ItemSlot> Neighbors => neighbors;

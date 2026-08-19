@@ -8,7 +8,7 @@
     "screenWidth": 1080,
     "screenHeight": 2340,
     "slotSize": 125,
-    "itemSize": 100,
+    "itemSize": 220,
     "cells": [
         {
             "landId": "land_01",
@@ -40,7 +40,7 @@
         {
             "landId": "land_03",
             "x": 420,
-            "y": 1120,
+            "y": 1118,
             "slotType": 0,
             "row": 0,
             "isCorner": false,
@@ -54,6 +54,7 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "displayName": "",
             "solutionLandId": "",
             "x": 430,
             "y": 1614,
@@ -61,10 +62,19 @@
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
-            "conditions": []
+            "conditions": [
+                {
+                    "conditionType": 10,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                }
+            ]
         },
         {
             "treeId": "tree_02",
+            "displayName": "",
             "solutionLandId": "",
             "x": 644,
             "y": 1614,
@@ -81,6 +91,20 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_01",
+            "prefabPath": "platform_1x3",
+            "x": 350,
+            "y": 801,
+            "sizeMode": 0,
+            "widthInLands": 1.0,
+            "heightInLands": 4.0,
+            "width": 140,
+            "height": 450,
+            "sortingOrder": -1
         }
     ]
 }

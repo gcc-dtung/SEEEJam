@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ItemSlotView : MonoBehaviour
 {
+    private static readonly Color NormalSlotColor = new Color32(0x63, 0x49, 0x2B, 0xFF);
+    private static readonly Color BadSmellSlotColor = new Color32(0x2D, 0x6C, 0x3E, 0xFF);
+    private static readonly Color GoodSmellSlotColor = new Color32(0xF2, 0xB0, 0xBF, 0xFF);
+
     [SerializeField] private SpriteRenderer hoverIndicatorSprite;
     [SerializeField] private float activeDragScale = 0.7f;
     [SerializeField] private float hintScale = 1.15f;
@@ -49,6 +53,9 @@ public class ItemSlotView : MonoBehaviour
     {
         _visualState = visualState;
         _canPlaceItem = canPlaceItem;
+
+        ApplyColor(visualState, GetHoveredItemSmell());
+
         float targetScale = _isShowingHint
             ? hintScale
             : GetTargetScale(_visualState, _canPlaceItem);
@@ -59,7 +66,10 @@ public class ItemSlotView : MonoBehaviour
     {
         EnsureHoverIndicator();
         if (hoverIndicatorSprite != null)
+        {
             hoverIndicatorSprite.transform.localScale = Vector3.zero;
+            hoverIndicatorSprite.color = NormalSlotColor;
+        }
     }
 
     private float GetTargetScale(SlotVisualState visualState, bool canPlaceItem)
@@ -126,6 +136,42 @@ public class ItemSlotView : MonoBehaviour
 
         if (hoverIndicatorSprite.transform.localScale != targetScale * Vector3.one)
             _scaleTween = Tween.Scale(hoverIndicatorSprite.transform, targetScale, scaleTransitionDuration);
+    }
+
+    private void ApplyColor(SlotVisualState visualState, PlantSmell hoveredItemSmell)
+    {
+        EnsureHoverIndicator();
+        if (hoverIndicatorSprite == null)
+            return;
+
+        Color targetColor = NormalSlotColor;
+        if (visualState == SlotVisualState.Hovered)
+            targetColor = GetSmellColor(hoveredItemSmell);
+
+        hoverIndicatorSprite.color = targetColor;
+    }
+
+    private PlantSmell GetHoveredItemSmell()
+    {
+        if (_itemSlot == null || _itemSlot.HoverItem == null)
+            return PlantSmell.None;
+
+        return _itemSlot.HoverItem.TryGetEmittedSmell(out PlantSmell hoveredSmell)
+            ? hoveredSmell
+            : PlantSmell.None;
+    }
+
+    private static Color GetSmellColor(PlantSmell smell)
+    {
+        switch (smell)
+        {
+            case PlantSmell.Disgust:
+                return BadSmellSlotColor;
+            case PlantSmell.Perfume:
+                return GoodSmellSlotColor;
+            default:
+                return NormalSlotColor;
+        }
     }
 
     private void EnsureHoverIndicator()

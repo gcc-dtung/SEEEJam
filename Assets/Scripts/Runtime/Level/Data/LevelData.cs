@@ -90,6 +90,43 @@ public class TreeData
 }
 
 [Serializable]
+public enum DecorSizeMode
+{
+    /// <summary>Width/Height are direct pixel values (same units as screenWidth/screenHeight).</summary>
+    Normal,
+    /// <summary>Width/Height are computed from widthInLands/heightInLands * slotSize.</summary>
+    Land
+}
+
+[Serializable]
+public class DecorData
+{
+    /// <summary>Unique identifier for this decoration entry.</summary>
+    public string decorId     = "decor_01";
+    /// <summary>
+    /// Path to the prefab relative to any Resources/ folder, without extension.
+    /// E.g. "Decor/PotBackground" for Assets/Resources/Decor/PotBackground.prefab
+    /// </summary>
+    public string prefabPath  = "";
+    /// <summary>Top-left X position in editor screen coordinates.</summary>
+    public int    x;
+    /// <summary>Top-left Y position in editor screen coordinates.</summary>
+    public int    y;
+    /// <summary>Which mode drives the width/height values below.</summary>
+    public DecorSizeMode sizeMode = DecorSizeMode.Land;
+    /// <summary>Width in land slots (e.g. 3 = 3 lands wide). Only used when sizeMode == Land.</summary>
+    public float  widthInLands  = 3f;
+    /// <summary>Height in land slots (e.g. 2 = 2 lands tall). Only used when sizeMode == Land.</summary>
+    public float  heightInLands = 3f;
+    /// <summary>Width in editor screen coordinates. Direct value when sizeMode == Normal, auto-computed when sizeMode == Land.</summary>
+    public int    width       = 800;
+    /// <summary>Height in editor screen coordinates. Direct value when sizeMode == Normal, auto-computed when sizeMode == Land.</summary>
+    public int    height      = 800;
+    /// <summary>SpriteRenderer sorting order. Negative values appear behind slots.</summary>
+    public int    sortingOrder = -1;
+}
+
+[Serializable]
 public class LevelData
 {
     public string levelName = "New Level";
@@ -101,7 +138,8 @@ public class LevelData
     public int screenWidth = 1080;
     public int screenHeight = 2340;
     public int slotSize = 125;
-    public int itemSize = 100;
-    public List<LevelCellData> cells = new List<LevelCellData>();
-    public List<TreeData>      trees = new List<TreeData>();
+    public int itemSize = 220;
+    public List<LevelCellData> cells       = new List<LevelCellData>();
+    public List<TreeData>      trees       = new List<TreeData>();
+    public List<DecorData>     decorations = new List<DecorData>();
 }

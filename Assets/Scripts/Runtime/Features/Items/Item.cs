@@ -17,10 +17,12 @@ public class Item : MonoBehaviour
 
     private ItemSlot currentSlot;
     private bool _ignoreConditionsForRun;
+    private BoxCollider2D _interactionCollider;
 
     private void Awake()
     {
         EnsureItemView();
+        AutoFitInteractionCollider();
     }
 
     private void OnEnable()
@@ -86,6 +88,7 @@ public class Item : MonoBehaviour
         solutionSlotId = newSolutionSlotId;
         _ignoreConditionsForRun = false;
         SyncEmittedSmellTrait();
+        UpdateTreeVisuals();
     }
 
     public bool TryGetEmittedSmell(out PlantSmell emittedSmell)
@@ -136,6 +139,8 @@ public class Item : MonoBehaviour
     public void RefreshConditionVisual(ItemSlot slot)
     {
         currentSlot = slot;
+        bool isHappyState = slot != null && slot.Type != SlotType.Wait && CheckCondition(slot);
+        View.SetMood(isHappyState);
 
         if (itemType == ItemType.Light)
         {
@@ -163,6 +168,9 @@ public class Item : MonoBehaviour
     public void SetCurrentSlot(ItemSlot slot)
     {
         currentSlot = slot;
+
+        if (slot != null)
+            RefreshConditionVisual(slot);
     }
 
     private void HandleBoardChanged(BoardChangedEvent gameEvent)
@@ -188,6 +196,22 @@ public class Item : MonoBehaviour
         return true;
     }
 
+    private void UpdateTreeVisuals()
+    {
+        if (View == null)
+            return;
+
+        View.ApplyTreeVisualProfile(DisplayName, itemId);
+        View.SetEffect(GetEmittedSmell());
+    }
+
+    private PlantSmell GetEmittedSmell()
+    {
+        return TryGetEmittedSmell(out PlantSmell emittedSmell)
+            ? emittedSmell
+            : PlantSmell.None;
+    }
+
     private void EnsureItemView()
     {
         if (itemView == null)
@@ -203,6 +227,18 @@ public class Item : MonoBehaviour
             plantVisual = GetComponent<PlantVisual>();
 
         plantVisual?.SetState(state);
+    }
+
+    private void AutoFitInteractionCollider()
+    {
+        if (_interactionCollider == null)
+            _interactionCollider = GetComponent<BoxCollider2D>();
+
+        if (_interactionCollider == null || itemView == null || itemView.SpriteRenderer == null)
+            return;
+
+        Bounds worldBounds = itemView.SpriteRenderer.bounds;
+        _interactionCollider.offset = transform.InverseTransformPoint(worldBounds.center);
     }
     
     #endregion

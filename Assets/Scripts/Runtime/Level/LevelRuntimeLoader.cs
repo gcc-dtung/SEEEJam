@@ -21,6 +21,7 @@ public class LevelRuntimeLoader : MonoBehaviour
     [SerializeField] private bool mapScreenPreviewToCamera = true;
     [SerializeField] private Transform slotRoot;
     [SerializeField] private Transform itemRoot;
+    [SerializeField] private Transform decorRoot;
     [SerializeField] private float editorUnitsPerWorldUnit = 48f;
     [SerializeField] private bool invertY = true;
     [SerializeField] private Vector3 worldOffset;
@@ -75,6 +76,7 @@ public class LevelRuntimeLoader : MonoBehaviour
         MoveManager.Instance.ClearHistory();
         LevelManager.Instance.ConfigureLoadedLevel(level);
 
+        SpawnDecorations(level);
         Dictionary<string, ItemSlot> landSlots = SpawnLandSlots(level);
         ConnectLandNeighbors(level, landSlots);
         List<Item> items = SpawnTreeWaitSlotsAndItems(level);
@@ -230,6 +232,70 @@ public class LevelRuntimeLoader : MonoBehaviour
                 conditions.Add(new RequiresLightCondition());
         }
         return conditions;
+    }
+
+    private void SpawnDecorations(LevelData level)
+    {
+        if (level.decorations == null || level.decorations.Count == 0)
+            return;
+
+        Transform root = decorRoot != null ? decorRoot : slotRoot;
+        foreach (DecorData decor in level.decorations)
+        {
+            if (string.IsNullOrWhiteSpace(decor.prefabPath))
+                continue;
+
+            GameObject prefab = Resources.Load<GameObject>(decor.prefabPath);
+            if (prefab == null)
+            {
+                Debug.LogWarning("[LevelRuntimeLoader] Decor prefab not found: Resources/" + decor.prefabPath);
+                continue;
+            }
+
+            // Place at the center of the decor rect in world space
+            int centerX = decor.x + decor.width  / 2;
+            int centerY = decor.y + decor.height / 2;
+            Vector3 worldPos = ToWorldPosition(level, centerX, centerY);
+            GameObject obj = Instantiate(prefab, worldPos, Quaternion.identity, root);
+            ApplyDecorWorldSize(obj, level, decor.width, decor.height);
+
+            SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
+            foreach (SpriteRenderer sr in renderers)
+                sr.sortingOrder = decor.sortingOrder;
+
+            _spawnedObjects.Add(obj);
+        }
+    }
+
+    private void ApplyDecorWorldSize(GameObject target, LevelData level, int editorWidth, int editorHeight)
+    {
+        float worldWidth, worldHeight;
+        if (mapScreenPreviewToCamera && TryGetCameraWorldRect(out Rect cameraRect))
+        {
+            worldWidth  = (float)editorWidth  / Mathf.Max(1f, level.screenWidth)  * cameraRect.width;
+            worldHeight = (float)editorHeight / Mathf.Max(1f, level.screenHeight) * cameraRect.height;
+        }
+        else
+        {
+            worldWidth  = editorWidth  / editorUnitsPerWorldUnit;
+            worldHeight = editorHeight / editorUnitsPerWorldUnit;
+        }
+
+        target.transform.localScale = Vector3.one;
+        Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0)
+        {
+            target.transform.localScale = new Vector3(worldWidth, worldHeight, 1f);
+            return;
+        }
+
+        Bounds bounds = renderers[0].bounds;
+        for (int i = 1; i < renderers.Length; i++)
+            bounds.Encapsulate(renderers[i].bounds);
+
+        float currW = Mathf.Max(bounds.size.x, 0.0001f);
+        float currH = Mathf.Max(bounds.size.y, 0.0001f);
+        target.transform.localScale = new Vector3(worldWidth / currW, worldHeight / currH, 1f);
     }
 
     private static string ResolveDisplayName(string treeId, List<TreeData> allTrees)

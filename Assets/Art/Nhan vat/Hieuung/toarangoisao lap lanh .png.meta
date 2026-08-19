@@ -1,10 +1,34 @@
 fileFormatVersion: 2
-guid: 30716c283acba40479c69060dd17ca23
+guid: 0c8c035fd7dcbb04f8e0f1c00fe6f63b
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -7138866396722344789
     second: toarangoisao lap lanh _0
+  - first:
+      213: 8097172804647439223
+    second: toarangoisao lap lanh _1
+  - first:
+      213: -8358593886471773929
+    second: toarangoisao lap lanh _2
+  - first:
+      213: -2353784393297693615
+    second: toarangoisao lap lanh _3
+  - first:
+      213: 5814323281844576191
+    second: toarangoisao lap lanh _4
+  - first:
+      213: -4481282166388863057
+    second: toarangoisao lap lanh _5
+  - first:
+      213: 8364028548273687501
+    second: toarangoisao lap lanh _6
+  - first:
+      213: 3844725485680151929
+    second: toarangoisao lap lanh _7
+  - first:
+      213: -8270479910237092160
+    second: toarangoisao lap lanh _8
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +70,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -96,6 +120,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -103,10 +140,10 @@ TextureImporter:
       name: toarangoisao lap lanh _0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 152
-        height: 152
+        x: 49
+        y: 121
+        width: 15
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,11 +158,187 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 100
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77bc6f1e3cfee5070800000000000000
+      internalID: 8097172804647439223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _2
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 74
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 711291f552f400c80800000000000000
+      internalID: -8358593886471773929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _3
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 91
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 154f1afa09da55fd0800000000000000
+      internalID: -2353784393297693615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _4
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 64
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbf11af1830a0b050800000000000000
+      internalID: 5814323281844576191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _5
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 48
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faf491ecc994fc1c0800000000000000
+      internalID: -4481282166388863057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _6
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 15
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcb441f66aff21470800000000000000
+      internalID: 8364028548273687501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _7
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 39
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97d4bd085753b5530800000000000000
+      internalID: 3844725485680151929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toarangoisao lap lanh _8
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 9
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c6405c275a593d80800000000000000
+      internalID: -8270479910237092160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -136,6 +349,14 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       toarangoisao lap lanh _0: -7138866396722344789
+      toarangoisao lap lanh _1: 8097172804647439223
+      toarangoisao lap lanh _2: -8358593886471773929
+      toarangoisao lap lanh _3: -2353784393297693615
+      toarangoisao lap lanh _4: 5814323281844576191
+      toarangoisao lap lanh _5: -4481282166388863057
+      toarangoisao lap lanh _6: 8364028548273687501
+      toarangoisao lap lanh _7: 3844725485680151929
+      toarangoisao lap lanh _8: -8270479910237092160
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
