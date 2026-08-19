@@ -25,6 +25,11 @@ public class Item : MonoBehaviour
         AutoFitInteractionCollider();
     }
 
+    private void Start()
+    {
+        AutoFitInteractionCollider();
+    }
+
     private void OnEnable()
     {
         EnsureItemView();
@@ -206,6 +211,7 @@ public class Item : MonoBehaviour
 
         View.ApplyTreeVisualProfile(DisplayName, itemId);
         View.SetEffect(GetEmittedSmell());
+        AutoFitInteractionCollider();
     }
 
     private PlantSmell GetEmittedSmell()
@@ -237,11 +243,19 @@ public class Item : MonoBehaviour
         if (_interactionCollider == null)
             _interactionCollider = GetComponent<BoxCollider2D>();
 
-        if (_interactionCollider == null || itemView == null || itemView.SpriteRenderer == null)
+        if (_interactionCollider == null)
             return;
 
-        Bounds worldBounds = itemView.SpriteRenderer.bounds;
-        _interactionCollider.offset = transform.InverseTransformPoint(worldBounds.center);
+        SpriteRenderer spriteRenderer = itemView != null ? itemView.SpriteRenderer : GetComponentInChildren<SpriteRenderer>();
+        if (spriteRenderer == null)
+            return;
+
+        Bounds worldBounds = spriteRenderer.bounds;
+        Vector3 localCenter = transform.InverseTransformPoint(worldBounds.center);
+        Vector3 localSize = transform.InverseTransformVector(worldBounds.size);
+
+        _interactionCollider.offset = new Vector2(localCenter.x, localCenter.y);
+        _interactionCollider.size = new Vector2(Mathf.Abs(localSize.x), Mathf.Abs(localSize.y));
     }
     
     #endregion

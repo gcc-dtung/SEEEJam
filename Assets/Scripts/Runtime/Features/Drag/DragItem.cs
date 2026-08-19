@@ -19,9 +19,12 @@ public class DragItem : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _boosterSelectionPointer = BoosterManager.Instance.TryHandleItemSelection(CurrentDragItem);
-        if (_boosterSelectionPointer)
-            return;
+        if (BoosterManager.Instance != null && BoosterManager.Instance.IsSelectingItem)
+        {
+            _boosterSelectionPointer = BoosterManager.Instance.TryHandleItemSelection(CurrentDragItem);
+            if (_boosterSelectionPointer)
+                return;
+        }
 
         if (GameManager.Instance.CurrentState != GameState.Playing)
             return;
