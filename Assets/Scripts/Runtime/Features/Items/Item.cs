@@ -151,16 +151,19 @@ public class Item : MonoBehaviour
         if (slot.Type == SlotType.Wait)
         {
             View.ShowNormal();
+            View.SetFaceState(PlantVisualState.Normal);
             ApplyPlantVisualState(PlantVisualState.Normal);
         }
         else if (CheckCondition(slot))
         {
             View.ShowCorrect();
+            View.SetFaceState(PlantVisualState.Happy);
             ApplyPlantVisualState(PlantVisualState.Happy);
         }
         else
         {
             View.ShowWrong();
+            View.SetFaceState(PlantVisualState.Angry);
             ApplyPlantVisualState(PlantVisualState.Angry);
         }
     }

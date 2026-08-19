@@ -173,11 +173,9 @@ public class PlantVisual : MonoBehaviour
 
         Transform parentTransform = skinRenderer.transform;
 
-        if (faceRenderer == null)
-            faceRenderer = CreateLayer("Face Layer", 1, parentTransform);
-
-        if (traitRenderer == null)
-            traitRenderer = CreateLayer("Trait Layer", 2, parentTransform);
+        // Do not auto-create face/trait layers at runtime.
+        // Keep them null unless explicitly assigned on the prefab to avoid
+        // adding GameObjects when the plant is spawned.
 
         SyncSortingWithSkin();
     }

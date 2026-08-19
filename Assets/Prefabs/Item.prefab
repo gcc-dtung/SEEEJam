@@ -720,6 +720,7 @@ MonoBehaviour:
   displayName: 
   solutionSlotId: 
   itemView: {fileID: 4163094950982574718}
+  plantVisual: {fileID: 0}
   conditions:
   - rid: -2
   references:
@@ -749,6 +750,14 @@ MonoBehaviour:
   textSortingOrderOffset: 1
   tooltipTransform: {fileID: 1386204572125455283}
   durationTween: 0.2
+  clampLayerName: ToolTipCollider
+  tooltipSpriteAsset: {fileID: 11400000, guid: f3816709ff276954897767f08a93fd8c, type: 2}
+  spriteIndexV: 0
+  spriteIndexX: 1
+  iconV: {fileID: 21300000, guid: 60908d0af4bf04a43a439d881c3d7dcd, type: 3}
+  iconX: {fileID: 21300000, guid: f4c57bc92512ec34e8498b0096cfc4f7, type: 3}
+  iconScale: 0.01
+  iconOffsetX: -0.2
 --- !u!114 &4163094950982574718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,6 +776,7 @@ MonoBehaviour:
   treeVisualDatabase: {fileID: 11400000, guid: fd19a183348dfee4f84b2ab2570569ab, type: 2}
   happyExpressionSprite: {fileID: 21300000, guid: 99455a1e250c1254d9df09a8daae1315, type: 3}
   sadExpressionSprite: {fileID: 21300000, guid: 843ffeffa8cb4f04eb705334b12dd046, type: 3}
+  normalExpressionSprite: {fileID: 21300000, guid: f8b860da95c43fc4f9667fbdfe388abb, type: 3}
   goodSmellEffectSprite: {fileID: 21300000, guid: d7fc9adbfead0dc41b76528e21bd6a22, type: 3}
   badSmellEffectSprite: {fileID: 21300000, guid: 2d8a9f9f53906a1429a8d4a9664d2863, type: 3}
 --- !u!1 &6931423305141668130
@@ -1090,7 +1100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sample text
+  m_text: 'Sample text <sprite index=0> '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1109,7 +1119,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
+  m_spriteAsset: {fileID: 11400000, guid: f3816709ff276954897767f08a93fd8c, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901

@@ -25,6 +25,30 @@ public class TooltipPopup : MonoBehaviour
     [SerializeField] private Transform tooltipTransform;
     [SerializeField] private float durationTween = 0.2f;
 
+    [Header("Clamp")]
+    [Tooltip("Name of the layer containing the ToolTipCollider used to constrain tooltip positions.")]
+    [SerializeField] private string clampLayerName = "ToolTipCollider";
+
+    // runtime reference to the collider we'll clamp inside
+    private Collider2D _clampCollider;
+
+    [Header("Icons")]
+    [Tooltip("Sprite Asset used for inline icons in tooltip text. Put both icons in this single Sprite Asset.")]
+    [SerializeField] private TMPro.TMP_SpriteAsset tooltipSpriteAsset;
+    [Tooltip("Index of the 'V' sprite inside the sprite asset (0-based).")]
+    [SerializeField] private int spriteIndexV = 0;
+    [Tooltip("Index of the 'X' sprite inside the sprite asset (0-based).")]
+    [SerializeField] private int spriteIndexX = 1;
+    [Header("Separate Icons")]
+    [Tooltip("Sprite used for satisfied (V) icon.")]
+    [SerializeField] private Sprite iconV;
+    [Tooltip("Sprite used for unsatisfied (X) icon.")]
+    [SerializeField] private Sprite iconX;
+    [Tooltip("World scale for icon renderers.")]
+    [SerializeField] private float iconScale = 0.01f;
+    [Tooltip("Horizontal offset from left edge of text (world units).")]
+    [SerializeField] private float iconOffsetX = -0.2f;
+
     private static TooltipPopup _activeTooltip;
 
     private Item _ownerItem;
@@ -33,6 +57,7 @@ public class TooltipPopup : MonoBehaviour
     private Camera _mainCamera;
     private int _shownFrame = -1;
     private bool _isShowing;
+    private readonly List<SpriteRenderer> _iconPool = new List<SpriteRenderer>();
 
     private void Awake()
     {
@@ -44,6 +69,34 @@ public class TooltipPopup : MonoBehaviour
 
         ConfigureSorting();
         HideImmediate();
+
+        // Try to locate a collider on the configured layer
+        FindClampCollider();
+
+        // Ensure tooltip visuals do not block input raycasts
+        SetIgnoreRaycastLayerRecursive(tooltipTransform != null ? tooltipTransform.gameObject : gameObject);
+
+        // If a TMP sprite asset was provided, assign it to the content text so
+        // inline <sprite=..> tags resolve automatically.
+        if (tooltipSpriteAsset != null && contentText != null)
+            contentText.spriteAsset = tooltipSpriteAsset;
+    }
+
+    private void SetIgnoreRaycastLayerRecursive(GameObject go)
+    {
+        if (go == null)
+            return;
+
+        int ignoreLayer = LayerMask.NameToLayer("Ignore Raycast");
+        if (ignoreLayer >= 0)
+            go.layer = ignoreLayer;
+
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            Transform child = go.transform.GetChild(i);
+            if (child != null)
+                SetIgnoreRaycastLayerRecursive(child.gameObject);
+        }
     }
 
     private void OnEnable()
@@ -71,7 +124,15 @@ public class TooltipPopup : MonoBehaviour
 
     private void Update()
     {
-        if (!_isShowing || _shownFrame == Time.frameCount)
+        if (!_isShowing)
+            return;
+
+        // Always update tooltip position while visible so first-show is correct
+        PositionNearOwner();
+        ClampToCamera();
+
+        // Don't process pointer-down hide logic on the same frame the tooltip was shown
+        if (_shownFrame == Time.frameCount)
             return;
 
         if (!TryGetPointerDownPosition(out Vector2 screenPosition))
@@ -148,9 +209,34 @@ public class TooltipPopup : MonoBehaviour
         float topCenterY = bottomHeight * 0.5f + middleHeight + topHeight * 0.5f;
         nameText.transform.localPosition = new Vector3(0f, topCenterY, -0.1f);
 
+        PositionNearOwner();
         ClampToCamera();
         ConfigureSorting();
         PlayTransition(1f, 1f);
+
+        // Update per-line icons (V/X) rendered next to text lines
+        UpdateConditionIcons();
+    }
+
+    private void PositionNearOwner()
+    {
+        if (_ownerItem == null || tooltipTransform == null)
+            return;
+
+        SpriteRenderer ownerRenderer = null;
+        if (_ownerItem != null && _ownerItem.View != null)
+            ownerRenderer = _ownerItem.View.SpriteRenderer;
+
+        if (ownerRenderer == null)
+            ownerRenderer = _ownerItem.GetComponentInChildren<SpriteRenderer>();
+
+        if (ownerRenderer == null)
+            return;
+
+        Bounds b = ownerRenderer.bounds;
+        float yOffset = 0.05f; // small gap above the sprite
+        Vector3 pos = new Vector3(b.center.x, b.max.y + yOffset, tooltipTransform.position.z);
+        tooltipTransform.position = pos;
     }
 
     public void Hide()
@@ -252,42 +338,83 @@ public class TooltipPopup : MonoBehaviour
 
     private void ClampToCamera()
     {
-        if (_mainCamera == null || tooltipTransform == null)
+        if (tooltipTransform == null)
             return;
 
-        // Tooltip sprites are centered on tooltipTransform.position.x
-        float tooltipHalfWidth  = middle.sprite.bounds.size.x * middle.transform.lossyScale.x * 0.5f;
+        // Ensure we have a clamp collider reference (it may be created/activated after Awake)
+        if (_clampCollider == null)
+            FindClampCollider();
 
-        // Total tooltip height so we can clamp the top edge too
+        // Tooltip sizes in world units
+        float tooltipHalfWidth  = middle.sprite.bounds.size.x * middle.transform.lossyScale.x * 0.5f;
         float bottomH = bottom.sprite.bounds.size.y * bottom.transform.lossyScale.y;
         float middleH = middle.sprite.bounds.size.y * middle.transform.lossyScale.y;
         float topH    = top.sprite.bounds.size.y    * top.transform.lossyScale.y;
         float tooltipTotalHeight = bottomH + middleH + topH;
 
-        // Convert camera viewport corners to world space (z = 0 for 2D)
-        float depth = Mathf.Abs(_mainCamera.transform.position.z);
-        Vector3 bottomLeft  = _mainCamera.ViewportToWorldPoint(new Vector3(0f, 0f, depth));
-        Vector3 topRight    = _mainCamera.ViewportToWorldPoint(new Vector3(1f, 1f, depth));
-
-        float camLeft   = bottomLeft.x;
-        float camRight  = topRight.x;
-        float camTop    = topRight.y;
-
-        const float margin = 0.05f;
+        const float margin = 0.01f;
 
         Vector3 pos = tooltipTransform.position;
 
-        // Horizontal: clamp so neither left nor right edge goes outside
-        pos.x = Mathf.Clamp(pos.x,
-            camLeft  + tooltipHalfWidth  + margin,
-            camRight - tooltipHalfWidth  - margin);
+        if (_clampCollider != null)
+        {
+            Bounds b = _clampCollider.bounds;
 
-        // Vertical: if the tooltip top goes above the camera, push it down
-        float tooltipTop = pos.y + tooltipTotalHeight;
-        if (tooltipTop > camTop - margin)
-            pos.y -= tooltipTop - (camTop - margin);
+            // Horizontal clamp (pos.x is center-aligned horizontally)
+            pos.x = Mathf.Clamp(pos.x,
+                b.min.x + tooltipHalfWidth + margin,
+                b.max.x - tooltipHalfWidth - margin);
+
+            // Vertical: ensure top and bottom inside bounds
+            float tooltipTop = pos.y + tooltipTotalHeight;
+            if (tooltipTop > b.max.y - margin)
+                pos.y -= tooltipTop - (b.max.y - margin);
+
+            float tooltipBottom = pos.y - (bottomH * 0.5f);
+            if (tooltipBottom < b.min.y + margin)
+                pos.y += (b.min.y + margin) - tooltipBottom;
+        }
+        else if (_mainCamera != null)
+        {
+            // Fallback: clamp to camera
+            float depth = Mathf.Abs(_mainCamera.transform.position.z);
+            Vector3 bottomLeft  = _mainCamera.ViewportToWorldPoint(new Vector3(0f, 0f, depth));
+            Vector3 topRight    = _mainCamera.ViewportToWorldPoint(new Vector3(1f, 1f, depth));
+
+            float camLeft   = bottomLeft.x;
+            float camRight  = topRight.x;
+            float camTop    = topRight.y;
+
+            pos.x = Mathf.Clamp(pos.x,
+                camLeft  + tooltipHalfWidth  + margin,
+                camRight - tooltipHalfWidth  - margin);
+
+            float tooltipTop = pos.y + tooltipTotalHeight;
+            if (tooltipTop > camTop - margin)
+                pos.y -= tooltipTop - (camTop - margin);
+        }
 
         tooltipTransform.position = pos;
+    }
+
+    private void FindClampCollider()
+    {
+        if (string.IsNullOrWhiteSpace(clampLayerName))
+            return;
+
+        int layer = LayerMask.NameToLayer(clampLayerName);
+        if (layer < 0)
+            return;
+
+        Collider2D[] all = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] != null && all[i].gameObject.layer == layer)
+            {
+                _clampCollider = all[i];
+                return;
+            }
+        }
     }
 
     private void ResizeInternal(float desiredMiddleHeight)
@@ -394,7 +521,7 @@ public class TooltipPopup : MonoBehaviour
         return false;
     }
 
-    private static string BuildTooltipContent(Item item)
+    private string BuildTooltipContent(Item item)
     {
         if (item == null || item.Conditions == null || item.Conditions.Count == 0)
             return "No conditions.";
@@ -402,10 +529,67 @@ public class TooltipPopup : MonoBehaviour
         List<string> lines = new List<string>();
         foreach (PlantCondition condition in item.Conditions)
         {
-            if (condition != null)
-                lines.Add(condition.GetDescription());
+            if (condition == null)
+                continue;
+
+            lines.Add(condition.GetDescription());
         }
 
         return lines.Count > 0 ? string.Join("\n", lines) : "No conditions.";
+    }
+
+    private void UpdateConditionIcons()
+    {
+        if (_ownerItem == null || contentText == null || contentText.textInfo == null)
+            return;
+
+        contentText.ForceMeshUpdate();
+        var info = contentText.textInfo;
+        int lineCount = info.lineCount;
+
+        // Ensure pool
+        while (_iconPool.Count < lineCount)
+        {
+            GameObject go = new GameObject("TooltipIcon", typeof(SpriteRenderer));
+            go.transform.SetParent(contentText.transform, false);
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            sr.sortingLayerID = _sortingGroup != null ? _sortingGroup.sortingLayerID : 0;
+            sr.sortingOrder = _sortingGroup != null ? _sortingGroup.sortingOrder + textSortingOrderOffset + 1 : 1000;
+            _iconPool.Add(sr);
+        }
+
+        // Compute per-line satisfied state from conditions
+        List<bool> satisfiedList = new List<bool>();
+        if (_ownerItem != null && _ownerItem.Conditions != null)
+        {
+            foreach (PlantCondition cond in _ownerItem.Conditions)
+                satisfiedList.Add(_ownerItem.CurrentSlot != null && cond != null && cond.CheckCondition(_ownerItem.CurrentSlot));
+        }
+
+        for (int i = 0; i < _iconPool.Count; i++)
+        {
+            SpriteRenderer sr = _iconPool[i];
+            if (i >= lineCount || i >= satisfiedList.Count || (iconV == null && iconX == null))
+            {
+                sr.gameObject.SetActive(false);
+                continue;
+            }
+
+            bool sat = satisfiedList[i];
+            sr.sprite = sat ? iconV : iconX;
+            sr.gameObject.SetActive(sr.sprite != null);
+            sr.transform.localScale = Vector3.one * iconScale;
+
+            // Position: relative to contentText local space. Use line baseline.
+            var line = info.lineInfo[i];
+            float localX = -textWidth * 0.5f + iconOffsetX;
+            float localY = line.baseline;
+            sr.transform.localPosition = new Vector3(localX, localY, -0.05f);
+            if (_sortingGroup != null)
+            {
+                sr.sortingLayerID = _sortingGroup.sortingLayerID;
+                sr.sortingOrder = _sortingGroup.sortingOrder + textSortingOrderOffset + 1;
+            }
+        }
     }
 }

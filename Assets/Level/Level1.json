@@ -54,11 +54,13 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "plantDataId": "",
             "displayName": "",
             "solutionLandId": "",
             "x": 430,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -74,11 +76,13 @@
         },
         {
             "treeId": "tree_02",
+            "plantDataId": "",
             "displayName": "",
             "solutionLandId": "",
             "x": 644,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -97,8 +101,8 @@
         {
             "decorId": "decor_01",
             "prefabPath": "platform_1x3",
-            "x": 350,
-            "y": 801,
+            "x": 352,
+            "y": 794,
             "sizeMode": 0,
             "widthInLands": 1.0,
             "heightInLands": 4.0,

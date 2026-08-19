@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TreeVisualDatabase
   entries:
   - treeKey: tree_01
-    happyCharacterSprite: {fileID: 21300000, guid: f3f28bb90f8d1a24b880c690ad7ad637, type: 3}
-    sadCharacterSprite: {fileID: 21300000, guid: fc936e9d96a783a4883d9940aff86137, type: 3}
+    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
+    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
   - treeKey: tree_02
     happyCharacterSprite: {fileID: -3405495423853031273, guid: bf47decfe797bd94e9854569e36da143, type: 3}
     sadCharacterSprite: {fileID: -7251571647162267069, guid: 44bb73ca6cbbe0a4690e17cc85663bed, type: 3}
@@ -29,8 +29,8 @@ MonoBehaviour:
     happyCharacterSprite: {fileID: -4729993889813597530, guid: 3373f15815cfedf4f84ac02156c11c01, type: 3}
     sadCharacterSprite: {fileID: -7509058083554409064, guid: 03d74b3f20d2fa14d9e351937c98e47f, type: 3}
   - treeKey: tree_06
-    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
-    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
+    happyCharacterSprite: {fileID: 21300000, guid: f3f28bb90f8d1a24b880c690ad7ad637, type: 3}
+    sadCharacterSprite: {fileID: 21300000, guid: fc936e9d96a783a4883d9940aff86137, type: 3}
   - treeKey: tree_07
     happyCharacterSprite: {fileID: 4461257610856927136, guid: f2b9a0531d694ad42a8603c0a0899913, type: 3}
     sadCharacterSprite: {fileID: -5671683876503960806, guid: ec5a9929a65fd9844809b3f13136744e, type: 3}
