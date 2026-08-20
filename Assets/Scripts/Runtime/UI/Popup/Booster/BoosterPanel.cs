@@ -58,11 +58,17 @@ public class BoosterPanel : MonoBehaviour
 
     public void HideOutOfBoosterPanel()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         root.gameObject.SetActive(false);
     }
 
     public void BuyBooster()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         int neededCoin = currentData.coins;
         if (neededCoin <= 0)
         {
@@ -73,7 +79,7 @@ public class BoosterPanel : MonoBehaviour
         if (EconomyManager.Instance.TrySpendCoins(neededCoin))
         {
             BoosterInventoryManager.Instance.Add(currentData.boosterType, 1);
-            HideOutOfBoosterPanel();
+            root.gameObject.SetActive(false);
         }
         else
         {

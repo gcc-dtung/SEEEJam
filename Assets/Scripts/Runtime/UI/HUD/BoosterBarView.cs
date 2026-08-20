@@ -52,16 +52,25 @@ public class BoosterBarView : MonoBehaviour
 
     private void HandleUndoClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         BoosterManager.Instance.UseUndo();
     }
 
     private void HandleRemoveConditionsClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         BoosterManager.Instance.BeginRemoveConditionsSelection();
     }
 
     private void HandleHintClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         BoosterManager.Instance.BeginHintSelection();
     }
 

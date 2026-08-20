@@ -89,6 +89,8 @@ public class DragController : MonoBehaviour
             _sourceItemSlot = _slotQueryService.GetSlotAt(transform.position);
 
         EventBus.Instance.Publish(new DragStartedEvent(dragItem));
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxNhatCayLen);
 
         SetHoveredSlot(_slotQueryService.GetSlotAt(mouseWorldPosition), dragItem);
         return true;
@@ -128,6 +130,9 @@ public class DragController : MonoBehaviour
         TweenToOriginalPosition();
 
         EventBus.Instance.Publish(new DragEndedEvent(dragItem));
+        if (AudioManager.TryGetInstance(out AudioManager audioManagerEnd))
+            audioManagerEnd.PlaySoundEffect(AudioManager.SfxDatCayXuong);
+
         _currentHoverItemSlot = null;
         _sourceItemSlot = null;
     }

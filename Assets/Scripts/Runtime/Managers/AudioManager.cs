@@ -10,6 +10,14 @@ using UnityEngine.Audio;
 /// </summary>
 public class AudioManager : SingletonMonoBehaviour<AudioManager>
 {
+    public const string BgmBackgroundMusic = "BackgroundMusic";
+    public const string SfxCayVui = "CayVui";
+    public const string SfxDatCayXuong = "DatCayXuong";
+    public const string SfxNhatCayLen = "NhatCayLen";
+    public const string SfxPressAnyButton = "PressAnyButton";
+    public const string SfxTooltipShow = "TooltipShow";
+    public const string SfxWin = "Win";
+
     private const string MasterVolumeKey = "Audio.MasterVolume";
     private const string MusicVolumeKey = "Audio.MusicVolume";
     private const string SfxVolumeKey = "Audio.SfxVolume";
@@ -37,9 +45,11 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     [Header("Playback")]
     [SerializeField, Min(1)] private int soundEffectPoolSize = 8;
     [SerializeField, Min(0f)] private float defaultMusicFadeDuration = 0.5f;
+    [SerializeField] private bool autoPlayMusic = true;
+    [SerializeField] private string defaultMusicId = BgmBackgroundMusic;
 
-    private readonly Dictionary<string, SoundDefinition> _musicById = new();
-    private readonly Dictionary<string, SoundDefinition> _soundEffectsById = new();
+    private readonly Dictionary<string, SoundDefinition> _musicById = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, SoundDefinition> _soundEffectsById = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<AudioSource> _soundEffectSources = new();
     private readonly Dictionary<AudioSource, float> _soundEffectBaseVolumes = new();
 
@@ -63,13 +73,35 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         if (Instance != this)
             return;
 
+        Application.runInBackground = true;
         BuildLibrary();
         CreateAudioSources();
         LoadSettings();
     }
 
+    private void Start()
+    {
+        if (autoPlayMusic && (_musicSource == null || !_musicSource.isPlaying))
+        {
+            if (!string.IsNullOrWhiteSpace(defaultMusicId) && _musicById.ContainsKey(defaultMusicId))
+            {
+                PlayMusic(defaultMusicId, 0.2f);
+            }
+            else if (music != null && music.Length > 0 && music[0] != null && !string.IsNullOrWhiteSpace(music[0].id))
+            {
+                PlayMusic(music[0].id, 0.2f);
+            }
+        }
+    }
+
     public void PlayMusic(string id, float fadeDuration = -1f)
     {
+        if (_musicById.Count == 0)
+            BuildLibrary();
+
+        if (_musicSource == null)
+            CreateAudioSources();
+
         if (!TryGetDefinition(_musicById, id, out SoundDefinition definition))
             return;
 
@@ -95,9 +127,10 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
             StopCoroutine(_musicFadeRoutine);
 
         float duration = fadeDuration < 0f ? defaultMusicFadeDuration : fadeDuration;
-        if (duration <= 0f || !_musicSource.isPlaying)
+        if (duration <= 0f || _musicSource == null || !_musicSource.isPlaying)
         {
-            _musicSource.Stop();
+            if (_musicSource != null)
+                _musicSource.Stop();
             CurrentMusicId = null;
             return;
         }
@@ -107,16 +140,31 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     public void PlaySoundEffect(string id)
     {
+        if (_soundEffectsById.Count == 0)
+            BuildLibrary();
+
+        if (_soundEffectSources.Count == 0)
+            CreateAudioSources();
+
         if (!TryGetDefinition(_soundEffectsById, id, out SoundDefinition definition))
             return;
+
+        if (definition.clip.loadState == AudioDataLoadState.Unloaded)
+            definition.clip.LoadAudioData();
+
+        float effectiveVolume = definition.volume <= 0f ? 1f : definition.volume;
+        float effectivePitch = definition.pitch <= 0f ? 1f : definition.pitch;
 
         AudioSource source = GetAvailableSoundEffectSource();
         source.clip = definition.clip;
         source.loop = definition.loop;
-        source.pitch = definition.pitch;
-        source.volume = GetEffectiveSoundEffectVolume(definition.volume);
-        _soundEffectBaseVolumes[source] = definition.volume;
+        source.pitch = effectivePitch;
+        source.spatialBlend = 0f;
+        source.volume = GetEffectiveSoundEffectVolume(effectiveVolume);
+        _soundEffectBaseVolumes[source] = effectiveVolume;
         source.Play();
+
+        Debug.Log($"[AudioManager] Played SFX '{id}' (Volume: {source.volume:F2}, Pitch: {source.pitch:F2}, AudioListener: {AudioListener.volume:F2})");
     }
 
     public void StopAllSoundEffects()
@@ -126,8 +174,19 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
     }
 
     public void SetMasterVolume(float value) => SetVolume(ref _masterVolume, value, MasterVolumeKey);
-    public void SetMusicVolume(float value) => SetVolume(ref _musicVolume, value, MusicVolumeKey);
+    public void SetMusicVolume(float value)
+    {
+        SetVolume(ref _musicVolume, value, MusicVolumeKey);
+        if (_musicVolume > 0f && (_musicSource == null || !_musicSource.isPlaying))
+            PlayMusic(string.IsNullOrWhiteSpace(defaultMusicId) ? BgmBackgroundMusic : defaultMusicId, 0.2f);
+    }
     public void SetSoundEffectVolume(float value) => SetVolume(ref _soundEffectVolume, value, SfxVolumeKey);
+
+    public bool IsMusicOn => _musicVolume > 0.05f;
+    public bool IsSoundEffectOn => _soundEffectVolume > 0.05f;
+
+    public void ToggleMusic() => SetMusicVolume(IsMusicOn ? 0f : 1f);
+    public void ToggleSoundEffect() => SetSoundEffectVolume(IsSoundEffectOn ? 0f : 1f);
 
     public void SetMuted(bool value)
     {
@@ -160,6 +219,7 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         sourceObject.transform.SetParent(transform);
         AudioSource source = sourceObject.AddComponent<AudioSource>();
         source.playOnAwake = false;
+        source.spatialBlend = 0f;
         source.outputAudioMixerGroup = outputGroup;
         return source;
     }
@@ -170,6 +230,11 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         _musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 1f);
         _soundEffectVolume = PlayerPrefs.GetFloat(SfxVolumeKey, 1f);
         _isMuted = PlayerPrefs.GetInt(MutedKey, 0) == 1;
+
+        if (_masterVolume <= 0.05f) _masterVolume = 1f;
+        if (_musicVolume <= 0.05f) _musicVolume = 1f;
+        if (_soundEffectVolume <= 0.05f) _soundEffectVolume = 1f;
+
         ApplyVolumes();
     }
 
@@ -196,13 +261,21 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
 
     private void StartMusic(SoundDefinition definition)
     {
-        _currentMusicBaseVolume = definition.volume;
+        if (definition.clip.loadState == AudioDataLoadState.Unloaded)
+            definition.clip.LoadAudioData();
+
+        _currentMusicBaseVolume = definition.volume <= 0f ? 1f : definition.volume;
+        float effectivePitch = definition.pitch <= 0f ? 1f : definition.pitch;
+
         _musicSource.clip = definition.clip;
         _musicSource.loop = definition.loop;
-        _musicSource.pitch = definition.pitch;
-        _musicSource.volume = GetEffectiveMusicVolume(definition.volume);
+        _musicSource.pitch = effectivePitch;
+        _musicSource.spatialBlend = 0f;
+        _musicSource.volume = GetEffectiveMusicVolume(_currentMusicBaseVolume);
         _musicSource.Play();
         CurrentMusicId = definition.id;
+
+        Debug.Log($"[AudioManager] Playing Music '{definition.id}' (Volume: {_musicSource.volume:F2}, AudioListener: {AudioListener.volume:F2})");
     }
 
     private IEnumerator CrossFadeMusic(SoundDefinition nextMusic, float duration)
@@ -261,6 +334,15 @@ public class AudioManager : SingletonMonoBehaviour<AudioManager>
         {
             if (definition == null || string.IsNullOrWhiteSpace(definition.id) || definition.clip == null)
                 continue;
+
+            if (definition.volume <= 0f)
+                definition.volume = 1f;
+
+            if (definition.pitch <= 0f)
+                definition.pitch = 1f;
+
+            if (definition.clip.loadState == AudioDataLoadState.Unloaded)
+                definition.clip.LoadAudioData();
 
             if (destination.ContainsKey(definition.id))
             {

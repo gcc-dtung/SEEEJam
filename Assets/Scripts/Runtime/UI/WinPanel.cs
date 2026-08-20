@@ -73,6 +73,9 @@ public class WinPanel : MonoBehaviour
 
     public void ShowWin()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxWin);
+
         ShowPanel(panelRoot, losePanelRoot, winAnimatedElements);
     }
 
@@ -102,18 +105,27 @@ public class WinPanel : MonoBehaviour
 
     private void HandleNextLevelClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         HideImmediate();
         FlowManager.Instance.NextLevel();
     }
 
     private void HandleRestartClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         HideImmediate();
         FlowManager.Instance.ReplayCurrentLevel();
     }
 
     private void HandleHomeClicked()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         HideImmediate();
         FlowManager.Instance.BackToMainMenu();
     }
