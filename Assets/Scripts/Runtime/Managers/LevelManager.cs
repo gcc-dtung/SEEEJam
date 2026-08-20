@@ -108,7 +108,7 @@ public class LevelManager : SingletonMonoBehaviour<LevelManager>
         }
 
         if (CurrentLevelIndex >= _levelSequence.Length - 1)
-            return false;
+            return LoadLevelAt(0);
 
         return LoadLevelAt(CurrentLevelIndex + 1);
     }

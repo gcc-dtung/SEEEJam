@@ -18,7 +18,7 @@ public class HudViewUpPanelView : MonoBehaviour
         EventBus.Instance.Subscribe<LevelChangedEvent>(HandleLevelChanged);
         
         if (moveCounterText != null)
-            moveCounterText.text = LevelManager.Instance.RemainingMoves.ToString();
+            moveCounterText.text = $"Move: {LevelManager.Instance.RemainingMoves}";
         if (levelNameText != null)
             levelNameText.text = LevelManager.Instance.CurrentLevelName;
     }
@@ -35,7 +35,7 @@ public class HudViewUpPanelView : MonoBehaviour
     private void HandleMovesChanged(MovesChangedEvent gameEvent)
     {
         if (moveCounterText != null)
-            moveCounterText.text = gameEvent.RemainingMoves.ToString();
+            moveCounterText.text = $"Move: {gameEvent.RemainingMoves}";
     }
 
     private void HandleLevelChanged(LevelChangedEvent gameEvent)
