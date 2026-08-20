@@ -17,4 +17,15 @@ public static class Constants
     {
         public const string Radius = "_Radius";
     }
+
+    public static class AudioIds
+    {
+        public const string BackgroundMusic = "BackgroundMusic";
+        public const string CayVui = "CayVui";
+        public const string DatCayXuong = "DatCayXuong";
+        public const string NhatCayLen = "NhatCayLen";
+        public const string PressAnyButton = "PressAnyButton";
+        public const string TooltipShow = "TooltipShow";
+        public const string Win = "Win";
+    }
 }

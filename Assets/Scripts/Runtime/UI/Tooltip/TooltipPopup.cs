@@ -181,6 +181,9 @@ public class TooltipPopup : MonoBehaviour
         _shownFrame = Time.frameCount;
         SetTooltipVisible(true);
 
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxTooltipShow);
+
         nameText.text = itemName;
         contentText.text = string.IsNullOrWhiteSpace(content) ? "No conditions." : content;
 

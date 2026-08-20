@@ -17,6 +17,7 @@ public class Item : MonoBehaviour
 
     private ItemSlot currentSlot;
     private bool _ignoreConditionsForRun;
+    private bool _wasSatisfied;
 
     private void Awake()
     {
@@ -89,6 +90,7 @@ public class Item : MonoBehaviour
         conditions = newConditions ?? new List<PlantCondition>();
         solutionSlotId = newSolutionSlotId;
         _ignoreConditionsForRun = false;
+        _wasSatisfied = false;
         SyncEmittedSmellTrait();
         UpdateTreeVisuals();
     }
@@ -148,6 +150,16 @@ public class Item : MonoBehaviour
         currentSlot = slot;
         bool isHappyState = slot != null && slot.Type != SlotType.Wait && CheckCondition(slot);
         View.SetMood(isHappyState);
+
+        if (isHappyState && !_wasSatisfied)
+        {
+            if (GameManager.TryGetInstance(out GameManager gameManager) && gameManager.CurrentState == GameState.Playing)
+            {
+                if (AudioManager.TryGetInstance(out AudioManager audioManager))
+                    audioManager.PlaySoundEffect(AudioManager.SfxCayVui);
+            }
+        }
+        _wasSatisfied = isHappyState;
 
         if (itemType == ItemType.Light)
         {

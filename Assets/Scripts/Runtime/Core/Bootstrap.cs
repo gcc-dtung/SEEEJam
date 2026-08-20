@@ -31,6 +31,8 @@ public class Bootstrap : MonoBehaviour
     {
         _ = SaveLoadManager.Instance;
 
+        AudioManager.Instance.PlayMusic(AudioManager.BgmBackgroundMusic);
+
         if (loadOnStart)
             LevelManager.Instance.LoadCurrentLevel();
     }

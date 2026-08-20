@@ -34,6 +34,9 @@ public class FlowManager : SingletonMonoBehaviour<FlowManager>
 
     public void StartGame()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         if (loadLevelOnStartButton)
         {
             LevelManager levelManager = LevelManager.Instance;
@@ -51,6 +54,9 @@ public class FlowManager : SingletonMonoBehaviour<FlowManager>
 
     public void BackToMainMenu()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         CanvasManager canvasManager = FindFirstObjectByType<CanvasManager>(FindObjectsInactive.Include);
         if (canvasManager != null)
             canvasManager.ShowMainMenuCanvas();
@@ -58,11 +64,17 @@ public class FlowManager : SingletonMonoBehaviour<FlowManager>
 
     public void NextLevel()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         PlayLevelTransition(() => LevelManager.Instance.LoadNextLevel());
     }
 
     public void ReplayCurrentLevel()
     {
+        if (AudioManager.TryGetInstance(out AudioManager audioManager))
+            audioManager.PlaySoundEffect(AudioManager.SfxPressAnyButton);
+
         PlayLevelTransition(() => LevelManager.Instance.ReloadLevel());
     }
 
