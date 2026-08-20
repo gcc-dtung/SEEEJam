@@ -10,9 +10,9 @@ public enum BoosterType
 public class BoosterInventoryManager : SingletonMonoBehaviour<BoosterInventoryManager>
 {
     [Header("First Launch Defaults")]
-    [SerializeField, Min(0)] private int defaultUndoCount = 3;
-    [SerializeField, Min(0)] private int defaultRemoveConditionsCount = 3;
-    [SerializeField, Min(0)] private int defaultHintCount = 3;
+    [SerializeField, Min(0)] private int defaultUndoCount = 50;
+    [SerializeField, Min(0)] private int defaultRemoveConditionsCount = 50;
+    [SerializeField, Min(0)] private int defaultHintCount = 50;
 
     private int _undoCount;
     private int _removeConditionsCount;

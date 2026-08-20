@@ -107,7 +107,7 @@
         {
             "landId": "land_07",
             "x": 160,
-            "y": 1060,
+            "y": 1058,
             "slotType": 0,
             "row": 0,
             "isCorner": true,
@@ -261,28 +261,6 @@
     ],
     "trees": [
         {
-            "treeId": "tree_01",
-            "plantDataId": "",
-            "displayName": "",
-            "solutionLandId": "",
-            "x": 100,
-            "y": 1614,
-            "itemType": 0,
-            "lightDirection": 0,
-            "requiredSlotType": 0,
-            "parameterN": 0,
-            "customNotes": "",
-            "conditions": [
-                {
-                    "conditionType": 0,
-                    "n": 0,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 0
-                }
-            ]
-        },
-        {
             "treeId": "tree_02",
             "plantDataId": "",
             "displayName": "",
@@ -292,12 +270,12 @@
             "itemType": 0,
             "lightDirection": 0,
             "requiredSlotType": 0,
-            "parameterN": 0,
+            "parameterN": 3,
             "customNotes": "",
             "conditions": [
                 {
                     "conditionType": 0,
-                    "n": 0,
+                    "n": 3,
                     "targetTreeId": "",
                     "smell": 1,
                     "smellPreference": 0
@@ -318,7 +296,14 @@
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 0,
+                    "conditionType": 3,
+                    "n": 0,
+                    "targetTreeId": "",
+                    "smell": 1,
+                    "smellPreference": 0
+                },
+                {
+                    "conditionType": 9,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
@@ -331,7 +316,7 @@
             "plantDataId": "",
             "displayName": "",
             "solutionLandId": "",
-            "x": 550,
+            "x": 546,
             "y": 1614,
             "itemType": 0,
             "lightDirection": 0,
@@ -340,7 +325,7 @@
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 0,
+                    "conditionType": 10,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
@@ -362,7 +347,7 @@
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 0,
+                    "conditionType": 3,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
@@ -375,7 +360,7 @@
             "plantDataId": "",
             "displayName": "",
             "solutionLandId": "",
-            "x": 850,
+            "x": 852,
             "y": 1614,
             "itemType": 0,
             "lightDirection": 0,
@@ -384,11 +369,11 @@
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 0,
+                    "conditionType": 3,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
-                    "smellPreference": 0
+                    "smellPreference": 1
                 }
             ]
         }

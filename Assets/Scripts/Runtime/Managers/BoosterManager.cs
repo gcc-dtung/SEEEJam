@@ -123,6 +123,12 @@ public class BoosterManager : SingletonMonoBehaviour<BoosterManager>
 
             case BoosterSelectionMode.Hint:
                 didApply = TryRevealHint(item);
+                if (!didApply)
+                {
+                    Debug.LogError("[BoosterManager] Hint booster failed to reveal the tree position. Continuing gameplay without stopping the game.");
+                    CancelSelection();
+                    return true;
+                }
                 break;
 
             default:
@@ -158,17 +164,20 @@ public class BoosterManager : SingletonMonoBehaviour<BoosterManager>
 
     private bool TryRevealHint(Item item)
     {
-        if (string.IsNullOrWhiteSpace(item.SolutionSlotId) ||
-            !BoardManager.Instance.TryGetBoardSlot(item.SolutionSlotId, out ItemSlot targetSlot))
-        {
-            Debug.LogWarning("[BoosterManager] No valid solution slot is configured for item: " + item.ItemId);
-            return false;
-        }
+        ItemSlot targetSlot = null;
 
-        if (targetSlot.Type != item.ItemSlotType)
+        bool hasConfiguredTarget = !string.IsNullOrWhiteSpace(item.SolutionSlotId) &&
+            BoardManager.Instance.TryGetBoardSlot(item.SolutionSlotId, out targetSlot);
+
+        if (!hasConfiguredTarget || targetSlot == null || targetSlot.Type != item.ItemSlotType)
         {
-            Debug.LogWarning("[BoosterManager] Solution slot type does not match item: " + item.ItemId);
-            return false;
+            if (!BoardManager.Instance.TryFindAutoSolutionSlot(item, out targetSlot))
+            {
+                Debug.LogWarning("[BoosterManager] No valid hint position found for item: " + item.ItemId + ". Gameplay continues without stopping.");
+                return false;
+            }
+
+            Debug.LogWarning("[BoosterManager] Missing/invalid hint position for item: " + item.ItemId + ". Highlighting fallback slot " + targetSlot.SlotId + ".");
         }
 
         EventBus.Instance.Publish(new HintRevealedEvent(item, targetSlot, hintDuration));

@@ -102,6 +102,7 @@ public class ItemSlotView : MonoBehaviour
     private void HandleBoardChanged(BoardChangedEvent gameEvent)
     {
         HideHint();
+        ApplyColor(_visualState, GetHoveredItemSmell());
     }
 
     private IEnumerator ShowHint(float duration)
@@ -144,21 +145,48 @@ public class ItemSlotView : MonoBehaviour
         if (hoverIndicatorSprite == null)
             return;
 
+        PlantSmell activeSmell = PlantSmell.None;
+
+        if (visualState == SlotVisualState.Hovered || visualState == SlotVisualState.ActiveDrag)
+            activeSmell = hoveredItemSmell;
+        else if (_itemSlot != null && _itemSlot.CurrentItem != null)
+            _itemSlot.CurrentItem.TryGetEmittedSmell(out activeSmell);
+
         Color targetColor = NormalSlotColor;
-        if (visualState == SlotVisualState.Hovered)
-            targetColor = GetSmellColor(hoveredItemSmell);
+        if (activeSmell != PlantSmell.None)
+            targetColor = GetSmellColor(activeSmell);
 
         hoverIndicatorSprite.color = targetColor;
     }
 
     private PlantSmell GetHoveredItemSmell()
     {
-        if (_itemSlot == null || _itemSlot.HoverItem == null)
+        if (_itemSlot == null)
             return PlantSmell.None;
 
-        return _itemSlot.HoverItem.TryGetEmittedSmell(out PlantSmell hoveredSmell)
-            ? hoveredSmell
-            : PlantSmell.None;
+        if (_itemSlot.HoverItem != null && _itemSlot.HoverItem.TryGetEmittedSmell(out PlantSmell hoveredSmell))
+            return hoveredSmell;
+
+        if (_itemSlot.CurrentItem != null && _itemSlot.CurrentItem.TryGetEmittedSmell(out PlantSmell currentSmell))
+            return currentSmell;
+
+        if (_itemSlot.Neighbors == null)
+            return PlantSmell.None;
+
+        for (int i = 0; i < _itemSlot.Neighbors.Count; i++)
+        {
+            ItemSlot neighbor = _itemSlot.Neighbors[i];
+            if (neighbor == null)
+                continue;
+
+            if (neighbor.HoverItem != null && neighbor.HoverItem.TryGetEmittedSmell(out PlantSmell neighborHoverSmell))
+                return neighborHoverSmell;
+
+            if (neighbor.CurrentItem != null && neighbor.CurrentItem.TryGetEmittedSmell(out PlantSmell neighborCurrentSmell))
+                return neighborCurrentSmell;
+        }
+
+        return PlantSmell.None;
     }
 
     private static Color GetSmellColor(PlantSmell smell)

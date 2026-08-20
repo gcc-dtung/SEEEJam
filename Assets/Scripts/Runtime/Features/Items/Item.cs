@@ -38,6 +38,8 @@ public class Item : MonoBehaviour
     {
         if (EventBus.TryGetInstance(out EventBus eventBus))
             eventBus.Unsubscribe<BoardChangedEvent>(HandleBoardChanged);
+
+        ClearNearSpecificTargetGlow();
     }
     
     #region Public API
@@ -48,7 +50,7 @@ public class Item : MonoBehaviour
         ? TreeNameRegistry.GetDisplayName(itemId)
         : displayName;
     public string SolutionSlotId => solutionSlotId;
-    public IReadOnlyList<PlantCondition> Conditions => conditions;
+    public IReadOnlyList<PlantCondition> Conditions => _ignoreConditionsForRun ? new List<PlantCondition>() : conditions;
     public bool IgnoresConditionsForRun => _ignoreConditionsForRun;
     public ItemView View
     {
@@ -207,6 +209,11 @@ public class Item : MonoBehaviour
         return currentSlot != null && currentSlot.Type != SlotType.Wait && CheckCondition(currentSlot);
     }
 
+    public bool IsSatisfiedAtSlot(ItemSlot slot)
+    {
+        return slot != null && slot.Type != SlotType.Wait && CheckCondition(slot);
+    }
+
     public bool TryIgnoreConditionsForRun()
     {
         if (_ignoreConditionsForRun)
@@ -249,6 +256,47 @@ public class Item : MonoBehaviour
             plantVisual = GetComponent<PlantVisual>();
 
         plantVisual?.SetState(state);
+    }
+
+    public void ClearNearSpecificTargetGlow()
+    {
+        if (!BoardManager.TryGetInstance(out BoardManager boardManager))
+            return;
+
+        foreach (Item boardItem in boardManager.LevelItems)
+        {
+            if (boardItem != null && boardItem.View != null)
+                boardItem.View.SetTargetHighlight(false);
+        }
+    }
+
+    public void ApplyNearSpecificTargetGlow()
+    {
+        if (!BoardManager.TryGetInstance(out BoardManager boardManager))
+            return;
+
+        foreach (Item boardItem in boardManager.LevelItems)
+        {
+            if (boardItem != null && boardItem.View != null)
+                boardItem.View.SetTargetHighlight(false);
+        }
+
+        foreach (PlantCondition condition in conditions)
+        {
+            if (condition is not NearSpecificTreeCondition nearCondition || string.IsNullOrWhiteSpace(nearCondition.targetTreeId))
+                continue;
+
+            foreach (Item boardItem in boardManager.LevelItems)
+            {
+                if (boardItem == null || boardItem.ItemId != nearCondition.targetTreeId)
+                    continue;
+
+                if (boardItem.View != null)
+                    boardItem.View.SetTargetHighlight(true);
+
+                return;
+            }
+        }
     }
 
     #endregion

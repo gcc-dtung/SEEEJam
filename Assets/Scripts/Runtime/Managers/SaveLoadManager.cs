@@ -36,7 +36,12 @@ public class SaveLoadManager : SingletonMonoBehaviour<SaveLoadManager>
 
         if (!_dataService.HasData(saveFileName))
         {
-            GameData = new GameData();
+            GameData = new GameData
+            {
+                undoBoosterCount = 50,
+                removeConditionsBoosterCount = 50,
+                hintBoosterCount = 50
+            };
             CaptureDataFromManagers();
             SaveGame();
             ApplyDataToManagers();

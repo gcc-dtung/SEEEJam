@@ -28,6 +28,7 @@ public class ItemView : MonoBehaviour
     private bool _hasBoosterSortingOverride;
     private int _normalSortingLayerId;
     private int _normalSortingOrder;
+    private bool _isTargetGlowActive;
 
     public SpriteRenderer SpriteRenderer => characterRenderer;
 
@@ -203,6 +204,29 @@ public class ItemView : MonoBehaviour
         characterRenderer.sortingLayerID = _normalSortingLayerId;
         characterRenderer.sortingOrder = _normalSortingOrder;
         _hasBoosterSortingOverride = false;
+    }
+
+    public void SetTargetHighlight(bool enabled)
+    {
+        EnsureReferences();
+        if (characterRenderer == null)
+            return;
+
+        _isTargetGlowActive = enabled;
+        Color baseColor = characterRenderer.color;
+        if (enabled)
+        {
+            float highlightAmount = 0.42f;
+            characterRenderer.color = new Color(
+                Mathf.Lerp(baseColor.r, 1f, highlightAmount),
+                Mathf.Lerp(baseColor.g, 0.2f, highlightAmount),
+                Mathf.Lerp(baseColor.b, 0.2f, highlightAmount),
+                baseColor.a);
+        }
+        else
+        {
+            characterRenderer.color = new Color(1f, 1f, 1f, baseColor.a);
+        }
     }
 
     private void TweenScale(Vector3 targetScale, float duration)

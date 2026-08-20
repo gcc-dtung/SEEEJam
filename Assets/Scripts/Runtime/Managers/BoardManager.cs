@@ -73,6 +73,48 @@ public class BoardManager : SingletonMonoBehaviour<BoardManager>
         return _boardSlotsById.TryGetValue(slotId, out slot);
     }
 
+    public bool TryFindAutoSolutionSlot(Item item, out ItemSlot slot)
+    {
+        slot = null;
+        if (item == null)
+            return false;
+
+        if (!string.IsNullOrWhiteSpace(item.SolutionSlotId) && TryGetBoardSlot(item.SolutionSlotId, out slot))
+            return true;
+
+        foreach (ItemSlot candidate in _boardSlots)
+        {
+            if (candidate == null)
+                continue;
+
+            if (candidate.HasCurrentItem && candidate.CurrentItem != item)
+                continue;
+
+            if (candidate.Type != SlotType.Wait && candidate.Type == item.ItemSlotType && item.IsSatisfiedAtSlot(candidate))
+            {
+                slot = candidate;
+                return true;
+            }
+        }
+
+        foreach (ItemSlot candidate in _boardSlots)
+        {
+            if (candidate == null)
+                continue;
+
+            if (candidate.HasCurrentItem && candidate.CurrentItem != item)
+                continue;
+
+            if (candidate.Type == SlotType.Wait || candidate.Type == item.ItemSlotType)
+            {
+                slot = candidate;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void EvaluateWinCondition()
     {
         if (GameManager.Instance.CurrentState != GameState.Playing)

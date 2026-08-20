@@ -15,6 +15,14 @@ public class RowSlotCondition : PlantCondition
         if (requiredRow == BoardRow.None)
             return "I want to be planted on a configured row.";
 
-        return "I want to be planted on " + requiredRow + ".";
+        string rowLabel = requiredRow switch
+        {
+            BoardRow.Row1 => "bottom row",
+            BoardRow.Row2 => "middle row",
+            BoardRow.Row3 => "top row",
+            _ => requiredRow.ToString()
+        };
+
+        return "I want to be planted on the " + rowLabel + ".";
     }
 }

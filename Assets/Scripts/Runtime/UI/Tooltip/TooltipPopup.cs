@@ -180,6 +180,7 @@ public class TooltipPopup : MonoBehaviour
         _isShowing = true;
         _shownFrame = Time.frameCount;
         SetTooltipVisible(true);
+        _ownerItem.ApplyNearSpecificTargetGlow();
 
         if (AudioManager.TryGetInstance(out AudioManager audioManager))
             audioManager.PlaySoundEffect(AudioManager.SfxTooltipShow);
@@ -251,6 +252,9 @@ public class TooltipPopup : MonoBehaviour
         if (_activeTooltip == this)
             _activeTooltip = null;
 
+        if (_ownerItem != null)
+            _ownerItem.ClearNearSpecificTargetGlow();
+
         PlayTransition(0f, 0f, () => SetTooltipVisible(false));
     }
 
@@ -262,6 +266,9 @@ public class TooltipPopup : MonoBehaviour
         _isShowing = false;
         if (_activeTooltip == this)
             _activeTooltip = null;
+
+        if (_ownerItem != null)
+            _ownerItem.ClearNearSpecificTargetGlow();
 
         if (top != null)
             ChangeColor(new Color(top.color.r, top.color.g, top.color.b, 0f));

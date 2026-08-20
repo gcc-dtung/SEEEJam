@@ -264,50 +264,6 @@
                     "smellPreference": 0
                 }
             ]
-        },
-        {
-            "treeId": "tree_05",
-            "plantDataId": "",
-            "displayName": "",
-            "solutionLandId": "",
-            "x": 700,
-            "y": 1614,
-            "itemType": 0,
-            "lightDirection": 0,
-            "requiredSlotType": 0,
-            "parameterN": 0,
-            "customNotes": "",
-            "conditions": [
-                {
-                    "conditionType": 0,
-                    "n": 0,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 0
-                }
-            ]
-        },
-        {
-            "treeId": "tree_06",
-            "plantDataId": "",
-            "displayName": "",
-            "solutionLandId": "",
-            "x": 850,
-            "y": 1614,
-            "itemType": 0,
-            "lightDirection": 0,
-            "requiredSlotType": 0,
-            "parameterN": 0,
-            "customNotes": "",
-            "conditions": [
-                {
-                    "conditionType": 0,
-                    "n": 0,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 0
-                }
-            ]
         }
     ],
     "decorations": [
