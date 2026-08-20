@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: fc4c9456b3b7a064fae9bbc2c4726949
+guid: bb40b3be3c4da0543ad225989fe4d700
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2120283571755802154
-    second: background_v002_0
+      213: 5931228439068009968
+    second: 3hoa_0
+  - first:
+      213: 1234955204322092636
+    second: 3hoa_1
+  - first:
+      213: -2779875646113947309
+    second: 3hoa_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,40 +102,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background_v002_0
+      name: 3hoa_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2000
-        height: 3000
+        x: 229
+        y: 346
+        width: 1698
+        height: 917
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6d12662435d3392e0800000000000000
-      internalID: -2120283571755802154
+      spriteID: 0f5e75027d4ff4250800000000000000
+      internalID: 5931228439068009968
       vertices: []
       indices: 
       edges: []
@@ -138,7 +131,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 6b6436f8ca16f2b4a955a99e03fe4527
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +139,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2000.0,"y":3000.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      background_v002_0: -2120283571755802154
+      3hoa_0: 5931228439068009968
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

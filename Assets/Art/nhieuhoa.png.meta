@@ -1,10 +1,67 @@
 fileFormatVersion: 2
-guid: fc4c9456b3b7a064fae9bbc2c4726949
+guid: 50d11a653c59fae4caa66eb9ccb1427e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2120283571755802154
-    second: background_v002_0
+      213: 1261690241227231878
+    second: nhieuhoa_0
+  - first:
+      213: 2246546135323013838
+    second: nhieuhoa_1
+  - first:
+      213: -7629333141608386939
+    second: nhieuhoa_2
+  - first:
+      213: 2434540191143104405
+    second: nhieuhoa_3
+  - first:
+      213: 8731017691114019474
+    second: nhieuhoa_4
+  - first:
+      213: 6349575465695534504
+    second: nhieuhoa_5
+  - first:
+      213: -2750910556888175784
+    second: nhieuhoa_6
+  - first:
+      213: -4673319306126647763
+    second: nhieuhoa_7
+  - first:
+      213: -8194154672494993499
+    second: nhieuhoa_8
+  - first:
+      213: -1846663546134252382
+    second: nhieuhoa_9
+  - first:
+      213: -8701887482689186983
+    second: nhieuhoa_10
+  - first:
+      213: 4801424031658002829
+    second: nhieuhoa_11
+  - first:
+      213: -1850233589679120425
+    second: nhieuhoa_12
+  - first:
+      213: 3252006998185510263
+    second: nhieuhoa_13
+  - first:
+      213: 8094573152718307086
+    second: nhieuhoa_14
+  - first:
+      213: 7329043493334417007
+    second: nhieuhoa_15
+  - first:
+      213: 1279745133632762909
+    second: nhieuhoa_16
+  - first:
+      213: -5803746569559236931
+    second: nhieuhoa_17
+  - first:
+      213: 2668394216858622010
+    second: nhieuhoa_18
+  - first:
+      213: -2270981891048161135
+    second: nhieuhoa_19
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,40 +153,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background_v002_0
+      name: nhieuhoa_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 1498
         width: 2000
-        height: 3000
+        height: 1378
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6d12662435d3392e0800000000000000
-      internalID: -2120283571755802154
+      spriteID: 6821de4f69c628110800000000000000
+      internalID: 1261690241227231878
       vertices: []
       indices: 
       edges: []
@@ -138,7 +182,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a8299932e855f1d4cb5820775ae12a17
     internalID: 0
     vertices: []
     indices: 
@@ -146,9 +190,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2000.0,"y":3000.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      background_v002_0: -2120283571755802154
+      nhieuhoa_0: 1261690241227231878
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
