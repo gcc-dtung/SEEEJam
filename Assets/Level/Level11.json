@@ -533,5 +533,31 @@
                 }
             ]
         }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_5x2 1",
+            "x": 740,
+            "y": 760,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 300,
+            "height": 500,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_03",
+            "prefabPath": "platform_3x4",
+            "x": 60,
+            "y": 760,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 600,
+            "height": 500,
+            "sortingOrder": -1
+        }
     ]
 }

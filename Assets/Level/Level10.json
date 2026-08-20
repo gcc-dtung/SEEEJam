@@ -310,10 +310,13 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 280,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 4,
             "customNotes": "",
@@ -329,10 +332,13 @@
         },
         {
             "treeId": "tree_02",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 420,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -348,10 +354,13 @@
         },
         {
             "treeId": "tree_03",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 560,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -367,10 +376,13 @@
         },
         {
             "treeId": "tree_04",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 700,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -393,10 +405,13 @@
         },
         {
             "treeId": "tree_05",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 840,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -419,10 +434,13 @@
         },
         {
             "treeId": "tree_06",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 560,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -442,6 +460,32 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_5x2 1",
+            "x": 740,
+            "y": 760,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 300,
+            "height": 500,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_03",
+            "prefabPath": "platform_3x4",
+            "x": 60,
+            "y": 760,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 600,
+            "height": 500,
+            "sortingOrder": -1
         }
     ]
 }

@@ -16,10 +16,14 @@
             "y": 720,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_02",
+                "land_04",
+                "land_05"
+            ]
         },
         {
             "landId": "land_02",
@@ -30,7 +34,13 @@
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_01",
+                "land_03",
+                "land_04",
+                "land_05",
+                "land_06"
+            ]
         },
         {
             "landId": "land_03",
@@ -38,10 +48,14 @@
             "y": 720,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_02",
+                "land_05",
+                "land_06"
+            ]
         },
         {
             "landId": "land_04",
@@ -49,10 +63,14 @@
             "y": 860,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_01",
+                "land_02",
+                "land_05"
+            ]
         },
         {
             "landId": "land_05",
@@ -63,7 +81,13 @@
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_01",
+                "land_02",
+                "land_03",
+                "land_04",
+                "land_06"
+            ]
         },
         {
             "landId": "land_06",
@@ -71,10 +95,14 @@
             "y": 860,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_02",
+                "land_03",
+                "land_05"
+            ]
         },
         {
             "landId": "land_07",
@@ -82,10 +110,14 @@
             "y": 1060,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_08",
+                "land_10",
+                "land_11"
+            ]
         },
         {
             "landId": "land_08",
@@ -96,7 +128,13 @@
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_07",
+                "land_09",
+                "land_10",
+                "land_11",
+                "land_12"
+            ]
         },
         {
             "landId": "land_09",
@@ -104,10 +142,14 @@
             "y": 1060,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_08",
+                "land_11",
+                "land_12"
+            ]
         },
         {
             "landId": "land_10",
@@ -115,10 +157,14 @@
             "y": 1200,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_07",
+                "land_08",
+                "land_11"
+            ]
         },
         {
             "landId": "land_11",
@@ -129,7 +175,13 @@
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_07",
+                "land_08",
+                "land_09",
+                "land_10",
+                "land_12"
+            ]
         },
         {
             "landId": "land_12",
@@ -137,10 +189,14 @@
             "y": 1200,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_08",
+                "land_09",
+                "land_11"
+            ]
         },
         {
             "landId": "land_13",
@@ -148,10 +204,14 @@
             "y": 880,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_14",
+                "land_15",
+                "land_16"
+            ]
         },
         {
             "landId": "land_14",
@@ -159,10 +219,14 @@
             "y": 880,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_13",
+                "land_15",
+                "land_16"
+            ]
         },
         {
             "landId": "land_15",
@@ -170,10 +234,14 @@
             "y": 1020,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_13",
+                "land_14",
+                "land_16"
+            ]
         },
         {
             "landId": "land_16",
@@ -181,19 +249,26 @@
             "y": 1020,
             "slotType": 0,
             "row": 0,
-            "isCorner": false,
+            "isCorner": true,
             "isEdge": false,
             "itemId": "",
-            "neighborIds": []
+            "neighborIds": [
+                "land_13",
+                "land_14",
+                "land_15"
+            ]
         }
     ],
     "trees": [
         {
             "treeId": "tree_01",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 100,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -209,10 +284,13 @@
         },
         {
             "treeId": "tree_02",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 250,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -228,10 +306,13 @@
         },
         {
             "treeId": "tree_03",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 400,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -247,10 +328,13 @@
         },
         {
             "treeId": "tree_04",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 550,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -266,10 +350,13 @@
         },
         {
             "treeId": "tree_05",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 700,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -285,10 +372,13 @@
         },
         {
             "treeId": "tree_06",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 850,
             "y": 1614,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -301,6 +391,44 @@
                     "smellPreference": 0
                 }
             ]
+        }
+    ],
+    "decorations": [
+        {
+            "decorId": "decor_01",
+            "prefabPath": "platform_3x2",
+            "x": 90,
+            "y": 660,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 420,
+            "height": 375,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_02",
+            "prefabPath": "platform_3x2",
+            "x": 80,
+            "y": 1000,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 420,
+            "height": 375,
+            "sortingOrder": -1
+        },
+        {
+            "decorId": "decor_03",
+            "prefabPath": "platform_2x2",
+            "x": 680,
+            "y": 820,
+            "sizeMode": 0,
+            "widthInLands": 3.0,
+            "heightInLands": 3.0,
+            "width": 280,
+            "height": 375,
+            "sortingOrder": -1
         }
     ]
 }
