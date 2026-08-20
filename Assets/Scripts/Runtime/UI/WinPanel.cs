@@ -25,7 +25,6 @@ public class WinPanel : MonoBehaviour
     [Header("Tween Settings")]
     [SerializeField, Min(0.05f)] private float elementShowDuration = 0.22f;
     [SerializeField, Min(0f)] private float elementStagger = 0.08f;
-    [SerializeField, Min(0f)] private float hiddenScale = 0.75f;
 
     private readonly List<Tween> _runningTweens = new List<Tween>();
     private Coroutine _showRoutine;
@@ -156,7 +155,8 @@ public class WinPanel : MonoBehaviour
             if (group != null)
                 group.alpha = 0f;
 
-            target.localScale = Vector3.one * hiddenScale;
+            Vector3 originalScale = target.localScale;
+            target.localScale = originalScale;
         }
 
         for (int i = 0; i < elements.Length; i++)
@@ -165,8 +165,11 @@ public class WinPanel : MonoBehaviour
             if (target == null)
                 continue;
 
+            Vector3 originalScale = target.localScale;
+            target.localScale = target.localScale;
+
             CanvasGroup group = EnsureCanvasGroup(target.gameObject);
-            _runningTweens.Add(Tween.Scale(target, Vector3.one, elementShowDuration));
+            _runningTweens.Add(Tween.Scale(target, originalScale, elementShowDuration));
 
             if (group != null)
             {

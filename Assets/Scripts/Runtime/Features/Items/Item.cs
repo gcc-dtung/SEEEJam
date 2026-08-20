@@ -17,17 +17,14 @@ public class Item : MonoBehaviour
 
     private ItemSlot currentSlot;
     private bool _ignoreConditionsForRun;
-    private BoxCollider2D _interactionCollider;
 
     private void Awake()
     {
         EnsureItemView();
-        AutoFitInteractionCollider();
     }
 
     private void Start()
     {
-        AutoFitInteractionCollider();
     }
 
     private void OnEnable()
@@ -120,13 +117,18 @@ public class Item : MonoBehaviour
         if (plantVisual == null)
             plantVisual = GetComponent<PlantVisual>();
 
-        if (plantVisual != null && TryGetEmittedSmell(out PlantSmell smell))
+        if (plantVisual == null)
+            return;
+
+        if (TryGetEmittedSmell(out PlantSmell smell))
         {
-            if (smell == PlantSmell.Perfume)
-                plantVisual.AddTrait(PlantTrait.Perfume);
-            else if (smell == PlantSmell.Disgust)
-                plantVisual.AddTrait(PlantTrait.Disgust);
+            plantVisual.SetTraitState(PlantTrait.Perfume, smell == PlantSmell.Perfume);
+            plantVisual.SetTraitState(PlantTrait.Disgust, smell == PlantSmell.Disgust);
+            return;
         }
+
+        plantVisual.SetTraitState(PlantTrait.Perfume, false);
+        plantVisual.SetTraitState(PlantTrait.Disgust, false);
     }
 
     private bool CheckCondition(ItemSlot slot)
@@ -211,7 +213,6 @@ public class Item : MonoBehaviour
 
         View.ApplyTreeVisualProfile(DisplayName, itemId);
         View.SetEffect(GetEmittedSmell());
-        AutoFitInteractionCollider();
     }
 
     private PlantSmell GetEmittedSmell()
@@ -238,25 +239,5 @@ public class Item : MonoBehaviour
         plantVisual?.SetState(state);
     }
 
-    private void AutoFitInteractionCollider()
-    {
-        if (_interactionCollider == null)
-            _interactionCollider = GetComponent<BoxCollider2D>();
-
-        if (_interactionCollider == null)
-            return;
-
-        SpriteRenderer spriteRenderer = itemView != null ? itemView.SpriteRenderer : GetComponentInChildren<SpriteRenderer>();
-        if (spriteRenderer == null)
-            return;
-
-        Bounds worldBounds = spriteRenderer.bounds;
-        Vector3 localCenter = transform.InverseTransformPoint(worldBounds.center);
-        Vector3 localSize = transform.InverseTransformVector(worldBounds.size);
-
-        _interactionCollider.offset = new Vector2(localCenter.x, localCenter.y);
-        _interactionCollider.size = new Vector2(Mathf.Abs(localSize.x), Mathf.Abs(localSize.y));
-    }
-    
     #endregion
 }

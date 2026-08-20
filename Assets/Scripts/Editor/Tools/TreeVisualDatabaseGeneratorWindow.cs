@@ -8,6 +8,7 @@ public class TreeVisualDatabaseGeneratorWindow : EditorWindow
 {
     private const string DefaultSourceRootFolder = "Assets/Art/Nhan vat/nhan vat";
     private const string DefaultOutputAssetPath = "Assets/Resources/TreeVisualDatabase.asset";
+    private const int TargetTreeCount = 30;
 
     private string sourceRootFolder = DefaultSourceRootFolder;
     private string outputAssetPath = DefaultOutputAssetPath;
@@ -23,7 +24,7 @@ public class TreeVisualDatabaseGeneratorWindow : EditorWindow
     private void OnGUI()
     {
         EditorGUILayout.LabelField("Tree Visual Database Generator", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("Scans Assets/Art/Nhan vat/nhan vat/1..7 style folders. The first sprite in each folder becomes happy, the second becomes sad. Bieu cam and effect stay shared in ItemView.", MessageType.Info);
+        EditorGUILayout.HelpBox("Scans Assets/Art/Nhan vat/nhan vat/1..7 style folders and repeats them to build 30 tree entries. The first sprite in each folder becomes happy, the second becomes sad. Bieu cam and effect stay shared in ItemView.", MessageType.Info);
 
         sourceRootFolder = EditorGUILayout.TextField("Source Root Folder", sourceRootFolder);
         outputAssetPath = EditorGUILayout.TextField("Output Asset Path", outputAssetPath);
@@ -54,9 +55,16 @@ public class TreeVisualDatabaseGeneratorWindow : EditorWindow
             .ToList();
 
         List<TreeVisualEntry> entries = new List<TreeVisualEntry>();
-        for (int i = 0; i < sortedSubFolders.Count; i++)
+        int sourceCount = sortedSubFolders.Count;
+        if (sourceCount == 0)
         {
-            string folderPath = sortedSubFolders[i];
+            EditorUtility.DisplayDialog("Tree Visual Database", "No subfolders found inside: " + sourceRootFolder, "OK");
+            return;
+        }
+
+        for (int i = 0; i < TargetTreeCount; i++)
+        {
+            string folderPath = sortedSubFolders[i % sourceCount];
             List<Sprite> sprites = LoadSprites(folderPath);
             if (sprites.Count < 2)
                 continue;

@@ -34,3 +34,72 @@ MonoBehaviour:
   - treeKey: tree_07
     happyCharacterSprite: {fileID: 4461257610856927136, guid: f2b9a0531d694ad42a8603c0a0899913, type: 3}
     sadCharacterSprite: {fileID: -5671683876503960806, guid: ec5a9929a65fd9844809b3f13136744e, type: 3}
+  - treeKey: tree_08
+    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
+    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
+  - treeKey: tree_09
+    happyCharacterSprite: {fileID: -3405495423853031273, guid: bf47decfe797bd94e9854569e36da143, type: 3}
+    sadCharacterSprite: {fileID: -7251571647162267069, guid: 44bb73ca6cbbe0a4690e17cc85663bed, type: 3}
+  - treeKey: tree_10
+    happyCharacterSprite: {fileID: 6006986660130359876, guid: 6c4702c51e9023141b817f6f5cee5b17, type: 3}
+    sadCharacterSprite: {fileID: 7069321215000627357, guid: ce36e6670a81e7b47a3ba4f81e9eec99, type: 3}
+  - treeKey: tree_11
+    happyCharacterSprite: {fileID: -4593982710790916606, guid: d3680e79172dfd24281f9fb85b380312, type: 3}
+    sadCharacterSprite: {fileID: -4476856608209015507, guid: c9c03eaf4a7ea324caaf198ce2e5ecff, type: 3}
+  - treeKey: tree_12
+    happyCharacterSprite: {fileID: -4729993889813597530, guid: 3373f15815cfedf4f84ac02156c11c01, type: 3}
+    sadCharacterSprite: {fileID: -7509058083554409064, guid: 03d74b3f20d2fa14d9e351937c98e47f, type: 3}
+  - treeKey: tree_13
+    happyCharacterSprite: {fileID: 21300000, guid: f3f28bb90f8d1a24b880c690ad7ad637, type: 3}
+    sadCharacterSprite: {fileID: 21300000, guid: fc936e9d96a783a4883d9940aff86137, type: 3}
+  - treeKey: tree_14
+    happyCharacterSprite: {fileID: 4461257610856927136, guid: f2b9a0531d694ad42a8603c0a0899913, type: 3}
+    sadCharacterSprite: {fileID: -5671683876503960806, guid: ec5a9929a65fd9844809b3f13136744e, type: 3}
+  - treeKey: tree_15
+    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
+    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
+  - treeKey: tree_16
+    happyCharacterSprite: {fileID: -3405495423853031273, guid: bf47decfe797bd94e9854569e36da143, type: 3}
+    sadCharacterSprite: {fileID: -7251571647162267069, guid: 44bb73ca6cbbe0a4690e17cc85663bed, type: 3}
+  - treeKey: tree_17
+    happyCharacterSprite: {fileID: 6006986660130359876, guid: 6c4702c51e9023141b817f6f5cee5b17, type: 3}
+    sadCharacterSprite: {fileID: 7069321215000627357, guid: ce36e6670a81e7b47a3ba4f81e9eec99, type: 3}
+  - treeKey: tree_18
+    happyCharacterSprite: {fileID: -4593982710790916606, guid: d3680e79172dfd24281f9fb85b380312, type: 3}
+    sadCharacterSprite: {fileID: -4476856608209015507, guid: c9c03eaf4a7ea324caaf198ce2e5ecff, type: 3}
+  - treeKey: tree_19
+    happyCharacterSprite: {fileID: -4729993889813597530, guid: 3373f15815cfedf4f84ac02156c11c01, type: 3}
+    sadCharacterSprite: {fileID: -7509058083554409064, guid: 03d74b3f20d2fa14d9e351937c98e47f, type: 3}
+  - treeKey: tree_20
+    happyCharacterSprite: {fileID: 21300000, guid: f3f28bb90f8d1a24b880c690ad7ad637, type: 3}
+    sadCharacterSprite: {fileID: 21300000, guid: fc936e9d96a783a4883d9940aff86137, type: 3}
+  - treeKey: tree_21
+    happyCharacterSprite: {fileID: 4461257610856927136, guid: f2b9a0531d694ad42a8603c0a0899913, type: 3}
+    sadCharacterSprite: {fileID: -5671683876503960806, guid: ec5a9929a65fd9844809b3f13136744e, type: 3}
+  - treeKey: tree_22
+    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
+    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
+  - treeKey: tree_23
+    happyCharacterSprite: {fileID: -3405495423853031273, guid: bf47decfe797bd94e9854569e36da143, type: 3}
+    sadCharacterSprite: {fileID: -7251571647162267069, guid: 44bb73ca6cbbe0a4690e17cc85663bed, type: 3}
+  - treeKey: tree_24
+    happyCharacterSprite: {fileID: 6006986660130359876, guid: 6c4702c51e9023141b817f6f5cee5b17, type: 3}
+    sadCharacterSprite: {fileID: 7069321215000627357, guid: ce36e6670a81e7b47a3ba4f81e9eec99, type: 3}
+  - treeKey: tree_25
+    happyCharacterSprite: {fileID: -4593982710790916606, guid: d3680e79172dfd24281f9fb85b380312, type: 3}
+    sadCharacterSprite: {fileID: -4476856608209015507, guid: c9c03eaf4a7ea324caaf198ce2e5ecff, type: 3}
+  - treeKey: tree_26
+    happyCharacterSprite: {fileID: -4729993889813597530, guid: 3373f15815cfedf4f84ac02156c11c01, type: 3}
+    sadCharacterSprite: {fileID: -7509058083554409064, guid: 03d74b3f20d2fa14d9e351937c98e47f, type: 3}
+  - treeKey: tree_27
+    happyCharacterSprite: {fileID: 21300000, guid: f3f28bb90f8d1a24b880c690ad7ad637, type: 3}
+    sadCharacterSprite: {fileID: 21300000, guid: fc936e9d96a783a4883d9940aff86137, type: 3}
+  - treeKey: tree_28
+    happyCharacterSprite: {fileID: 4461257610856927136, guid: f2b9a0531d694ad42a8603c0a0899913, type: 3}
+    sadCharacterSprite: {fileID: -5671683876503960806, guid: ec5a9929a65fd9844809b3f13136744e, type: 3}
+  - treeKey: tree_29
+    happyCharacterSprite: {fileID: -8883449060467459026, guid: fdbe4be9b136c6046abb3058edad73d8, type: 3}
+    sadCharacterSprite: {fileID: -3667107078102375881, guid: 336ace1f79d92ff4db5f955caaa7cf47, type: 3}
+  - treeKey: tree_30
+    happyCharacterSprite: {fileID: -3405495423853031273, guid: bf47decfe797bd94e9854569e36da143, type: 3}
+    sadCharacterSprite: {fileID: -7251571647162267069, guid: 44bb73ca6cbbe0a4690e17cc85663bed, type: 3}

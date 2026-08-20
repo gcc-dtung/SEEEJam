@@ -342,6 +342,10 @@ public class LevelRuntimeLoader : MonoBehaviour
         }
 
         SetVisibleWorldSize(target, worldSize);
+
+        if (target != null && target.GetComponent<DragItem>() != null)
+            return;
+
         ResizeColliderToWorldSize(target, worldSize);
     }
 

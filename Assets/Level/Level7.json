@@ -15,6 +15,7 @@
             "x": 240,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -29,6 +30,7 @@
             "x": 400,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -45,6 +47,7 @@
             "x": 560,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -61,6 +64,7 @@
             "x": 720,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -77,6 +81,7 @@
             "x": 880,
             "y": 760,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -91,6 +96,7 @@
             "x": 240,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -105,6 +111,7 @@
             "x": 400,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -121,6 +128,7 @@
             "x": 560,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -137,6 +145,7 @@
             "x": 720,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -153,6 +162,7 @@
             "x": 880,
             "y": 920,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -167,6 +177,7 @@
             "x": 400,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -179,6 +190,7 @@
             "x": 560,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": false,
             "isEdge": false,
             "itemId": "",
@@ -192,6 +204,7 @@
             "x": 720,
             "y": 1200,
             "slotType": 0,
+            "row": 0,
             "isCorner": true,
             "isEdge": false,
             "itemId": "",
@@ -203,10 +216,13 @@
     "trees": [
         {
             "treeId": "tree_01",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 300,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 4,
             "customNotes": "",
@@ -217,22 +233,18 @@
                     "targetTreeId": "",
                     "smell": 1,
                     "smellPreference": 0
-                },
-                {
-                    "conditionType": 4,
-                    "n": 4,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 1
                 }
             ]
         },
         {
             "treeId": "tree_02",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 440,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
@@ -248,21 +260,17 @@
         },
         {
             "treeId": "tree_03",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 580,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 2,
             "customNotes": "",
             "conditions": [
-                {
-                    "conditionType": 5,
-                    "n": 2,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 0
-                },
                 {
                     "conditionType": 1,
                     "n": 2,
@@ -274,42 +282,41 @@
         },
         {
             "treeId": "tree_04",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
-            "x": 720,
+            "x": 722,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 4,
+                    "conditionType": 8,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
                     "smellPreference": 0
-                },
-                {
-                    "conditionType": 4,
-                    "n": 0,
-                    "targetTreeId": "",
-                    "smell": 2,
-                    "smellPreference": 1
                 }
             ]
         },
         {
             "treeId": "tree_05",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 860,
             "y": 1620,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 1,
+                    "conditionType": 7,
                     "n": 0,
                     "targetTreeId": "tree_01",
                     "smell": 1,
@@ -319,21 +326,17 @@
         },
         {
             "treeId": "tree_06",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 300,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
-                {
-                    "conditionType": 6,
-                    "n": 0,
-                    "targetTreeId": "",
-                    "smell": 1,
-                    "smellPreference": 0
-                },
                 {
                     "conditionType": 3,
                     "n": 0,
@@ -345,35 +348,41 @@
         },
         {
             "treeId": "tree_07",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 440,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 4,
+                    "conditionType": 10,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
-                    "smellPreference": 1
+                    "smellPreference": 0
                 }
             ]
         },
         {
             "treeId": "tree_08",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 580,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 6,
+                    "conditionType": 9,
                     "n": 0,
                     "targetTreeId": "",
                     "smell": 1,
@@ -383,35 +392,41 @@
         },
         {
             "treeId": "tree_09",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 720,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 5,
+                    "conditionType": 7,
                     "n": 0,
                     "targetTreeId": "",
-                    "smell": 2,
+                    "smell": 1,
                     "smellPreference": 0
                 }
             ]
         },
         {
             "treeId": "tree_10",
+            "plantDataId": "",
+            "displayName": "",
             "solutionLandId": "",
             "x": 860,
-            "y": 1760,
+            "y": 1820,
             "itemType": 0,
+            "lightDirection": 0,
             "requiredSlotType": 0,
             "parameterN": 0,
             "customNotes": "",
             "conditions": [
                 {
-                    "conditionType": 1,
+                    "conditionType": 9,
                     "n": 0,
                     "targetTreeId": "tree_04",
                     "smell": 1,
@@ -420,7 +435,7 @@
             ]
         }
     ],
-        "decorations": [
+    "decorations": [
         {
             "decorId": "decor_01",
             "prefabPath": "platform_5x2",

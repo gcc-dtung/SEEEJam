@@ -90,6 +90,24 @@ public class PlantVisual : MonoBehaviour
         }
     }
 
+    public void SetTraitState(PlantTrait trait, bool enabled)
+    {
+        if (trait == PlantTrait.None)
+            return;
+
+        if (enabled)
+        {
+            if (!traits.Contains(trait))
+                traits.Add(trait);
+        }
+        else if (traits.Contains(trait))
+        {
+            traits.Remove(trait);
+        }
+
+        ApplyTrait();
+    }
+
     public void Refresh()
     {
         ApplySkin();

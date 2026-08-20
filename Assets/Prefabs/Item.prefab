@@ -654,7 +654,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.021591514, y: 0.2698952}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -664,7 +664,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.561382, y: 2.6193717}
   m_EdgeRadius: 0
 --- !u!114 &2251225891551616367
 MonoBehaviour:
@@ -773,7 +773,7 @@ MonoBehaviour:
   characterRenderer: {fileID: 4247991491332374300}
   expressionRenderer: {fileID: 5595523273332152195}
   effectRenderer: {fileID: 2761644428522251944}
-  treeVisualDatabase: {fileID: 11400000, guid: fd19a183348dfee4f84b2ab2570569ab, type: 2}
+  treeVisualDatabase: {fileID: 0}
   happyExpressionSprite: {fileID: 21300000, guid: 99455a1e250c1254d9df09a8daae1315, type: 3}
   sadExpressionSprite: {fileID: 21300000, guid: 843ffeffa8cb4f04eb705334b12dd046, type: 3}
   normalExpressionSprite: {fileID: 21300000, guid: f8b860da95c43fc4f9667fbdfe388abb, type: 3}
