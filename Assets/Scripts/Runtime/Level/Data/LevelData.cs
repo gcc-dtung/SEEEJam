@@ -130,7 +130,7 @@ public class DecorData
 public class LevelData
 {
     public string levelName = "New Level";
-    public int maxMoves = 10;
+    public int maxMoves = 50;
     public int width  = 5;
     public int height = 5;
     public int screenX = 0;

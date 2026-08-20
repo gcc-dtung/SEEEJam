@@ -129,7 +129,8 @@ public class LevelManager : SingletonMonoBehaviour<LevelManager>
 
     public void ConfigureLoadedLevel(LevelData level)
     {
-        MaxMoves = level != null ? Mathf.Max(0, level.maxMoves) : 0;
+        int baseMoves = level != null ? Mathf.Max(0, level.maxMoves) : 0;
+        MaxMoves = baseMoves;
         RemainingMoves = MaxMoves;
 
         // Always derive the displayed level number from the 1-based index instead of
